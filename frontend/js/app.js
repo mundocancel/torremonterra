@@ -178,6 +178,44 @@ function createBuilding() {
       addMesh(group, new THREE.BoxGeometry(W + 0.42, 0.28, D + 0.42), concreteMat, [0, baseY + H + 0.14, 0]);
       addMesh(group, new THREE.BoxGeometry(W * 0.46, 2.2, 0.42), redMat, [0, baseY + H + 1.05, D / 2 - 1.1]);
       addMesh(group, new THREE.BoxGeometry(W - 1.1, 0.75, D - 1.1), wallMat, [0, baseY + H + 0.38, 0]);
+      // Azotea trasera: moldura de concreto colado en sitio.
+      addMesh(group, new THREE.BoxGeometry(W + 0.42, 0.28, D + 0.42), concreteMat, [0, baseY + H + 0.14, 0]);
+    }
+
+    // ============ FACHADA POSTERIOR (ARQ-08 / ARQ-20) ============
+    // Z = -D/2 (atrás). Simétrica: ventanal 2x2 centrado + 2 ventanas laterales estrechas + muros ciegos extremos.
+    if (['n1', 'n2', 'n3', 'n4'].includes(key)) {
+      // Ventanal central 2x2 (cuatro paños)
+      addFourPaneWindow(group, 0, baseY + H / 2, -D / 2 - 0.12, 1.72 * SCALE, 2.1 * SCALE, frameMat, glassMat, addMesh);
+      // Ventanas verticales estrechas flanqueando el centro
+      [-3.4, 3.4].forEach(x => addTallWindow(group, x, baseY + H / 2, -D / 2 - 0.12, 0.95 * SCALE, 2.1 * SCALE, frameMat, glassMat, addMesh));
+      // Muros ciegos en extremos (±5.86 m del centro = 2.82 m desde borde), sin huecos.
+    }
+
+    if (key === 'pb') {
+      // PB posterior: dos portones de servicio con cristal (rayas diagonales) a ±4.54 m del centro.
+      [-4.54, 4.54].forEach(x => addServiceDoor(group, x, baseY + H / 2, -D / 2 - 0.12, 2.0 * SCALE, 2.2 * SCALE, woodMat, frameMat, glassMat, addMesh));
+      // Zona central (rampa/escaleras) sin hueco visible: muro bajo / barandilla.
+      addMesh(group, new THREE.BoxGeometry(3.5 * SCALE, 1.2 * SCALE, 0.18), concreteMat, [0, baseY + 0.6 * SCALE, -D / 2 - 0.11]);
+      // Molduras de concreto a 0.80 m (izq/der) según alzado.
+      [-5.5, 5.5].forEach(x => addMesh(group, new THREE.BoxGeometry(0.6 * SCALE, 0.22, 0.3), concreteMat, [x, baseY + 0.8 * SCALE, -D / 2 - 0.11]));
+    }
+
+    // ============ LATERAL DERECHO (ARQ-09) ============
+    // X = +W/2. 4 ventanas centradas por nivel + escalera en PB.
+    if (['n1', 'n2', 'n3', 'n4'].includes(key)) {
+      addSideWindow(group, W / 2 + 0.12, baseY + H / 2, 0, 1.05 * SCALE, 1.45 * SCALE, frameMat, glassMat, addMesh);
+    }
+    if (key === 'pb') {
+      // Escalera de acceso lateral derecho
+      addMesh(group, new THREE.BoxGeometry(0.3, 2.6 * SCALE, 1.8 * SCALE), stairMat, [W / 2 + 0.15, baseY + 1.3 * SCALE, -D / 2 + 2.5 * SCALE]);
+      addFrontRail(group, W / 2 + 0.15, baseY + 1.3 * SCALE, -D / 2 + 1.6 * SCALE, 1.6 * SCALE, frameMat, addMesh);
+    }
+
+    // ============ LATERAL IZQUIERDO (ARQ-10/11) ============
+    // X = -W/2. Simétrico al derecho pero sin escalera en PB.
+    if (['n1', 'n2', 'n3', 'n4'].includes(key)) {
+      addSideWindow(group, -W / 2 - 0.12, baseY + H / 2, 0, 1.05 * SCALE, 1.45 * SCALE, frameMat, glassMat, addMesh);
     }
 
     building.levels[key] = group;
@@ -224,6 +262,20 @@ function addDoor(group, x, y, z, width, height, woodMat, frameMat, addMesh, doub
   addMesh(group, new THREE.BoxGeometry(width + 0.24, height + 0.24, 0.17), frameMat, [x, y, z]);
   addMesh(group, new THREE.BoxGeometry(width, height, 0.1), woodMat, [x, y, z + 0.11]);
   if (doubleDoor) addMesh(group, new THREE.BoxGeometry(0.1, height - 0.12, 0.16), frameMat, [x, y, z + 0.18]);
+}
+
+function addServiceDoor(group, x, y, z, width, height, woodMat, frameMat, glassMat, addMesh) {
+  // Portón de servicio con paneles de cristal (simulando rayas diagonales con cristales subdivididos)
+  addMesh(group, new THREE.BoxGeometry(width + 0.18, height + 0.18, 0.15), frameMat, [x, y, z]);
+  addMesh(group, new THREE.BoxGeometry(width - 0.12, height - 0.12, 0.07), glassMat, [x, y, z + 0.1]);
+  // Subdivisión en 4 paños (2x2) para sugerir paneles
+  addMesh(group, new THREE.BoxGeometry(0.1, height - 0.06, 0.19), frameMat, [x, y, z + 0.13]);
+  addMesh(group, new THREE.BoxGeometry(width - 0.06, 0.1, 0.19), frameMat, [x, y, z + 0.13]);
+  // Detalle de "X" simulado con barras diagonales delgadas
+  const diag1 = addMesh(group, new THREE.BoxGeometry(width * 0.7, 0.04, 0.12), frameMat, [x, y, z + 0.15]);
+  diag1.rotation.z = Math.PI / 4.2;
+  const diag2 = addMesh(group, new THREE.BoxGeometry(width * 0.7, 0.04, 0.12), frameMat, [x, y, z + 0.15]);
+  diag2.rotation.z = -Math.PI / 4.2;
 }
 
 function addWindows(group, baseY, H, W, D, frameMat, glassMat) {
