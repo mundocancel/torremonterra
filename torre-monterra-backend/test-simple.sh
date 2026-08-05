@@ -1,7 +1,7 @@
 #!/bin/bash
 # Tests simples sin dependencias externas
 
-BASE_URL="http://localhost:3000/api"
+BASE_URL="${BASE_URL:-http://localhost:3000/api}"
 PASSED=0
 FAILED=0
 
