@@ -24,6 +24,9 @@ logs
 *.swp
 *.swo
 
+# Local Hermes attachments and generated document previews
+.hermes/
+
 # Temporary files
 *.tmp
 *.temp
