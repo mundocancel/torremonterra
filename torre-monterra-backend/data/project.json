@@ -1,0 +1,154 @@
+{
+  "info": {
+    "name": "Torre MONTERRA",
+    "project": "Proyecto Arquitectónico V2",
+    "location": "Monterra",
+    "type": "Edificio Departamentos",
+    "key": "MON-EDI-TT-ARQ",
+    "date": "29-Nov-2024",
+    "version": "01",
+    "revision": "01",
+    "units": "Metros",
+    "scale": "1:40 / 1:50 / 1:75",
+    "designer": "INDEM | Innovación en Desarrollos",
+    "website": "www.indemexico.com",
+    "dimensions": {
+      "width": 11.72,
+      "depth": 10.33,
+      "totalHeight": 13.65,
+      "floorArea": 121.9,
+      "units": "m / m²"
+    },
+    "levelsSummary": {
+      "basement": "Acceso NPT +0.05m",
+      "groundFloor": "Planta Baja NPT +0.65m",
+      "typicalFloors": "Niveles 1-4",
+      "rooftop": "Azotea NPT +13.65m",
+      "totalLevels": 6
+    }
+  },
+  "levels": [
+    {
+      "id": "pb",
+      "name": "Planta Baja",
+      "npt": 0.65,
+      "height": 2.60,
+      "description": "Acceso principal a torre con puerta doble hoja WPC",
+      "drawing": "ARQ-01",
+      "features": [
+        "Acceso principal P-04 WPC Nogal",
+        "Cerradura TECDOFY H5H",
+        "Piso LAMOSA Sinatra Gris",
+        "Muro exterior Piedra Georgetown"
+      ]
+    },
+    {
+      "id": "n1",
+      "name": "Nivel 1",
+      "npt": 3.25,
+      "height": 2.60,
+      "description": "Departamentos tipo con 2 recámaras",
+      "drawing": "ARQ-02",
+      "features": [
+        "Piso CASTEL Geo Silver 60x60cm",
+        "Cancelería aluminio 3\" negro",
+        "Closet MDF Arauco Monarca",
+        "Cocina cubierta Lu Marquina"
+      ]
+    },
+    {
+      "id": "n2",
+      "name": "Nivel 2",
+      "npt": 5.85,
+      "height": 2.60,
+      "description": "Departamentos con balcones en L",
+      "drawing": "ARQ-03",
+      "features": [
+        "Balcones en L laterales",
+        "Barandales acero Pimienta K5-12",
+        "H-02/H-03 barandales tubulares",
+        "Cancelería V-05 a V-09"
+      ]
+    },
+    {
+      "id": "n3",
+      "name": "Nivel 3",
+      "npt": 8.45,
+      "height": 2.60,
+      "description": "Nivel intermedio con balcones",
+      "drawing": "ARQ-04",
+      "features": [
+        "Balcones en L",
+        "Muros pasta CEMIX Reserved White",
+        "Ventanales aluminio negro cristal 6mm",
+        "Accesorios baño DICA cromo"
+      ]
+    },
+    {
+      "id": "n4",
+      "name": "Nivel 4",
+      "npt": 11.05,
+      "height": 2.60,
+      "description": "Último nivel habitable con acabados premium",
+      "drawing": "ARQ-05",
+      "features": [
+        "Molduras concreto colado en sitio",
+        "Pintura PRISA Harrison Gray AP46-5",
+        "Acabados caracoleados",
+        "Acceso a azotea"
+      ]
+    },
+    {
+      "id": "azotea",
+      "name": "Azotea",
+      "npt": 13.65,
+      "height": 0.80,
+      "description": "Cubierta con impermeabilizante y accesos",
+      "drawing": "ARQ-06",
+      "features": [
+        "Impermeabilizante IMPAC 3.5mm",
+        "Pretil perimetral",
+        "Escotilla H-08 acero Portafolio",
+        "Escalera marina H-07 tubular"
+      ]
+    }
+  ],
+  "drawings": [
+    { "sheet": "ARQ-00", "title": "Especificaciones", "scale": "-" },
+    { "sheet": "ARQ-01", "title": "Planta Baja", "scale": "1:40" },
+    { "sheet": "ARQ-02", "title": "Nivel 1", "scale": "1:40" },
+    { "sheet": "ARQ-03", "title": "Nivel 2", "scale": "1:40" },
+    { "sheet": "ARQ-04", "title": "Nivel 3", "scale": "1:40" },
+    { "sheet": "ARQ-05", "title": "Nivel 4", "scale": "1:40" },
+    { "sheet": "ARQ-06", "title": "Azotea", "scale": "1:40" },
+    { "sheet": "ARQ-07", "title": "Alzado Frontal", "scale": "1:50" },
+    { "sheet": "ARQ-08", "title": "Alzado Posterior", "scale": "1:50" },
+    { "sheet": "ARQ-09", "title": "Alzado Lateral Derecho", "scale": "1:50" },
+    { "sheet": "ARQ-10", "title": "Alzado Lateral Izquierdo", "scale": "1:50" },
+    { "sheet": "ARQ-11", "title": "Sección X-1", "scale": "1:50" },
+    { "sheet": "ARQ-12", "title": "Sección X-2", "scale": "1:50" },
+    { "sheet": "ARQ-13", "title": "Sección Y-1", "scale": "1:50" },
+    { "sheet": "ARQ-14", "title": "Sección Y-2", "scale": "1:50" },
+    { "sheet": "ARQ-15", "title": "Balcones L Derecho", "scale": "1:40" },
+    { "sheet": "ARQ-15.1", "title": "Balcones L Izquierdo", "scale": "1:40" },
+    { "sheet": "ARQ-15.2", "title": "Torres Colindantes", "scale": "1:40" },
+    { "sheet": "ARQ-16", "title": "Acabados PB y N1", "scale": "1:50" },
+    { "sheet": "ARQ-17", "title": "Acabados N2 y N3", "scale": "1:50" },
+    { "sheet": "ARQ-18", "title": "Acabados N4 y Azotea", "scale": "1:50" },
+    { "sheet": "ARQ-19", "title": "Alzado Frontal Acabados", "scale": "1:50" },
+    { "sheet": "ARQ-20", "title": "Alzado Posterior Acabados", "scale": "1:50" },
+    { "sheet": "ARQ-21", "title": "Alzado Lateral Der. Acabados", "scale": "1:50" },
+    { "sheet": "ARQ-22", "title": "Alzado Lateral Izq. Acabados", "scale": "1:50" },
+    { "sheet": "ARQ-23", "title": "Cancelerías PB, N1, N2", "scale": "1:75" },
+    { "sheet": "ARQ-24", "title": "Cancelerías N3 y N4", "scale": "1:75" },
+    { "sheet": "ARQ-25", "title": "Puertas PB, N1, N2", "scale": "1:75" },
+    { "sheet": "ARQ-26", "title": "Puertas N3 y N4", "scale": "1:75" },
+    { "sheet": "ARQ-27", "title": "Herrerías PB", "scale": "1:75" },
+    { "sheet": "ARQ-28", "title": "Herrerías N1, N2, N3", "scale": "1:75" },
+    { "sheet": "ARQ-29", "title": "Herrerías N4 y Azotea", "scale": "1:75" },
+    { "sheet": "ARQ-30", "title": "Equipamiento PB, N1, N2", "scale": "1:75" },
+    { "sheet": "ARQ-31", "title": "Equipamiento N3 y N4", "scale": "1:75" },
+    { "sheet": "ARQ-32", "title": "Detalles de Baños", "scale": "1:20" },
+    { "sheet": "ARQ-33", "title": "Señalética", "scale": "1:75" }
+  ]
+}

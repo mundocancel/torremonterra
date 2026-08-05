@@ -1,0 +1,116 @@
+{
+  "floors": [
+    {
+      "id": "S-01",
+      "name": "Piso Interior Departamentos",
+      "brand": "CASTEL",
+      "model": "Geo Silver",
+      "format": "60x60 cm",
+      "color": "Silver",
+      "joint": "Mínima 3mm color TAN",
+      "location": "Interior departamentos",
+      "hexColor": "#b8b8b8"
+    },
+    {
+      "id": "S-02",
+      "name": "Pasillos y Escalera",
+      "brand": "LAMOSA",
+      "model": "Sinatra",
+      "format": "44x44 cm",
+      "color": "Gris",
+      "adhesive": "PEGAPISO INTERCERAMIC",
+      "joint": "Arena color BONE",
+      "location": "Pasillos y escaleras",
+      "hexColor": "#8a8a8a"
+    },
+    {
+      "id": "S-03",
+      "name": "Piso Baños",
+      "brand": "PORCELANITE",
+      "model": "Bramasole Bone",
+      "format": "30x60 cm",
+      "color": "Bone",
+      "joint": "Mínima +/- 3mm color BONE",
+      "location": "Baños",
+      "hexColor": "#d4c4a8"
+    },
+    {
+      "id": "S-04",
+      "name": "Impermeabilizante",
+      "brand": "IMPAC",
+      "model": "Hogar Fibra Poliéster",
+      "thickness": "3.5mm",
+      "color": "Blanco con grávilla",
+      "location": "Azotea",
+      "hexColor": "#f5f5f5"
+    }
+  ],
+  "walls": [
+    {
+      "id": "W-01",
+      "name": "Muro Interior Departamentos",
+      "system": "Aplanado pasta CEMIX ADEBLOK PLUS",
+      "finish": "Caracoleado con grano especial",
+      "thickness": "+/- 2cm",
+      "sealer": "Sellador 5X1 Reforzado (1 mano)",
+      "paint": "PRISA Reserved White AP14-2 (2 manos)",
+      "paintLine": "RIVINOL",
+      "location": "Interior",
+      "hexColor": "#e8e4dc"
+    },
+    {
+      "id": "W-02",
+      "name": "Muro Exterior",
+      "system": "Aplanado pasta CEMIX ADEBLOK Constructor",
+      "finish": "Caracoleado con grano especial",
+      "sealer": "Sellador 5X1 Reforzado (1 mano)",
+      "paint": "PRISA Ivory Too AP57-1 (2 manos)",
+      "paintLine": "RIVINOL Uso Profesional",
+      "location": "Exterior",
+      "hexColor": "#e5dcc8"
+    },
+    {
+      "id": "W-04",
+      "name": "Muro Recubierto Piedra",
+      "system": "Muro de concreto",
+      "finish": "Piedra Georgetown",
+      "brand": "INTERSTONE",
+      "waterproofing": "FESTER CR-66",
+      "location": "Exterior",
+      "hexColor": "#a89882"
+    },
+    {
+      "id": "W-09",
+      "name": "Columnas de Concreto",
+      "size": "30x30 cm",
+      "system": "Aplanado pasta CEMIX ADEBLOK Constructor",
+      "finish": "Caracoleado",
+      "paint": "PRISA Harrison Gray AP46-5 (2 manos)",
+      "paintLine": "RIVINOL Uso Profesional",
+      "location": "Columnas exteriores",
+      "hexColor": "#6b6f75"
+    }
+  ],
+  "ceilings": [
+    {
+      "id": "B-01",
+      "name": "Bóveda Interior",
+      "system": "Aplanado pasta caracoleado",
+      "thickness": "+/- 2cm",
+      "sealer": "Sellador 5X1 Reforzado (1 mano)",
+      "paint": "PRISA Hush White AP5-2 (2 manos)",
+      "altPaint": "COMEX Foco J5-02",
+      "location": "Interior departamentos",
+      "hexColor": "#f5f1e8"
+    },
+    {
+      "id": "B-02",
+      "name": "Losa Concreto Azotea",
+      "system": "Impermeabilizante IMPAC",
+      "model": "Asfalto Modificado 3.5 POL GB",
+      "color": "Blanco",
+      "location": "Azotea y exterior",
+      "hexColor": "#ffffff"
+    }
+  ]
+}

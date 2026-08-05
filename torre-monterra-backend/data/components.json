@@ -1,0 +1,261 @@
+{
+  "doors": [
+    {
+      "id": "P-01",
+      "name": "Puerta Ingreso Principal",
+      "material": "Lámina CAPECO",
+      "model": "Ébano",
+      "frame": "Metálico color negro o chocolate oscuro",
+      "lock": "DEXTER PP100 WIFI",
+      "stopper": "Tope Catarina",
+      "dimensions": "0.96 x 2.17 m",
+      "location": "Departamentos"
+    },
+    {
+      "id": "P-02",
+      "name": "Puerta Recámara",
+      "material": "EUCAPLAC",
+      "color": "Blanco Arena",
+      "frame": "Metálico blanco",
+      "lock": "HYM Manija Redonda 00101637",
+      "stopper": "Tope Catarina",
+      "dimensions": "0.86 x 2.14 m"
+    },
+    {
+      "id": "P-03",
+      "name": "Puerta Baño",
+      "material": "EUCAPLAC",
+      "color": "Blanco Arena",
+      "frame": "Metálico blanco",
+      "lock": "HYM Manija Redonda 00101637",
+      "dimensions": "0.76 x 2.14 m"
+    },
+    {
+      "id": "P-04",
+      "name": "Ingreso Principal Torre",
+      "type": "Doble hoja con fijo intermedio",
+      "frame": "PTR 2\"x2\"x3/4\"",
+      "cladding": "WPC Exterior color Nogal SIN-12",
+      "lock": "TECDOFY H5H (solo hoja izquierda)",
+      "stopper": "HYM Tope Níquel con Imán",
+      "location": "Acceso principal a torre"
+    },
+    {
+      "id": "P-05",
+      "name": "Puerta Abatible Aluminio",
+      "material": "Aluminio 3\" color negro",
+      "glass": "Cristal claro 6mm",
+      "dimensions": "0.97 x 2.14 m"
+    },
+    {
+      "id": "P-06",
+      "name": "Puerta Abatible Aluminio",
+      "material": "Aluminio 3\" color negro",
+      "glass": "Cristal claro 6mm",
+      "dimensions": "0.99 x 2.14 m"
+    }
+  ],
+  "windows": [
+    {
+      "id": "V-01",
+      "name": "Ventanal 1 Fijo + 1 Corrediza",
+      "material": "Aluminio 3\" negro",
+      "glass": "Cristal claro 6mm",
+      "dimensions": "1.99 x 2.40 m",
+      "type": "Fijo + Corrediza"
+    },
+    {
+      "id": "V-02",
+      "name": "Ventanal 1 Fijo + 1 Corrediza",
+      "material": "Aluminio 3\" negro",
+      "glass": "Cristal claro 6mm",
+      "dimensions": "1.25 x 1.60 m"
+    },
+    {
+      "id": "V-03",
+      "name": "Ventanal 1 Fijo + 1 Corrediza",
+      "material": "Aluminio 3\" negro",
+      "glass": "Cristal claro 6mm",
+      "dimensions": "1.23 x 2.40 m"
+    },
+    {
+      "id": "V-04",
+      "name": "Ventana Louver",
+      "type": "Louver con 2 rejillas",
+      "brand": "REFLECTO",
+      "material": "Aluminio negro",
+      "line": "Cuprum Panorama",
+      "output": "Salida secadora 4\"",
+      "dimensions": "0.74 x 0.40 m"
+    },
+    {
+      "id": "V-05",
+      "name": "Ventanal 1 Fijo + 1 Corrediza",
+      "material": "Aluminio 3\" negro",
+      "glass": "Cristal claro 6mm",
+      "dimensions": "1.60 x 1.99 m"
+    },
+    {
+      "id": "V-06",
+      "name": "Ventanal 3 Fijos + 1 Corrediza",
+      "material": "Aluminio 3\" negro",
+      "glass": "Cristal claro 6mm",
+      "dimensions": "1.99 x 2.40 m"
+    },
+    {
+      "id": "V-07",
+      "name": "Ventanal Tipo Sifón",
+      "material": "Aluminio 3\" negro",
+      "glass": "Cristal claro 6mm con película privacidad",
+      "dimensions": "0.33 x 0.40 m"
+    },
+    {
+      "id": "V-08",
+      "name": "Ventanal 3 Fijos + 1 Corrediza",
+      "material": "Aluminio 3\" negro",
+      "glass": "Cristal claro 6mm",
+      "dimensions": "0.97 x 2.40 m"
+    },
+    {
+      "id": "V-09",
+      "name": "Ventanal 3 Fijos + 1 Corrediza",
+      "material": "Aluminio 3\" negro",
+      "glass": "Cristal claro 6mm",
+      "dimensions": "0.99 x 2.40 m"
+    },
+    {
+      "id": "CAN-01",
+      "name": "Cancel de Baño",
+      "type": "1 Fijo + 1 Corredizo",
+      "glass": "Cristal claro templado 6mm"
+    }
+  ],
+  "ironwork": [
+    {
+      "id": "H-01",
+      "name": "Puerta Doble Abatible Acero",
+      "profiles": "Tubular cuadrado 1.5\"x1.5\" laterales",
+      "rail": "Solera 1.5\"x1/4\" horizontal",
+      "intermediates": "Perfiles verticales 1/2\"",
+      "color": "Pimienta K5-12",
+      "paint": "COMEX Línea Acqua"
+    },
+    {
+      "id": "H-02",
+      "name": "Barandal Acero",
+      "profiles": "Tubular cuadrado 1.5\"x1.5\"",
+      "rail": "Solera 1.5\"x1/4\"",
+      "intermediates": "Perfiles verticales 1/2\"",
+      "color": "Pimienta K5-12",
+      "paint": "COMEX Línea Acqua",
+      "location": "Balcones"
+    },
+    {
+      "id": "H-03",
+      "name": "Barandal Acero",
+      "spec": "Igual que H-02",
+      "location": "Balcones"
+    },
+    {
+      "id": "H-07",
+      "name": "Escalera Marina",
+      "material": "Tubular 1\"x1\"",
+      "finish": "Fondeado + esmalte semimate",
+      "color": "Portafolio 313-06",
+      "paint": "COMEX",
+      "location": "Acceso a azotea"
+    },
+    {
+      "id": "H-08",
+      "name": "Escotilla",
+      "frame": "Ángulo 2\"x2\" (3/16\") corte 45°",
+      "sheet": "Lámina lisa 1/4\"",
+      "finish": "Pasta automotiva en uniones",
+      "primer": "Fondo anticorrosivo gris",
+      "color": "Portafolio 313-06",
+      "paint": "COMEX esmalte semimate"
+    },
+    {
+      "id": "H-09",
+      "name": "Puerta Corrediza Aluminio Louver",
+      "material": "Aluminio negro 3\"",
+      "type": "Con louver"
+    },
+    {
+      "id": "H-10",
+      "name": "Barandal Acero",
+      "spec": "Igual que H-02",
+      "location": "Azotea"
+    }
+  ],
+  "equipment": [
+    {
+      "id": "EQU-01",
+      "name": "Closet Recámara Principal",
+      "material": "MDF 16mm con melamina",
+      "brand": "ARAUCO",
+      "model": "Monarca",
+      "handles": "HERRAJES BULNES C3",
+      "interior": "Color blanco"
+    },
+    {
+      "id": "EQU-02",
+      "name": "Closet Recámara Secundaria",
+      "material": "MDF 16mm con melamina",
+      "brand": "ARAUCO",
+      "model": "Monarca",
+      "handles": "HERRAJES BULNES C3"
+    },
+    {
+      "id": "EQU-03",
+      "name": "Cocina Integral",
+      "upperCabinets": {
+        "material": "MDF 15mm melamina ARAUCO Visión",
+        "interior": "Melamina blanca semimate"
+      },
+      "lowerCabinets": {
+        "material": "MDF ARAUCO Monarca",
+        "interior": "Melamina blanca semimate"
+      },
+      "countertop": {
+        "brand": "KOBER",
+        "model": "Lu Marquina Original Q",
+        "type": "Sin respaldo"
+      },
+      "splash": "Lu Marquina MCA. KOBER"
+    },
+    {
+      "id": "EQU-04",
+      "name": "Puerta Reforzada Maletero",
+      "type": "Doble abatible reforzada",
+      "profiles": "2 perfiles por hoja antipandeo",
+      "frame": "Melamina ARAUCO Monarca",
+      "lock": "Chapa de llave",
+      "ventilation": "Rejilla superior"
+    },
+    {
+      "id": "EQU-05",
+      "name": "Lavadero",
+      "material": "Polietileno",
+      "brand": "VERSAPLAS",
+      "size": "24x43x64 cm",
+      "color": "Gris",
+      "model": "Sin pileta",
+      "faucet": "Llave nariz",
+      "note": "Considerar ménsulas de fijación"
+    }
+  ],
+  "bathroom_accessories": [
+    { "id": "BA-01", "name": "Lavamanos", "brand": "SPAZIO", "includes": "Push", "color": "Blanco" },
+    { "id": "BA-02", "name": "Monomando", "brand": "CASTEL", "model": "Damasco Alto 3210", "color": "Cromo" },
+    { "id": "BA-03", "name": "Regadera", "brand": "DICA", "model": "4538R", "arm": "30cm a pared", "color": "Cromo" },
+    { "id": "BA-04", "name": "Gancho Doble", "brand": "DICA", "model": "3300", "color": "Cromo" },
+    { "id": "BA-05", "name": "Jabonera", "brand": "DICA", "model": "3300", "color": "Cromo" },
+    { "id": "BA-06", "name": "WC One Piece", "brand": "CORONA", "model": "CIMA", "color": "Blanco" },
+    { "id": "BA-07", "name": "Portarollo", "brand": "DICA", "model": "3300", "color": "Cromo" },
+    { "id": "BA-08", "name": "Toallero Argolla", "brand": "DICA", "model": "3300", "color": "Cromo" },
+    { "id": "BA-09", "name": "Manerales", "brand": "DICA", "model": "MCR", "color": "Cromo" },
+    { "id": "BA-10", "name": "Portavaso", "brand": "DICA", "model": "3300", "color": "Cromo" },
+    { "id": "BA-11", "name": "Vanity", "brand": "ECO", "size": "45x50x15 cm", "material": "MDF 15mm melamina ARAUCO Monarca" }
+  ]
+}

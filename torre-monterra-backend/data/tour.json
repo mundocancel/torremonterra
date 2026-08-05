@@ -1,0 +1,119 @@
+{
+  "title": "Tour Arquitectónico Torre MONTERRA",
+  "description": "Recorrido interactivo por los elementos arquitectónicos del proyecto",
+  "totalSteps": 8,
+  "steps": [
+    {
+      "step": 1,
+      "title": "Vista General del Edificio",
+      "description": "Torre de departamentos con 6 niveles (PB + 4 + Azotea). Altura total: 13.65m. Planta rectangular de 11.72m × 10.33m.",
+      "highlights": ["6 Niveles", "13.65m Altura", "121.9 m² Planta"],
+      "camera": { "pos": [30, 20, 30], "target": [0, 13, 0] },
+      "focus": null,
+      "specs": [
+        { "label": "Ubicación", "value": "Monterra" },
+        { "label": "Tipo", "value": "Edificio Departamentos" },
+        { "label": "Clave", "value": "MON-EDI-TT-ARQ" },
+        { "label": "Fecha", "value": "29-Nov-2024" }
+      ]
+    },
+    {
+      "step": 2,
+      "title": "Planta Baja - Acceso Principal",
+      "description": "NPT +0.65m. Acceso principal con puerta doble hoja WPC color Nogal (P-04). Cerradura TECDOFY H5H. Piso LAMOSA Sinatra Gris.",
+      "highlights": ["NPT +0.65m", "Puerta WPC Nogal", "Cerradura WIFI"],
+      "camera": { "pos": [0, 4, 22], "target": [0, 2, 0] },
+      "focus": "pb",
+      "specs": [
+        { "label": "Puerta P-04", "value": "Doble hoja WPC Nogal SIN-12" },
+        { "label": "Cerradura", "value": "TECDOFY MOD. H5H" },
+        { "label": "Piso", "value": "LAMOSA Sinatra Gris 44x44cm" },
+        { "label": "Muro exterior", "value": "Piedra Georgetown INTERSTONE" }
+      ]
+    },
+    {
+      "step": 3,
+      "title": "Nivel 1 - Departamento Tipo",
+      "description": "NPT +3.25m. Departamentos con 2 recámaras. Piso CASTEL Geo Silver 60x60cm. Cancelería aluminio 3\" negro con cristal 6mm.",
+      "highlights": ["NPT +3.25m", "2 Recámaras", "Piso CASTEL"],
+      "camera": { "pos": [20, 10, 20], "target": [0, 7, 0] },
+      "focus": "n1",
+      "specs": [
+        { "label": "Piso interior", "value": "CASTEL Geo Silver 60x60cm" },
+        { "label": "Cancelería", "value": "Aluminio 3\" negro, cristal 6mm" },
+        { "label": "Muros", "value": "Pasta CEMIX Reserved White" },
+        { "label": "Closet", "value": "MDF Arauco Monarca" }
+      ]
+    },
+    {
+      "step": 4,
+      "title": "Niveles 2 y 3 - Balcones en \"L\"",
+      "description": "NPT +5.85m y +8.45m. Balcones en forma de \"L\" en ambos laterales. Barandales acero color Pimienta K5-12 (COMEX).",
+      "highlights": ["Balcones en L", "Barandales acero", "Pimienta K5-12"],
+      "camera": { "pos": [-22, 14, 18], "target": [0, 12, 0] },
+      "focus": "n2-n3",
+      "specs": [
+        { "label": "Barandal H-02/03", "value": "Acero tubular 1.5\"x1.5\"" },
+        { "label": "Color", "value": "Pimienta K5-12 COMEX" },
+        { "label": "Solera", "value": "1.5\" x 1/4\" horizontal" },
+        { "label": "Perfiles", "value": "Verticales 1/2\"" }
+      ]
+    },
+    {
+      "step": 5,
+      "title": "Nivel 4 - Último Piso Habitable",
+      "description": "NPT +11.05m. Último nivel con acabados premium. Molduras de concreto colado en sitio color Harrison Gray AP46-5.",
+      "highlights": ["NPT +11.05m", "Molduras Harrison Gray", "Acabados premium"],
+      "camera": { "pos": [18, 22, 22], "target": [0, 22, 0] },
+      "focus": "n4",
+      "specs": [
+        { "label": "Molduras", "value": "Concreto colado en sitio" },
+        { "label": "Pintura", "value": "PRISA Harrison Gray AP46-5" },
+        { "label": "Muros", "value": "Aplanado caracoleado" },
+        { "label": "Ventanales", "value": "Aluminio negro cristal 6mm" }
+      ]
+    },
+    {
+      "step": 6,
+      "title": "Azotea - NPT +13.65m",
+      "description": "Impermeabilizante IMPAC 3.5mm. Pretil perimetral. Escotilla H-08 acero Portafolio. Escalera marina H-07 tubular.",
+      "highlights": ["NPT +13.65m", "IMPAC 3.5mm", "Escotilla acero"],
+      "camera": { "pos": [15, 32, 20], "target": [0, 27, 0] },
+      "focus": "azotea",
+      "specs": [
+        { "label": "Impermeabilizante", "value": "IMPAC Hogar 3.5mm" },
+        { "label": "Escotilla H-08", "value": "Acero Portafolio 313-06" },
+        { "label": "Escalera H-07", "value": "Tubular 1\"x1\" marina" },
+        { "label": "Pretil", "value": "Perimetral de concreto" }
+      ]
+    },
+    {
+      "step": 7,
+      "title": "Cancelería y Ventanales",
+      "description": "Sistema de ventanales V-01 a V-09. Aluminio 3\" color negro con cristal claro templado 6mm. Fijo + corrediza.",
+      "highlights": ["V-01 a V-09", "Aluminio 3\" negro", "Cristal 6mm"],
+      "camera": { "pos": [12, 12, 18], "target": [0, 10, 5] },
+      "focus": "windows",
+      "specs": [
+        { "label": "V-01/02/03", "value": "1 fijo + 1 corrediza" },
+        { "label": "V-06/08/09", "value": "3 fijos + 1 corrediza" },
+        { "label": "V-04", "value": "Louver 2 rejillas REFLECTO" },
+        { "label": "V-07", "value": "Sifón con película privacidad" }
+      ]
+    },
+    {
+      "step": 8,
+      "title": "Acabados Exteriores",
+      "description": "Muros pasta CEMIX ADEBLOK PLUS caracoleado. Pintura PRISA Ivory Too AP57-1. Molduras Harrison Gray. Piedra Georgetown.",
+      "highlights": ["CEMIX ADEBLOK", "Ivory Too", "Georgetown"],
+      "camera": { "pos": [-25, 15, 20], "target": [-10, 12, 0] },
+      "focus": "finishes",
+      "specs": [
+        { "label": "Muro 2 (Exterior)", "value": "CEMIX ADEBLOK Constructor" },
+        { "label": "Pintura", "value": "PRISA Ivory Too AP57-1" },
+        { "label": "Piedra", "value": "Georgetown INTERSTONE" },
+        { "label": "Columnas (Muro 9)", "value": "PRISA Harrison Gray AP46-5" }
+      ]
+    }
+  ]
+}
