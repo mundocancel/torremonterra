@@ -141,9 +141,25 @@ function createBuilding() {
 
     const baseY = levelData.npt * SCALE;
 
-    // Volumen principal y moldura perimetral de concreto.
-    addMesh(group, new THREE.BoxGeometry(W, H, D), wallMat, [0, baseY + H / 2, 0]);
-    addMesh(group, new THREE.BoxGeometry(W + 0.32, 0.22, D + 0.32), concreteMat, [0, baseY + 0.11, 0]);
+    // Losa de entrepiso y moldura perimetral de concreto.
+    addMesh(group, new THREE.BoxGeometry(W, 0.22, D), concreteMat, [0, baseY + 0.11, 0]);
+
+    // Muros perimetrales ahuecados (fachadas con grosor real)
+    const wallThick = 0.3;
+    addMesh(group, new THREE.BoxGeometry(W, H, wallThick), wallMat, [0, baseY + H / 2, D / 2 - wallThick / 2]); // Muro Frente
+    addMesh(group, new THREE.BoxGeometry(W, H, wallThick), wallMat, [0, baseY + H / 2, -D / 2 + wallThick / 2]); // Muro Trasero
+    addMesh(group, new THREE.BoxGeometry(wallThick, H, D - wallThick * 2), wallMat, [-W / 2 + wallThick / 2, baseY + H / 2, 0]); // Muro Izq
+    addMesh(group, new THREE.BoxGeometry(wallThick, H, D - wallThick * 2), wallMat, [W / 2 - wallThick / 2, baseY + H / 2, 0]); // Muro Der
+
+    // Muros divisorios interiores y cubo de escaleras (en niveles habitables y PB)
+    if (['pb', 'n1', 'n2', 'n3', 'n4'].includes(key)) {
+      // Muro divisorio central entre departamentos (Eje longitudinal)
+      addMesh(group, new THREE.BoxGeometry(wallThick * 0.7, H - 0.22, D * 0.65), wallMat, [0, baseY + H / 2, -D * 0.1]);
+      // Muro transversal para recámaras / servicios
+      addMesh(group, new THREE.BoxGeometry(W * 0.85, H - 0.22, wallThick * 0.7), wallMat, [0, baseY + H / 2, -D * 0.15]);
+      // Paredes del cubo de escaleras central
+      addMesh(group, new THREE.BoxGeometry(1.6 * SCALE, H - 0.22, wallThick * 0.7), stairMat, [0, baseY + H / 2, D * 0.22]);
+    }
 
     if (key === 'pb') {
       // PB: zócalo Brier Branch, puerta doble central y dos accesos laterales.
