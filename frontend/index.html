@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Torre MONTERRA - Modelo 3D</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div id="canvas-container"></div>
+
+<div id="loading">
+  <div class="spinner"></div>
+  <div>Cargando modelo 3D...</div>
+</div>
+
+<div id="header" class="panel">
+  <h1>TORRE MONTERRA</h1>
+  <div class="sub">PROYECTO ARQUITECTÓNICO V2</div>
+  <div class="info">
+    <strong>Ubicación:</strong> Monterra<br>
+    <strong>Tipo:</strong> Edificio Departamentos<br>
+    <strong>Niveles:</strong> PB + 4 + Azotea<br>
+    <strong>Altura:</strong> 13.65 m<br>
+    <strong>Planta:</strong> 11.72 × 10.33 m<br>
+    <strong>Clave:</strong> MON-EDI-TT-ARQ
+  </div>
+</div>
+
+<div id="controls" class="panel">
+  <h3>📐 NIVELES</h3>
+  <button class="btn active" data-level="all">Vista Completa <span>Todos</span></button>
+  <button class="btn" data-level="azotea">Azotea <span>+13.65m</span></button>
+  <button class="btn" data-level="4">Nivel 4 <span>+11.05m</span></button>
+  <button class="btn" data-level="3">Nivel 3 <span>+8.45m</span></button>
+  <button class="btn" data-level="2">Nivel 2 <span>+5.85m</span></button>
+  <button class="btn" data-level="1">Nivel 1 <span>+3.25m</span></button>
+  <button class="btn" data-level="pb">Planta Baja <span>+0.65m</span></button>
+  <h3 class="controls-section-title">🎨 VISTA</h3>
+  <button class="btn" id="btn-wireframe">Wireframe</button>
+  <button class="btn" id="btn-reset">Reset Cámara</button>
+  <button class="btn" id="btn-rotate">Auto-Rotar</button>
+</div>
+
+<div id="info" class="panel">
+  <h4>📋 ESPECIFICACIONES</h4>
+  <p id="info-text">
+    <strong>Acabados principales:</strong><br>
+    • Muros: Pasta CEMIX ADEBLOK PLUS caracoleado<br>
+    • Pintura: PRISA Reserved White / Ivory Too<br>
+    • Molduras: Concreto colado, Harrison Gray<br>
+    • Cancelería: Aluminio 3" negro, cristal 6mm<br>
+    • Herrería: Acero color Pimienta K5-12
+  </p>
+</div>
+
+<div id="legend" class="panel">
+  <h4>🎨 MATERIALES</h4>
+  <div class="legend-item"><div class="legend-color" style="background:#e8e4dc"></div>Muros Reserved White</div>
+  <div class="legend-item"><div class="legend-color" style="background:#6b6f75"></div>Molduras Harrison Gray</div>
+  <div class="legend-item"><div class="legend-color" style="background:#1a1a1a"></div>Cancelería Aluminio</div>
+  <div class="legend-item"><div class="legend-color" style="background:#88ccee; opacity:0.6"></div>Cristal 6mm</div>
+  <div class="legend-item"><div class="legend-color" style="background:#8b6f47"></div>WPC Nogal</div>
+  <div class="legend-item"><div class="legend-color" style="background:#a89882"></div>Piedra Georgetown</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+<script src="js/app.js" defer></script>
+
+</body>
+</html>
