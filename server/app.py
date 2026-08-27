@@ -141,6 +141,8 @@ def inventory():
     resultado = {}
     for material_id, info in inventario_json.items():
         snapshot = snapshots.get(material_id, {})
+        # Snapshot de DB (actualizado por movimientos)
+        cant_db = snapshot.get("cantidad_disponible", info.get("cantidad_disponible", 0))
         resultado[material_id] = {
             "tipo_material": info.get("tipo_material", ""),
             "unidad_medida": info.get("unidad_medida", ""),
@@ -148,18 +150,18 @@ def inventory():
             "cantidad_minima": info.get("cantidad_minima", 0),
             "proveedor_principal": info.get("proveedor_principal", ""),
             "costo_unitario": info.get("costo_unitario", 0),
-            # Snapshot de DB (actualizado por movimientos)
-            "cantidad_disponible_db": snapshot.get("cantidad_disponible", info.get("cantidad_disponible", 0)),
+            "cantidad_disponible_db": cant_db,
+            "alerta_stock_negativo": cant_db < 0,
             "fecha_actualizacion_db": snapshot.get("fecha_actualizacion", None),
         }
-    
     return jsonify(resultado)
 
 @app.route("/api/inventory/snapshot/<material_id>")
 def inventory_snapshot(material_id):
-    """Snapshot actual de un material desde DB."""
+    """Snapshot actual de un material desde DB, con flag de stock negativo."""
     snapshot = get_inventory_snapshot(material_id)
     if snapshot:
+        snapshot["alerta_stock_negativo"] = snapshot.get("cantidad_disponible", 0) < 0
         return jsonify(snapshot)
     return jsonify({"error": "Material no encontrado"}), 404
 
@@ -186,14 +188,18 @@ def inventory_move():
         ref_instalacion_id=ref_instalacion_id or None
     )
     
-    # Retornar snapshot actualizado
+    # Retornar snapshot actualizado, con alerta si el stock quedó negativo
     snapshot = get_inventory_snapshot(material_id)
+    alerta = False
+    if snapshot is not None:
+        alerta = snapshot.get("cantidad_disponible", 0) < 0
     return jsonify({
         "movimiento_id": mov_id,
         "material_id": material_id,
         "tipo": tipo,
         "cantidad": cantidad,
-        "snapshot_actualizado": snapshot
+        "snapshot_actualizado": snapshot,
+        "alerta_stock_negativo": alerta,
     })
 
 @app.route("/api/inventory/movements")
