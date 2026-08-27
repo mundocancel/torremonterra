@@ -24,6 +24,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_PATH = os.path.join(SCRIPT_DIR, "monterra.json")
 
 def load_json():
+    """Carga monterra.json con fallback seguro para estructuras faltantes."""
     with open(DATA_PATH, "r", encoding="utf-8") as f:
         return json.load(f)
 
@@ -38,11 +39,13 @@ init_db()
 
 @app.route("/api/catalog/pieces")
 def catalog_pieces():
-    return jsonify(load_json()["catalogos"]["piezas_catalogo"])
+    data = load_json()
+    return jsonify(data.get("catalogos", {}).get("piezas_catalogo", []))
 
 @app.route("/api/catalog/types")
 def catalog_types():
-    return jsonify(load_json()["catalogos"]["tipos_pieza"])
+    data = load_json()
+    return jsonify(data.get("catalogos", {}).get("tipos_pieza", []))
 
 @app.route("/api/catalog/components")
 def catalog_components():
@@ -63,9 +66,10 @@ def catalog_hardware():
 @app.route("/api/catalog/rules")
 def catalog_rules():
     data = load_json()
+    reglas = data.get("catalogos", {}).get("reglas_calculo", {})
     return jsonify({
-        "corrediza_3pulg": data["catalogos"]["reglas_calculo"]["corrediza_3pulg"],
-        "fijo_inferior": data["catalogos"]["reglas_calculo"]["fijo_inferior"],
+        "corrediza_3pulg": reglas.get("corrediza_3pulg", []),
+        "fijo_inferior": reglas.get("fijo_inferior", []),
     })
 
 @app.route("/api/catalog/calculate", methods=["POST"])
@@ -232,9 +236,21 @@ def create_piece():
         if field not in body:
             return jsonify({"error": f"Campo requerido: {field}"}), 400
     
+    # Validar que pieza_catalogo_id existe en el catálogo
+    data = load_json()
+    catalogo_piezas = data.get("catalogos", {}).get("piezas_catalogo", [])
+    catalogo_ids = {p.get("codigo_plano") for p in catalogo_piezas if p.get("codigo_plano")}
+    
+    pieza_catalogo_id = body["pieza_catalogo_id"]
+    if pieza_catalogo_id not in catalogo_ids:
+        return jsonify({
+            "error": f"pieza_catalogo_id '{pieza_catalogo_id}' no existe en el catálogo",
+            "catalogo_disponible": sorted(catalogo_ids)
+        }), 400
+    
     piece_id = add_piece_installation(
         codigo_plano=body["codigo_plano"],
-        pieza_catalogo_id=body["pieza_catalogo_id"],
+        pieza_catalogo_id=pieza_catalogo_id,
         departamento_id=body["departamento_id"],
         torre_codigo=body["torre_codigo"],
         nivel_nombre=body["nivel_nombre"],
