@@ -67,6 +67,7 @@ function init() {
   // Eventos
   window.addEventListener('resize', onResize);
   setupControls();
+  setupDashboardListener();
 
   document.getElementById('loading').classList.add('hidden');
   animate();
@@ -383,13 +384,14 @@ function addMainAccess(group, baseY, W, D, accessMat, molduraMat) {
   allMeshes.push(dintel);
 }
 
-// ============ CONTROLES ============
+// ============ CONTROLES UI ============
 function setupControls() {
   document.querySelectorAll('.btn[data-level]').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.btn[data-level]').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       showLevel(btn.dataset.level);
+      zoomToLevel(btn.dataset.level);
     });
   });
 
@@ -399,17 +401,63 @@ function setupControls() {
   });
 
   document.getElementById('btn-reset').addEventListener('click', () => {
-    camera.position.set(35, 25, 35);
-    controls.target.set(0, 13, 0);
-    showLevel('all');
-    document.querySelectorAll('.btn[data-level]').forEach(b => b.classList.remove('active'));
-    document.querySelector('.btn[data-level="all"]').classList.add('active');
+    resetCamera();
   });
 
   document.getElementById('btn-rotate').addEventListener('click', () => {
     controls.autoRotate = !controls.autoRotate;
     controls.autoRotateSpeed = 1.5;
   });
+}
+
+// ============ DASHBOARD LISTENER (minimalista) ============
+// Escucha eventos del dashboard para sincronizar selecciones con el visor 3D.
+// Tipos soportados: 'nivel' (valor = clave del nivel o 'reset'), 'reset' (reset general).
+function setupDashboardListener() {
+  window.addEventListener('dashboard-event', (e) => {
+    const { tipo, valor } = e.detail;
+
+    if (tipo === 'nivel') {
+      if (valor === 'reset') {
+        resetCamera();
+      } else {
+        // Valor es la clave del nivel: pb, n1, n2, n3, n4, azotea
+        // Validamos que sea una clave conocida antes de aplicar
+        if (LEVELS[valor]) {
+          showLevel(valor);
+          zoomToLevel(valor);
+        } else {
+          console.warn('Nivel desconocido:', valor);
+        }
+      }
+    }
+
+    if (tipo === 'reset') {
+      resetCamera();
+    }
+  });
+}
+
+function zoomToLevel(nivelKey) {
+  const level = LEVELS[nivelKey];
+  if (!level) return;
+
+  // Altura del nivel en coordenadas 3D (SCALE aplicado)
+  const targetY = level.npt * SCALE;
+  // Apuntar la cámara al centro del nivel
+  controls.target.set(0, targetY, 0);
+  // Posicionar cámara frente al edificio, a la altura del nivel
+  camera.position.set(14, targetY + 4, 14);
+  controls.update();
+}
+
+function resetCamera() {
+  camera.position.set(35, 25, 35);
+  controls.target.set(0, 13, 0);
+  controls.update();
+  showLevel('all');
+  document.querySelectorAll('.btn[data-level]').forEach(b => b.classList.remove('active'));
+  document.querySelector('.btn[data-level="all"]').classList.add('active');
 }
 
 function showLevel(level) {
