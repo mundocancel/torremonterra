@@ -18,10 +18,11 @@ from db import (
     get_inventory_movements,
 )
 
-app = Flask(__name__)
-
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_PATH = os.path.join(SCRIPT_DIR, "monterra.json")
+FRONTEND_DIR = os.path.join(SCRIPT_DIR, "..", "frontend")
+
+app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path="/frontend")
 
 def load_json():
     """Carga monterra.json con fallback seguro para estructuras faltantes."""
@@ -45,7 +46,7 @@ def catalog_pieces():
 @app.route("/api/catalog/types")
 def catalog_types():
     data = load_json()
-    return jsonify(data.get("catalogos", {}).get("tipos_pieza", []))
+    return jsonify(data.get("catalogos", {}).get("tipos_de_pieza", []))
 
 @app.route("/api/catalog/components")
 def catalog_components():
@@ -130,7 +131,7 @@ def inventory():
     """Lista inventario: datos del JSON + snapshot de DB."""
     data = load_json()
     inventario_json = data["inventario"]
-    
+
     conn = get_db()
     cur = conn.execute("SELECT * FROM inventory_snapshot")
     rows = cur.fetchall()
