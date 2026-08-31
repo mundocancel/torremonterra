@@ -255,6 +255,24 @@ const LS = {
 };
 
 /* ===================================================================
+   DATA DEL DEPARTAMENTO
+   =================================================================== */
+function deptoStorageKey(torre, nivel, depto){
+  return `depto|${torre}|${nivel}|${depto}`;
+}
+
+function cargarDataDepto(){
+  const key = deptoStorageKey(state.torre, state.nivel, state.depto);
+  return LS.get(key) || {};
+}
+
+function guardarDataDepto(data){
+  const key = deptoStorageKey(state.torre, state.nivel, state.depto);
+  LS.set(key, data);
+  return true;
+}
+
+/* ===================================================================
    ESTADO
    =================================================================== */
 let state = {
