@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MONTERRA · Taller de Ventanería</title>
+    <style>
+        :root {
+            --primary: #1E4D6B;
+            --primary-dark: #153A52;
+            --accent: #E8722C;
+            --accent-light: #FCF1E0;
+            --success: #2E7D4F;
+            --alert: #C77700;
+            --danger: #D94F4F;
+            --bg: #F4F6F8;
+            --surface: #FFFFFF;
+            --ink: #1C2733;
+            --ink-soft: #5B6B78;
+            --line: #DEE4E9;
+            --font: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--ink);
+            min-height: 100vh;
+            padding: 0;
+        }
+        
+        .app-header {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .app-header h1 {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        
+        .app-header .subtitle {
+            font-size: 0.75rem;
+            color: #BFD4E0;
+            margin-top: 2px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 0;
+            background: white;
+            border-bottom: 1px solid var(--line);
+            padding: 0 1rem;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.25rem;
+            border: none;
+            background: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--ink-soft);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .tab:hover { color: var(--ink); }
+        
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        .main-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+        
+        .section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--ink);
+        }
+        
+        .piece-list {
+            display: grid;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .piece-item {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .piece-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .piece-info h3 {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .piece-info .piece-meta {
+            font-size: 0.75rem;
+            color: var(--ink-soft);
+            margin-top: 2px;
+        }
+        
+        .piece-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+        
+        .badge-pending { background: var(--ink-soft); color: white; }
+        .badge-progress { background: var(--accent); color: white; }
+        .badge-done { background: var(--success); color: white; }
+        
+        .piece-detail {
+            display: none;
+            animation: fadeIn 0.2s ease;
+        }
+        
+        .piece-detail.active { display: block; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .card {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .card-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--line);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .croquis-container {
+            background: var(--bg);
+            border-radius: 6px;
+            padding: 1rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .croquis-container canvas {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .cut-list {
+            list-style: none;
+        }
+        
+        .cut-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid var(--line);
+        }
+        
+        .cut-item:last-child { border-bottom: none; }
+        
+        .cut-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--success);
+        }
+        
+        .cut-item.checked .cut-label {
+            text-decoration: line-through;
+            color: var(--ink-soft);
+        }
+        
+        .cut-label {
+            flex: 1;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .cut-measure {
+            font-size: 0.8rem;
+            color: var(--ink-soft);
+            font-family: ui-monospace, monospace;
+        }
+        
+        .cut-qty {
+            background: var(--primary);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            min-width: 28px;
+            text-align: center;
+        }
+        
+        .input-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .input-group {
+            flex: 1;
+        }
+        
+        .input-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--ink-soft);
+            margin-bottom: 0.25rem;
+        }
+        
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1.5px solid var(--line);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--ink);
+        }
+        
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.25rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn-primary:hover { background: #d6621e; }
+        
+        .btn-secondary {
+            background: var(--line);
+            color: var(--ink);
+        }
+        
+        .btn-secondary:hover { background: #c8d0d8; }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .actions-bar {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--line);
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background: var(--line);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--success);
+            transition: width 0.3s ease;
+        }
+        
+        .glass-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--line);
+        }
+        
+        .glass-item:last-child { border-bottom: none; }
+        
+        .glass-dims {
+            font-family: ui-monospace, monospace;
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .supply-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.4rem 0;
+            border-bottom: 1px solid var(--line);
+            font-size: 0.8rem;
+        }
+        
+        .supply-item:last-child { border-bottom: none; }
+        
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.8rem;
+            color: var(--ink-soft);
+            cursor: pointer;
+            margin-bottom: 1rem;
+            background: none;
+            border: none;
+        }
+        
+        .back-btn:hover { color: var(--primary); }
+        
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--ink-soft);
+        }
+        
+        @media print {
+            .app-header, .tabs, .actions-bar, .back-btn { display: none; }
+            .piece-detail.active { display: block !important; }
+            .card { break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <header class="app-header">
+        <div>
+            <h1>🏗️ MONTERRA · Taller</h1>
+            <div class="subtitle">Sistema de Despiece y Producción</div>
+        </div>
+    </header>
+    
+    <nav class="tabs">
+        <button class="tab active" data-view="proyecto">Proyecto</button>
+        <button class="tab" data-view="taller">Taller</button>
+        <button class="tab" data-view="dashboard">Dashboard</button>
+    </nav>
+    
+    <main class="main-content">
+        <!-- Vista: Lista de piezas del proyecto -->
+        <div id="view-proyecto" class="view active">
+            <h2 class="section-title">Piezas del Proyecto</h2>
+            <div id="piece-list" class="piece-list"></div>
+        </div>
+        
+        <!-- Vista: Detalle de pieza -->
+        <div id="view-detalle" class="piece-detail">
+            <button class="back-btn" onclick="showView('proyecto')">← Volver a la lista</button>
+            <div id="detalle-content"></div>
+        </div>
+        
+        <!-- Vista: Dashboard -->
+        <div id="view-dashboard" class="view" style="display:none;">
+            <h2 class="section-title">Avance por Torre</h2>
+            <div id="dashboard-content"></div>
+        </div>
+    </main>
+
+    <script>
+        // ==================== DATOS DEL PROYECTO ====================
+        const PROYECTO = {
+            nombre: "MONTERRA",
+            piezas: [
+                { codigo: "V-01", nombre: "Sala PB", sistema: "corrediza_3", ancho: 1990, alto: 2400 },
+                { codigo: "V-02", nombre: "Comedor N1", sistema: "corrediza_3", ancho: 1230, alto: 1600 },
+                { codigo: "V-03", nombre: "Balcón", sistema: "corrediza_3", ancho: 1230, alto: 2400 },
+                { codigo: "V-04", nombre: "Lavandería", sistema: "celosias_fijas", ancho: 740, alto: 400 },
+                { codigo: "V-05", nombre: "Sala N1", sistema: "corrediza_3", ancho: 1990, alto: 1600 },
+                { codigo: "V-06", nombre: "Salas N2-N4", sistema: "corrediza_3", ancho: 1990, alto: 1200, alto_total: 2400 },
+                { codigo: "V-07", nombre: "Baño", sistema: "sifon_eco", ancho: 430, alto: 330, alto_total: 330 },
+                { codigo: "V-08", nombre: "Recámara 1", sistema: "corrediza_3", ancho: 990, alto: 1200, alto_total: 2400 },
+                { codigo: "V-09", nombre: "Recámara 2", sistema: "corrediza_3", ancho: 990, alto: 1200, alto_total: 2400 },
+                { codigo: "P-01", nombre: "Puerta Rec1 (chapa der.)", sistema: "puerta_abitable", ancho: 990, alto: 2400 },
+                { codigo: "P-02", nombre: "Puerta Rec2 (chapa izq.)", sistema: "puerta_abitable", ancho: 990, alto: 2400 },
+            ]
+        };
+
+        const SISTEMAS = {
+            'corrediza_3': 'Corrediza 3"',
+            'celosias_fijas': 'Celosías Fijas',
+            'sifon_eco': 'Sifón Ecológico',
+            'puerta_abitable': 'Puerta Abatible',
+            'ventanal_4_hojas': 'Ventanal 4 Hojas'
+        };
+
+        // ==================== ESTADO LOCAL ====================
+        let estadoPiezas = JSON.parse(localStorage.getItem('monterra_estado') || '{}');
+
+        function guardarEstado() {
+            localStorage.setItem('monterra_estado', JSON.stringify(estadoPiezas));
+        }
+
+        // ==================== RENDERIZADO ====================
+        function renderListaPiezas() {
+            const container = document.getElementById('piece-list');
+            container.innerHTML = PROYECTO.piezas.map(p => {
+                const estado = estadoPiezas[p.codigo] || {};
+                const cortesHechos = (estado.cortes || []).filter(c => c.hecho).length;
+                const totalCortes = estado.cortes ? estado.cortes.length : 0;
+                const pct = totalCortes > 0 ? Math.round((cortesHechos / totalCortes) * 100) : 0;
+                
+                let badgeClass = 'badge-pending';
+                let badgeText = 'Pendiente';
+                if (pct === 100) { badgeClass = 'badge-done'; badgeText = 'Completo'; }
+                else if (pct > 0) { badgeClass = 'badge-progress'; badgeText = `${pct}%`; }
+                
+                return `
+                    <div class="piece-item" onclick="verDetalle('${p.codigo}')">
+                        <div class="piece-info">
+                            <h3>${p.codigo} · ${p.nombre}</h3>
+                            <div class="piece-meta">${SISTEMAS[p.sistema]} · ${p.ancho}×${p.alto}mm</div>
+                        </div>
+                        <div class="piece-status">
+                            <span class="badge ${badgeClass}">${badgeText}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function verDetalle(codigo) {
+            const pieza = PROYECTO.piezas.find(p => p.codigo === codigo);
+            if (!pieza) return;
+            
+            showView('detalle');
+            
+            const container = document.getElementById('detalle-content');
+            container.innerHTML = '<div class="empty-state">Calculando despiece...</div>';
+            
+            try {
+                const body = {
+                    sistema_id: pieza.sistema,
+                    ancho: pieza.ancho,
+                    alto: pieza.alto
+                };
+                if (pieza.alto_total) body.alto_total = pieza.alto_total;
+                
+                const resp = await fetch('/api/calcular', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                
+                const data = await resp.json();
+                if (data.error) {
+                    container.innerHTML = `<div class="empty-state">Error: ${data.error}</div>`;
+                    return;
+                }
+                
+                renderDetalle(pieza, data);
+            } catch (err) {
+                // Modo offline: mostrar datos del proyecto
+                renderDetalleOffline(pieza);
+            }
+        }
+
+        function renderDetalle(pieza, data) {
+            const container = document.getElementById('detalle-content');
+            const estado = estadoPiezas[pieza.codigo] || { cortes: [] };
+            
+            // Croquis
+            const croquisHTML = dibujarCroquis(pieza, data);
+            
+            // Lista de corte
+            const cortesHTML = (data.componentes || []).map((c, i) => {
+                const corteId = `${pieza.codigo}-c${i}`;
+                const corte = (estado.cortes || []).find(x => x.id === corteId);
+                const checked = corte && corte.hecho ? 'checked' : '';
+                const doneClass = checked ? 'checked' : '';
+                
+                const long = c.longitud_mm !== null ? `${c.longitud_mm}mm` : 'N/A';
+                return `
+                    <li class="cut-item ${doneClass}">
+                        <input type="checkbox" ${checked} onchange="toggleCorte('${pieza.codigo}', '${corteId}')">
+                        <span class="cut-label">${c.pieza}</span>
+                        <span class="cut-qty">×${c.cantidad}</span>
+                        <span class="cut-measure">${long}</span>
+                    </li>
+                `;
+            }).join('');
+            
+            // Vidrios
+            const vidriosHTML = (data.vidrios || []).map(v => {
+                if (!v.cantidad || v.cantidad === 0) return '';
+                const ancho = v.ancho_mm ? v.ancho_mm.toFixed(1) : 'N/A';
+                const alto = v.alto_mm ? v.alto_mm.toFixed(1) : 'N/A';
+                return `
+                    <div class="glass-item">
+                        <span class="cut-label">${v.posicion}</span>
+                        <span class="glass-dims">${ancho} × ${alto} mm</span>
+                        <span class="cut-qty">×${v.cantidad}</span>
+                    </div>
+                `;
+            }).join('');
+            
+            // Insumos
+            const insumosHTML = (data.insumos || []).map(i => {
+                if (!i.cantidad || i.cantidad === 0) return '';
+                const qty = i.unidad === 'metro_lineal' ? (i.cantidad / 1000).toFixed(2) + 'm' : i.cantidad;
+                return `
+                    <div class="supply-item">
+                        <span>${i.nombre}</span>
+                        <span class="cut-measure">${qty}</span>
+                    </div>
+                `;
+            }).join('');
+            
+            // Progreso
+            const totalCortes = (data.componentes || []).length;
+            const cortesHechos = (estado.cortes || []).filter(c => c.hecho).length;
+            const pct = totalCortes > 0 ? Math.round((cortesHechos / totalCortes) * 100) : 0;
+            
+            container.innerHTML = `
+                <h2 class="section-title">${pieza.codigo} · ${pieza.nombre}</h2>
+                <div style="font-size:0.8rem;color:var(--ink-soft);margin-bottom:1rem;">
+                    ${SISTEMAS[pieza.sistema]} · ${pieza.ancho}×${pieza.alto}mm
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">📐 Croquis de Despiece</div>
+                    <div class="croquis-container">${croquisHTML}</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">📋 Lista de Corte</div>
+                    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem;">
+                        <div class="progress-bar" style="flex:1;">
+                            <div class="progress-fill" style="width:${pct}%;"></div>
+                        </div>
+                        <span style="font-size:0.8rem;font-weight:600;">${cortesHechos}/${totalCortes}</span>
+                    </div>
+                    <ul class="cut-list">${cortesHTML}</ul>
+                </div>
+                
+                ${vidriosHTML ? `
+                <div class="card">
+                    <div class="card-title">🪟 Vidrios</div>
+                    ${vidriosHTML}
+                </div>
+                ` : ''}
+                
+                ${insumosHTML ? `
+                <div class="card">
+                    <div class="card-title">📦 Insumos</div>
+                    ${insumosHTML}
+                </div>
+                ` : ''}
+                
+                <div class="actions-bar">
+                    <button class="btn btn-secondary" onclick="imprimir()">🖨️ Imprimir</button>
+                    <button class="btn btn-primary" onclick="avanzarEstado('${pieza.codigo}')">➡️ Avanzar</button>
+                </div>
+            `;
+        }
+
+        function renderDetalleOffline(pieza) {
+            const container = document.getElementById('detalle-content');
+            container.innerHTML = `
+                <h2 class="section-title">${pieza.codigo} · ${pieza.nombre}</h2>
+                <div style="font-size:0.8rem;color:var(--ink-soft);margin-bottom:1rem;">
+                    ${SISTEMAS[pieza.sistema]} · ${pieza.ancho}×${pieza.alto}mm
+                </div>
+                <div class="card">
+                    <div class="card-title">⚠️ Sin conexión</div>
+                    <p style="font-size:0.85rem;color:var(--ink-soft);">
+                        Mostrando datos del proyecto. Conectate al servidor para el despiece completo.
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="card-title">📐 Croquis</div>
+                    <div class="croquis-container">${dibujoGenerico(pieza)}</div>
+                </div>
+            `;
+        }
+
+        // ==================== CROQUIS ====================
+        function dibujarCroquis(pieza, data) {
+            const w = pieza.ancho;
+            const h = pieza.alto;
+            const scale = Math.min(300 / w, 400 / h);
+            const sw = w * scale;
+            const sh = h * scale;
+            
+            let svg = `<svg viewBox="0 0 ${sw + 40} ${sh + 40}" style="max-width:100%;">`;
+            
+            // Marco exterior
+            svg += `<rect x="20" y="20" width="${sw}" height="${sh}" fill="none" stroke="#1E4D6B" stroke-width="3"/>`;
+            
+            if (pieza.sistema === 'corrediza_3' && sw > 100) {
+                const midX = 20 + sw / 2;
+                // Panel fijo
+                svg += `<rect x="20" y="20" width="${sw/2 - 2}" height="${sh}" fill="#4FD1E8" fill-opacity="0.3" stroke="#4FD1E8" stroke-width="1.5"/>`;
+                svg += `<text x="${20 + sw/4}" y="${sh/2 + 25}" text-anchor="middle" font-size="10" fill="#1E4D6B">FIJO</text>`;
+                
+                // Panel corredizo
+                svg += `<rect x="${midX + 2}" y="20" width="${sw/2 - 2}" height="${sh}" fill="#E8722C" fill-opacity="0.2" stroke="#E8722C" stroke-width="1.5"/>`;
+                svg += `<text x="${midX + sw/4 + 2}" y="${sh/2 + 25}" text-anchor="middle" font-size="10" fill="#1E4D6B">CORREDIZO</text>`;
+                
+                // Sentido
+                svg += `<path d="M ${20 + sw*0.25} ${sh + 35} l 5 -5 m -5 5 l 5 5" stroke="#1E4D6B" stroke-width="1.5" fill="none"/>`;
+                svg += `<path d="M ${midX + sw*0.25} ${sh + 35} l -5 -5 m 5 5 l -5 5" stroke="#1E4D6B" stroke-width="1.5" fill="none"/>`;
+            } else if (pieza.sistema === 'puerta_abitable') {
+                svg += `<rect x="25" y="25" width="${sw - 10}" height="${sh - 10}" fill="#4FD1E8" fill-opacity="0.3" stroke="#4FD1E8" stroke-width="1.5"/>`;
+                // Sentido de apertura
+                svg += `<path d="M ${20 + sw - 10} ${20 + sh} A ${sw-10} ${sh-10} 0 0 1 ${20 + sw} ${20 + sh - 10}" fill="none" stroke="#E8722C" stroke-width="2"/>`;
+                svg += `<text x="${20 + sw/2}" y="${sh + 35}" text-anchor="middle" font-size="10" fill="#1E4D6B">ABATIBLE</text>`;
+            } else {
+                svg += `<rect x="25" y="25" width="${sw - 10}" height="${sh - 10}" fill="#4FD1E8" fill-opacity="0.3" stroke="#4FD1E8" stroke-width="1.5"/>`;
+            }
+            
+            // Medidas
+            svg += `<text x="${20 + sw/2}" y="12" text-anchor="middle" font-size="9" fill="#5B6B78">${w}mm</text>`;
+            svg += `<text x="12" y="${20 + sh/2}" text-anchor="middle" font-size="9" fill="#5B6B78" transform="rotate(-90, 12, ${20 + sh/2})">${h}mm</text>`;
+            
+            svg += `</svg>`;
+            return svg;
+        }
+
+        function dibujoGenerico(pieza) {
+            return dibujarCroquis(pieza, { componentes: [], vidrios: [] });
+        }
+
+        // ==================== ESTADO ====================
+        function toggleCorte(codigo, corteId) {
+            if (!estadoPiezas[codigo]) estadoPiezas[codigo] = { cortes: [] };
+            const idx = estadoPiezas[codigo].cortes.findIndex(c => c.id === corteId);
+            if (idx >= 0) {
+                estadoPiezas[codigo].cortes[idx].hecho = !estadoPiezas[codigo].cortes[idx].hecho;
+            } else {
+                estadoPiezas[codigo].cortes.push({ id: corteId, hecho: true });
+            }
+            guardarEstado();
+            renderListaPiezas();
+            verDetalle(codigo);
+        }
+
+        function avanzarEstado(codigo) {
+            // Marcar todos como hechos
+            const pieza = PROYECTO.piezas.find(p => p.codigo === codigo);
+            if (!pieza) return;
+            
+            const container = document.getElementById('detalle-content');
+            const checkboxes = container.querySelectorAll('.cut-item input[type="checkbox"]');
+            if (!estadoPiezas[codigo]) estadoPiezas[codigo] = { cortes: [] };
+            
+            checkboxes.forEach((cb, i) => {
+                cb.checked = true;
+                const id = `${codigo}-c${i}`;
+                const idx = estadoPiezas[codigo].cortes.findIndex(c => c.id === id);
+                if (idx >= 0) {
+                    estadoPiezas[codigo].cortes[idx].hecho = true;
+                } else {
+                    estadoPiezas[codigo].cortes.push({ id, hecho: true });
+                }
+            });
+            
+            guardarEstado();
+            renderListaPiezas();
+            verDetalle(codigo);
+        }
+
+        // ==================== NAVEGACIÓN ====================
+        function showView(view) {
+            document.querySelectorAll('.view').forEach(v => v.style.display = 'none');
+            document.querySelectorAll('.piece-detail').forEach(v => v.classList.remove('active'));
+            
+            const el = document.getElementById(`view-${view}`);
+            if (el) {
+                if (view === 'detalle') el.classList.add('active');
+                else el.style.display = 'block';
+            }
+            
+            document.querySelectorAll('.tab').forEach(t => {
+                t.classList.toggle('active', t.dataset.view === view);
+            });
+        }
+
+        // ==================== TABS ====================
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                showView(tab.dataset.view);
+            });
+        });
+
+        // ==================== IMPRIMIR ====================
+        function imprimir() {
+            window.print();
+        }
+
+        // ==================== DASHBOARD ====================
+        function renderDashboard() {
+            const container = document.getElementById('dashboard-content');
+            const total = PROYECTO.piezas.length;
+            const completas = PROYECTO.piezas.filter(p => {
+                const e = estadoPiezas[p.codigo];
+                return e && e.cortes && e.cortes.length > 0 && e.cortes.every(c => c.hecho);
+            }).length;
+            
+            container.innerHTML = `
+                <div class="card">
+                    <div class="card-title">📊 Avance General</div>
+                    <div style="display:flex;align-items:center;gap:1rem;">
+                        <div class="progress-bar" style="flex:1;">
+                            <div class="progress-fill" style="width:${(completas/total)*100}%;"></div>
+                        </div>
+                        <span style="font-size:1.2rem;font-weight:700;">${completas}/${total}</span>
+                    </div>
+                </div>
+                <div class="piece-list">
+                    ${PROYECTO.piezas.map(p => {
+                        const e = estadoPiezas[p.codigo];
+                        const hechas = (e?.cortes || []).filter(c => c.hecho).length;
+                        const totalC = (e?.cortes || []).length;
+                        const pct = totalC > 0 ? Math.round((hechas/totalC)*100) : 0;
+                        return `
+                            <div class="piece-item" onclick="verDetalle('${p.codigo}'); showView('detalle');">
+                                <div class="piece-info">
+                                    <h3>${p.codigo}</h3>
+                                    <div class="piece-meta">${hechas}/${totalC} cortes</div>
+                                </div>
+                                <div style="width:60px;">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width:${pct}%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        // Dashboard tab
+        document.querySelector('[data-view="dashboard"]').addEventListener('click', renderDashboard);
+
+        // ==================== INICIALIZACIÓN ====================
+        renderListaPiezas();
+    </script>
+</body>
+</html>

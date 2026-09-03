@@ -62,6 +62,36 @@ class ExpressionEvaluator(ast.NodeVisitor):
             return left % right
         raise ValueError(f"Operador no soportado: {type(node.op).__name__}")
 
+    def visit_Compare(self, node):
+        """Evalúa comparaciones: x > y, x <= y, etc."""
+        left = self.visit(node.left)
+        result = True
+        for op, comparator in zip(node.ops, node.comparators):
+            right = self.visit(comparator)
+            if isinstance(op, ast.Gt):
+                result = result and (left > right)
+            elif isinstance(op, ast.Lt):
+                result = result and (left < right)
+            elif isinstance(op, ast.GtE):
+                result = result and (left >= right)
+            elif isinstance(op, ast.LtE):
+                result = result and (left <= right)
+            elif isinstance(op, ast.Eq):
+                result = result and (left == right)
+            else:
+                raise ValueError(f"Comparador no soportado: {type(op).__name__}")
+            left = right
+        return result
+
+    def visit_BoolOp(self, node):
+        """Evalúa and / or"""
+        values = [self.visit(v) for v in node.values]
+        if isinstance(node.op, ast.And):
+            return all(values)
+        if isinstance(node.op, ast.Or):
+            return any(values)
+        raise ValueError(f"Operador booleano no soportado: {type(node.op).__name__}")
+
     def visit_UnaryOp(self, node):
         operand = self.visit(node.operand)
         if isinstance(node.op, ast.USub):
@@ -161,22 +191,20 @@ def evaluate_expression(expr_str: str, context: Dict[str, Any]) -> Any:
 
 # ============================================================================
 # CÁLCULO DE SISTEMA
-# ============================================================================
-
-def calcular_sistema(sistema_id: str, ancho: float, alto: float,
-                     alto_total: Optional[float] = None) -> Dict[str, Any]:
-    """Calcula componentes, vidrios e insumos para un sistema dado.
+def calcular_sistema(sistema_id: str,
+                     ancho: float,
+                     alto: float,
+                     alto_total: Optional[float] = None,
+                     **parametros_extra) -> Dict[str, Any]:
+    """Calcula el despiece de un sistema.
 
     Args:
-        sistema_id: ID del sistema (ej. 'corrediza_3', 'celosias_fijas',
-                    'fijo_inferior_ventana_cruz', 'sifon_eco')
+        sistema_id: ID del sistema (ej. 'corrediza_3', 'ventanal_4_hojas')
         ancho: ancho real medido (mm)
-        alto: alto real medido (mm) — para la mayoría es el alto del vano
-        alto_total: alto total del vano (mm) — específicamente para V-06/V-08/V-09
-                   donde el fijo inferior necesita el alto total, no el de la corredera
-
-    Returns:
-        Dict con componentes, vidrios, insumos y resumen por material.
+        alto: alto real medido (mm)
+        alto_total: alto total del vano (mm) — para fijo inferior
+        **parametros_extra: parámetros adicionales del sistema
+            (ej. fijas=2, corredizas=2, mosquitero=False)
     """
     data = load_data()
     sistemas = data['sistemas_formulas']
@@ -196,9 +224,10 @@ def calcular_sistema(sistema_id: str, ancho: float, alto: float,
         'ancho_total': ancho_f,
         'alto_total': alto_total_f,
         'perimetro_total': 2 * (ancho_f + alto_f),
+        **parametros_extra,  # Agregar parámetros configurables
     }
 
-    # Calcular vidrios primero (para disponer de perimetros en insumos)
+    # Vidrios
     vidrios_calc = []
     for v in sistema.get('vidrios', []):
         ancho_v = evaluate_cut(v.get('corte_ancho', {}), context, 'ancho')
@@ -207,13 +236,32 @@ def calcular_sistema(sistema_id: str, ancho: float, alto: float,
             alto_v = evaluate_expression(alto_v_cfg['expresion'], context)
         else:
             alto_v = evaluate_cut(alto_v_cfg, context, 'alto')
-        vidrios_calc.append({
-            'posicion': v.get('posicion', ''),
-            'ancho_mm': round(ancho_v, 2) if ancho_v is not None else None,
-            'alto_mm': round(alto_v, 2) if alto_v is not None else None,
-            'cantidad': v.get('cantidad', 1),
-            'observaciones': v.get('observaciones', ''),
-        })
+        cantidad = v.get('cantidad', 1)
+        if v.get('cantidad_formula'):
+            cantidad = evaluate_expression(v['cantidad_formula']['expresion'], context)
+        if cantidad and cantidad > 0:
+            vidrios_calc.append({
+                'posicion': v.get('posicion', ''),
+                'ancho_mm': round(ancho_v, 2) if ancho_v is not None else None,
+                'alto_mm': round(alto_v, 2) if alto_v is not None else None,
+                'cantidad': round(float(cantidad), 2),
+                'observaciones': v.get('observaciones', ''),
+            })
+
+    # Insumos de mosquitero
+    if parametros_extra.get('mosquitero', False):
+        for ins in sistema.get('insumos_mosquitero', []):
+            qty = ins.get('cantidad', 0)
+            if ins.get('expresion'):
+                qty = evaluate_expression(ins['expresion'], context)
+            if qty and qty > 0:
+                insumos_fijos.append({
+                    'material_id': ins.get('material_id'),
+                    'nombre': ins.get('nombre', ''),
+                    'cantidad': round(float(qty), 2),
+                    'unidad': ins.get('unidad', 'pieza'),
+                    'observaciones': ins.get('observaciones', ''),
+                })
 
     # Variables de perimetro para insumos (basados en vidrios calculados)
     if vidrios_calc:
@@ -235,13 +283,14 @@ def calcular_sistema(sistema_id: str, ancho: float, alto: float,
         cantidad = comp.get('cantidad')
         if comp.get('cantidad_formula'):
             cantidad = evaluate_expression(comp['cantidad_formula']['expresion'], context)
-        componentes.append({
-            'pieza': comp.get('pieza', ''),
-            'material_id': comp.get('material_id'),
-            'longitud_mm': round(longitud, 2) if longitud is not None else None,
-            'cantidad': round(float(cantidad), 2) if cantidad is not None else None,
-            'observaciones': comp.get('observaciones', ''),
-        })
+        if cantidad and cantidad > 0:
+            componentes.append({
+                'pieza': comp.get('pieza', ''),
+                'material_id': comp.get('material_id'),
+                'longitud_mm': round(longitud, 2) if longitud is not None else None,
+                'cantidad': round(float(cantidad), 2) if cantidad is not None else None,
+                'observaciones': comp.get('observaciones', ''),
+            })
 
     # Insumos fijos
     insumos_fijos = []
@@ -253,6 +302,33 @@ def calcular_sistema(sistema_id: str, ancho: float, alto: float,
             'unidad': ins.get('unidad', 'pieza'),
             'observaciones': ins.get('observaciones', ''),
         })
+
+    # Componentes e insumos de mosquitero (solo si se requiere)
+    if parametros_extra.get('mosquitero', False):
+        for comp in sistema.get('componentes_mosquitero', []):
+            corte = comp.get('corte')
+            longitud = evaluate_cut(corte, context) if corte else None
+            cantidad = comp.get('cantidad')
+            if cantidad and cantidad > 0:
+                componentes.append({
+                    'pieza': comp.get('pieza', ''),
+                    'material_id': comp.get('material_id'),
+                    'longitud_mm': round(longitud, 2) if longitud is not None else None,
+                    'cantidad': round(float(cantidad), 2) if cantidad is not None else None,
+                    'observaciones': comp.get('observaciones', ''),
+                })
+        for ins in sistema.get('insumos_mosquitero', []):
+            qty = ins.get('cantidad', 0)
+            if ins.get('expresion'):
+                qty = evaluate_expression(ins['expresion'], context)
+            if qty and qty > 0:
+                insumos_fijos.append({
+                    'material_id': ins.get('material_id'),
+                    'nombre': ins.get('nombre', ''),
+                    'cantidad': round(float(qty), 2),
+                    'unidad': ins.get('unidad', 'pieza'),
+                    'observaciones': ins.get('observaciones', ''),
+                })
 
     # Insumos por expresión
     insumos_expr = []
@@ -274,14 +350,18 @@ def calcular_sistema(sistema_id: str, ancho: float, alto: float,
             try:
                 result = evaluate_expression(si_expr, context)
                 if result:
+                    nombre_final = cond.get('nombre', ins.get('nombre', ''))
+                    observaciones_final = cond.get('observaciones', ins.get('observaciones', ''))
                     insumos_cond.append({
                         'material_id': ins.get('material_id'),
-                        'nombre': ins.get('nombre', ''),
+                        'nombre': nombre_final,
                         'cantidad': cond.get('cantidad', 0),
                         'unidad': ins.get('unidad', 'pieza'),
-                        'condicion': si_expr,
+                        'observaciones': observaciones_final,
                     })
-            except Exception:
+                    break
+            except Exception as e:
+                print(f"ERROR evaluando condicion '{si_expr}': {e}")
                 pass
 
     # Resumen por material_id

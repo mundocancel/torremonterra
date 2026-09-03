@@ -1,6 +1,7 @@
 import json
 import os
 from flask import Flask, jsonify, request
+from calculos import calcular_sistema
 from db import (
     init_db,
     get_db,
@@ -121,6 +122,42 @@ def calculate():
         })
 
     return jsonify({"error": "tipo_calculo no soportado"}), 400
+
+
+# ============================================================================
+# CALCULADORA v2 (motor paramétrico calculos.py)
+# ============================================================================
+
+@app.route("/api/calcular", methods=["POST"])
+def calcular_v2():
+    """Calcula despiece usando el motor paramétrico calculos.py"""
+    body = request.get_json()
+    
+    sistema_id = body.get("sistema_id", "corrediza_3")
+    ancho = float(body.get("ancho", 0))
+    alto = float(body.get("alto", 0))
+    alto_total = body.get("alto_total")
+    
+    # Parámetros extra (para sistemas configurables)
+    params = {}
+    if body.get("fijas") is not None:
+        params["fijas"] = int(body.get("fijas", 2))
+    if body.get("corredizas") is not None:
+        params["corredizas"] = int(body.get("corredizas", 2))
+    if body.get("mosquitero") is not None:
+        params["mosquitero"] = bool(body.get("mosquitero", False))
+    
+    try:
+        resultado = calcular_sistema(
+            sistema_id, 
+            ancho, 
+            alto, 
+            alto_total=alto_total,
+            **params
+        )
+        return jsonify(resultado)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # ============================================================================
 # INVENTARIO (desde monterra.json + DB snapshot)
