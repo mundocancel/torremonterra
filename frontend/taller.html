@@ -290,6 +290,27 @@
         
         .btn-primary:hover { background: #d6621e; }
         
+        .filters {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .filters select {
+            flex: 1;
+            padding: 0.5rem 0.75rem;
+            border: 1.5px solid var(--line);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--ink);
+            background: white;
+        }
+        
+        .filters select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
         .btn-secondary {
             background: var(--line);
             color: var(--ink);
@@ -397,6 +418,22 @@
         <!-- Vista: Lista de piezas del proyecto -->
         <div id="view-proyecto" class="view active">
             <h2 class="section-title">Piezas del Proyecto</h2>
+            <div class="filters">
+                <select id="filter-torre" onchange="renderListaPiezas()">
+                    <option value="">Todas las torres</option>
+                    <option value="T-01">Torre 1</option>
+                    <option value="T-02">Torre 2</option>
+                    <option value="T-03">Torre 3</option>
+                </select>
+                <select id="filter-nivel" onchange="renderListaPiezas()">
+                    <option value="">Todos los niveles</option>
+                    <option value="PB">Planta Baja</option>
+                    <option value="N1">Nivel 1</option>
+                    <option value="N2">Nivel 2</option>
+                    <option value="N3">Nivel 3</option>
+                    <option value="N4">Nivel 4</option>
+                </select>
+            </div>
             <div id="piece-list" class="piece-list"></div>
         </div>
         
@@ -417,18 +454,32 @@
         // ==================== DATOS DEL PROYECTO ====================
         const PROYECTO = {
             nombre: "MONTERRA",
+            torres: [
+                { codigo: "T-01", nombre: "Torre 1", niveles: ["PB", "N1", "N2", "N3", "N4"] },
+                { codigo: "T-02", nombre: "Torre 2", niveles: ["PB", "N1", "N2", "N3", "N4"] },
+                { codigo: "T-03", nombre: "Torre 3", niveles: ["PB", "N1", "N2", "N3", "N4"] }
+            ],
             piezas: [
-                { codigo: "V-01", nombre: "Sala PB", sistema: "corrediza_3", ancho: 1990, alto: 2400 },
-                { codigo: "V-02", nombre: "Comedor N1", sistema: "corrediza_3", ancho: 1230, alto: 1600 },
-                { codigo: "V-03", nombre: "Balcón", sistema: "corrediza_3", ancho: 1230, alto: 2400 },
-                { codigo: "V-04", nombre: "Lavandería", sistema: "celosias_fijas", ancho: 740, alto: 400 },
-                { codigo: "V-05", nombre: "Sala N1", sistema: "corrediza_3", ancho: 1990, alto: 1600 },
-                { codigo: "V-06", nombre: "Salas N2-N4", sistema: "corrediza_3", ancho: 1990, alto: 1200, alto_total: 2400 },
-                { codigo: "V-07", nombre: "Baño", sistema: "sifon_eco", ancho: 430, alto: 330, alto_total: 330 },
-                { codigo: "V-08", nombre: "Recámara 1", sistema: "corrediza_3", ancho: 990, alto: 1200, alto_total: 2400 },
-                { codigo: "V-09", nombre: "Recámara 2", sistema: "corrediza_3", ancho: 990, alto: 1200, alto_total: 2400 },
-                { codigo: "P-01", nombre: "Puerta Rec1 (chapa der.)", sistema: "puerta_abitable", ancho: 990, alto: 2400 },
-                { codigo: "P-02", nombre: "Puerta Rec2 (chapa izq.)", sistema: "puerta_abitable", ancho: 990, alto: 2400 },
+                // Torre 1
+                { codigo: "V-01", nombre: "Sala PB", sistema: "corrediza_3", ancho: 1990, alto: 2400, torre: "T-01", nivel: "PB", depto: "DEP1", recinto: "Sala" },
+                { codigo: "V-04", nombre: "Lavandería", sistema: "celosias_fijas", ancho: 740, alto: 400, torre: "T-01", nivel: "PB", depto: "DEP1", recinto: "Lavandería" },
+                { codigo: "V-07", nombre: "Baño", sistema: "sifon_eco", ancho: 430, alto: 330, torre: "T-01", nivel: "PB", depto: "DEP1", recinto: "Baño" },
+                { codigo: "P-01", nombre: "Puerta Rec1 (chapa der.)", sistema: "puerta_abitable", ancho: 990, alto: 2400, torre: "T-01", nivel: "PB", depto: "DEP1", recinto: "Recámara 1" },
+                { codigo: "P-02", nombre: "Puerta Rec2 (chapa izq.)", sistema: "puerta_abitable", ancho: 990, alto: 2400, torre: "T-01", nivel: "PB", depto: "DEP2", recinto: "Recámara 2" },
+                // Torre 1 - Nivel 1
+                { codigo: "V-02", nombre: "Comedor N1", sistema: "corrediza_3", ancho: 1230, alto: 1600, torre: "T-01", nivel: "N1", depto: "DEP1", recinto: "Comedor" },
+                { codigo: "V-05", nombre: "Sala N1", sistema: "corrediza_3", ancho: 1990, alto: 1600, torre: "T-01", nivel: "N1", depto: "DEP2", recinto: "Sala" },
+                // Torre 1 - Niveles 2-4
+                { codigo: "V-03", nombre: "Balcón", sistema: "corrediza_3", ancho: 1230, alto: 2400, torre: "T-01", nivel: "N2", depto: "DEP1", recinto: "Balcón" },
+                { codigo: "V-06", nombre: "Salas N2-N4", sistema: "corrediza_3", ancho: 1990, alto: 1200, alto_total: 2400, torre: "T-01", nivel: "N2", depto: "DEP2", recinto: "Sala" },
+                { codigo: "V-08", nombre: "Recámara 1", sistema: "corrediza_3", ancho: 990, alto: 1200, alto_total: 2400, torre: "T-01", nivel: "N3", depto: "DEP1", recinto: "Recámara 1" },
+                { codigo: "V-09", nombre: "Recámara 2", sistema: "corrediza_3", ancho: 990, alto: 1200, alto_total: 2400, torre: "T-01", nivel: "N3", depto: "DEP2", recinto: "Recámara 2" },
+                // Torre 2
+                { codigo: "V-10", nombre: "Sala PB T2", sistema: "corrediza_3", ancho: 1990, alto: 2400, torre: "T-02", nivel: "PB", depto: "DEP1", recinto: "Sala" },
+                { codigo: "V-11", nombre: "Comedor T2", sistema: "corrediza_3", ancho: 1230, alto: 1600, torre: "T-02", nivel: "N1", depto: "DEP1", recinto: "Comedor" },
+                // Torre 3
+                { codigo: "V-12", nombre: "Sala PB T3", sistema: "corrediza_3", ancho: 1990, alto: 2400, torre: "T-03", nivel: "PB", depto: "DEP1", recinto: "Sala" },
+                { codigo: "V-13", nombre: "Comedor T3", sistema: "corrediza_3", ancho: 1230, alto: 1600, torre: "T-03", nivel: "N1", depto: "DEP1", recinto: "Comedor" },
             ]
         };
 
@@ -450,7 +501,21 @@
         // ==================== RENDERIZADO ====================
         function renderListaPiezas() {
             const container = document.getElementById('piece-list');
-            container.innerHTML = PROYECTO.piezas.map(p => {
+            const filtroTorre = document.getElementById('filter-torre')?.value || '';
+            const filtroNivel = document.getElementById('filter-nivel')?.value || '';
+            
+            const piezasFiltradas = PROYECTO.piezas.filter(p => {
+                if (filtroTorre && p.torre !== filtroTorre) return false;
+                if (filtroNivel && p.nivel !== filtroNivel) return false;
+                return true;
+            });
+            
+            if (piezasFiltradas.length === 0) {
+                container.innerHTML = '<div class="empty-state">No hay piezas para esta selección</div>';
+                return;
+            }
+            
+            container.innerHTML = piezasFiltradas.map(p => {
                 const estado = estadoPiezas[p.codigo] || {};
                 const cortesHechos = (estado.cortes || []).filter(c => c.hecho).length;
                 const totalCortes = estado.cortes ? estado.cortes.length : 0;
@@ -461,11 +526,14 @@
                 if (pct === 100) { badgeClass = 'badge-done'; badgeText = 'Completo'; }
                 else if (pct > 0) { badgeClass = 'badge-progress'; badgeText = `${pct}%`; }
                 
+                const ubicacion = p.torre ? `${p.torre} · ${p.nivel} · ${p.depto}` : '';
+                
                 return `
                     <div class="piece-item" onclick="verDetalle('${p.codigo}')">
                         <div class="piece-info">
                             <h3>${p.codigo} · ${p.nombre}</h3>
                             <div class="piece-meta">${SISTEMAS[p.sistema]} · ${p.ancho}×${p.alto}mm</div>
+                            ${ubicacion ? `<div class="piece-meta" style="color:var(--primary);">📍 ${ubicacion}</div>` : ''}
                         </div>
                         <div class="piece-status">
                             <span class="badge ${badgeClass}">${badgeText}</span>
@@ -753,9 +821,53 @@
                 return e && e.cortes && e.cortes.length > 0 && e.cortes.every(c => c.hecho);
             }).length;
             
+            // Avance por torre
+            const torresHTML = PROYECTO.torres.map(torre => {
+                const piezasTorre = PROYECTO.piezas.filter(p => p.torre === torre.codigo);
+                const totalTorre = piezasTorre.length;
+                const completasTorre = piezasTorre.filter(p => {
+                    const e = estadoPiezas[p.codigo];
+                    return e && e.cortes && e.cortes.length > 0 && e.cortes.every(c => c.hecho);
+                }).length;
+                const pctTorre = totalTorre > 0 ? Math.round((completasTorre / totalTorre) * 100) : 0;
+                
+                // Niveles de esta torre
+                const niveles = [...new Set(piezasTorre.map(p => p.nivel))];
+                const nivelesHTML = niveles.map(niv => {
+                    const piezasNivel = piezasTorre.filter(p => p.nivel === niv);
+                    const totalNivel = piezasNivel.length;
+                    const completasNivel = piezasNivel.filter(p => {
+                        const e = estadoPiezas[p.codigo];
+                        return e && e.cortes && e.cortes.length > 0 && e.cortes.every(c => c.hecho);
+                    }).length;
+                    const pctNivel = totalNivel > 0 ? Math.round((completasNivel / totalNivel) * 100) : 0;
+                    return `
+                        <div style="padding:0.25rem 0;font-size:0.75rem;color:var(--ink-soft);display:flex;justify-content:space-between;">
+                            <span>${niv}</span>
+                            <span>${completasNivel}/${totalNivel} (${pctNivel}%)</span>
+                        </div>
+                    `;
+                }).join('');
+                
+                return `
+                    <div class="card" style="margin-bottom:0.75rem;">
+                        <div class="card-title">🏗️ ${torre.nombre}</div>
+                        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem;">
+                            <div class="progress-bar" style="flex:1;">
+                                <div class="progress-fill" style="width:${pctTorre}%;"></div>
+                            </div>
+                            <span style="font-size:0.9rem;font-weight:700;">${completasTorre}/${totalTorre}</span>
+                        </div>
+                        <div style="padding-left:0.5rem;border-left:2px solid var(--line);">
+                            ${nivelesHTML}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
             container.innerHTML = `
                 <div class="card">
-                    <div class="card-title">📊 Avance General</div>
+                    <div class="card-title">📊 Avance General Monterra</div>
                     <div style="display:flex;align-items:center;gap:1rem;">
                         <div class="progress-bar" style="flex:1;">
                             <div class="progress-fill" style="width:${(completas/total)*100}%;"></div>
@@ -763,27 +875,7 @@
                         <span style="font-size:1.2rem;font-weight:700;">${completas}/${total}</span>
                     </div>
                 </div>
-                <div class="piece-list">
-                    ${PROYECTO.piezas.map(p => {
-                        const e = estadoPiezas[p.codigo];
-                        const hechas = (e?.cortes || []).filter(c => c.hecho).length;
-                        const totalC = (e?.cortes || []).length;
-                        const pct = totalC > 0 ? Math.round((hechas/totalC)*100) : 0;
-                        return `
-                            <div class="piece-item" onclick="verDetalle('${p.codigo}'); showView('detalle');">
-                                <div class="piece-info">
-                                    <h3>${p.codigo}</h3>
-                                    <div class="piece-meta">${hechas}/${totalC} cortes</div>
-                                </div>
-                                <div style="width:60px;">
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width:${pct}%;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
+                ${torresHTML}
             `;
         }
 
