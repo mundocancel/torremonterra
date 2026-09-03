@@ -1,423 +1,207 @@
+"""
+MONTERRA — API Flask para Sistema de Taller de Ventanería
+===========================================================
+Servidor: http://localhost:5000
+Frontend: /frontend/taller.html
+Base de datos: SQLite (data/taller.db)
+"""
+
 import json
 import os
 from flask import Flask, jsonify, request
-from calculos import calcular_sistema
 from db import (
     init_db,
     get_db,
-    get_inventory_snapshot,
-    update_inventory_snapshot,
-    add_inventory_movement,
-    add_piece_installation,
-    get_piece_installations,
-    get_piece_installation,
-    update_piece_installation,
-    add_production_task,
-    get_production_tasks,
-    get_production_task,
-    update_production_task,
-    get_inventory_movements,
+    get_proyecto,
+    get_dashboard,
+    get_pieza,
+    marcar_corte_cortado,
+    registrar_instalacion,
+    calcular_y_guardar_pieza,
 )
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_PATH = os.path.join(SCRIPT_DIR, "monterra.json")
-FRONTEND_DIR = os.path.join(SCRIPT_DIR, "..", "frontend")
+DATA_DIR = os.path.join(SCRIPT_DIR, 'data')
+FRONTEND_DIR = os.path.join(SCRIPT_DIR, '..', 'frontend')
 
-app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path="/frontend")
+app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path='/frontend')
 
-def load_json():
-    """Carga monterra.json con fallback seguro para estructuras faltantes."""
-    with open(DATA_PATH, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-# ============================================================================
+# ===========================================================================
 # INICIALIZACIÓN
-# ============================================================================
+# ===========================================================================
+os.makedirs(DATA_DIR, exist_ok=True)
 init_db()
 
-# ============================================================================
-# CATÁLOGO (desde monterra.json)
-# ============================================================================
 
-@app.route("/api/catalog/pieces")
-def catalog_pieces():
-    data = load_json()
-    return jsonify(data.get("catalogos", {}).get("piezas_catalogo", []))
+# ===========================================================================
+# CATÁLOGO (solo lectura, desde DB)
+# ===========================================================================
 
-@app.route("/api/catalog/types")
-def catalog_types():
-    data = load_json()
-    return jsonify(data.get("catalogos", {}).get("tipos_de_pieza", []))
-
-@app.route("/api/catalog/components")
-def catalog_components():
-    data = load_json()
-    return jsonify({
-        "corrediza_3pulg": data["catalogos"]["componentes"].get("corrediza_3pulg", []),
-        "fijo_inferior": data["catalogos"]["componentes"].get("fijo_inferior", []),
-    })
-
-@app.route("/api/catalog/hardware")
-def catalog_hardware():
-    data = load_json()
-    return jsonify({
-        "corrediza_3pulg": data["catalogos"]["herrajes"].get("corrediza_3pulg", []),
-        "fijo_inferior": data["catalogos"]["herrajes"].get("fijo_inferior", []),
-    })
-
-@app.route("/api/catalog/rules")
-def catalog_rules():
-    data = load_json()
-    reglas = data.get("catalogos", {}).get("reglas_calculo", {})
-    return jsonify({
-        "corrediza_3pulg": reglas.get("corrediza_3pulg", []),
-        "fijo_inferior": reglas.get("fijo_inferior", []),
-    })
-
-@app.route("/api/catalog/calculate", methods=["POST"])
-def calculate():
-    body = request.get_json()
-    ancho = float(body.get("ancho_mm", 0))
-    alto = float(body.get("alto_mm", 0))
-    tipo = body.get("tipo_calculo", "corrediza_3pulg")
-
-    if tipo == "corrediza_3pulg":
-        # Leer reglas desde monterra.json (es un array de objetos con nombre/valor)
-        data = load_json()
-        reglas_lista = data.get("catalogos", {}).get("reglas_calculo", {}).get("corrediza_3pulg", [])
-
-        def _get_regla(nombre_buscar: str, default: float) -> float:
-            for r in reglas_lista:
-                if nombre_buscar.lower() in r.get("nombre", "").lower():
-                    return float(r.get("valor_numerico", default))
-            return default
-
-        resta_hojas = _get_regla("Resta hojas ancho", 185.0)
-        resta_cerco = _get_regla("Resta cerco chapa alto", 30.0)
-        resta_traslape = _get_regla("Resta traslape alto", 40.0)
-        resta_vidrio_ancho = _get_regla("Resta vidrio ancho", 155.0)
-        resta_vidrio_fijo_alto = _get_regla("Resta vidrio alto panel fijo", 125.0)
-        resta_vidrio_cored_alto = _get_regla("Resta vidrio alto panel corredizo", 135.0)
-
-        zoclo = (ancho - resta_hojas) / 2
-        vidrio_fijo_ancho = (ancho - resta_vidrio_ancho) / 2
-
-        return jsonify({
-            "tipo": "corrediza_3pulg",
-            "ancho_mm": ancho,
-            "alto_mm": alto,
-            "componentes": [
-                {"nombre": "Riel de 3\"", "medida_mm": ancho, "cantidad": 1},
-                {"nombre": "Jamba de 3\"", "medida_mm": ancho, "cantidad": 2},
-                {"nombre": "Cabezal de 3\"", "medida_mm": ancho, "cantidad": 1},
-                {"nombre": "Zoclo doble vena", "medida_mm": round(zoclo, 2), "cantidad": 2},
-                {"nombre": "Cabezal hojas", "medida_mm": round(zoclo, 2), "cantidad": 2},
-                {"nombre": "Cerco chapa fijo", "medida_mm": alto - resta_cerco, "cantidad": 1},
-                {"nombre": "Traslape corredizo", "medida_mm": alto - resta_traslape, "cantidad": 1},
-                {"nombre": "Vidrio panel fijo", "medida_mm_ancho": round(vidrio_fijo_ancho, 2),
-                 "medida_mm_alto": alto - resta_vidrio_fijo_alto, "cantidad": 1},
-                {"nombre": "Vidrio panel corredizo", "medida_mm_ancho": round(vidrio_fijo_ancho, 2),
-                 "medida_mm_alto": alto - resta_vidrio_cored_alto, "cantidad": 1}
-            ]
-        })
-
-    return jsonify({"error": "tipo_calculo no soportado"}), 400
+@app.route('/api/catalog/sistemas')
+def catalog_sistemas():
+    """Lista de sistemas de ventanas/puertas disponibles."""
+    conn = get_db()
+    rows = conn.execute(
+        "SELECT sistema_id, nombre, descripcion FROM catalogo_sistemas WHERE activo=1 ORDER BY nombre"
+    ).fetchall()
+    conn.close()
+    return jsonify([dict(row) for row in rows])
 
 
-# ============================================================================
-# CALCULADORA v2 (motor paramétrico calculos.py)
-# ============================================================================
+@app.route('/api/catalog/materiales')
+def catalog_materiales():
+    """Lista de materiales/herrajes disponibles."""
+    conn = get_db()
+    rows = conn.execute(
+        "SELECT material_id, nombre, unidad, precio_unitario, observaciones "
+        "FROM catalogo_materiales ORDER BY material_id"
+    ).fetchall()
+    conn.close()
+    return jsonify([dict(row) for row in rows])
 
-@app.route("/api/calcular", methods=["POST"])
-def calcular_v2():
-    """Calcula despiece usando el motor paramétrico calculos.py"""
-    body = request.get_json()
-    
-    sistema_id = body.get("sistema_id", "corrediza_3")
-    ancho = float(body.get("ancho", 0))
-    alto = float(body.get("alto", 0))
-    alto_total = body.get("alto_total")
-    
-    # Parámetros extra (para sistemas configurables)
+
+@app.route('/api/catalog/calcular', methods=['POST'])
+def catalog_calcular():
+    """Calcula despiece para un sistema y medidas dadas (sin persistir)."""
+    from calculos import calcular_sistema
+
+    body = request.get_json(force=True, silent=True) or {}
+    sistema_id = body.get('sistema_id', 'corrediza_3')
+    ancho = float(body.get('ancho', body.get('ancho_mm', 0)))
+    alto = float(body.get('alto', body.get('alto_mm', 0)))
+    alto_total = body.get('alto_total')
+    if isinstance(alto_total, (int, float)):
+        alto_total = float(alto_total)
+    else:
+        alto_total = None
+
+    # Parámetros extra para sistemas configurables
     params = {}
-    if body.get("fijas") is not None:
-        params["fijas"] = int(body.get("fijas", 2))
-    if body.get("corredizas") is not None:
-        params["corredizas"] = int(body.get("corredizas", 2))
-    if body.get("mosquitero") is not None:
-        params["mosquitero"] = bool(body.get("mosquitero", False))
-    
+    for k in ('fijas', 'corredizas', 'mosquitero'):
+        v = body.get(k)
+        if v is not None:
+            params[k] = v
+
     try:
-        resultado = calcular_sistema(
-            sistema_id, 
-            ancho, 
-            alto, 
-            alto_total=alto_total,
-            **params
-        )
+        resultado = calcular_sistema(sistema_id, ancho, alto, alto_total=alto_total, **params)
         return jsonify(resultado)
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({'error': str(e)}), 500
 
-# ============================================================================
-# INVENTARIO (desde monterra.json + DB snapshot)
-# ============================================================================
 
-@app.route("/api/inventory")
-def inventory():
-    """Lista inventario: datos del JSON + snapshot de DB."""
-    data = load_json()
-    inventario_json = data["inventario"]
+# ===========================================================================
+# PROYECTO (estructura del proyecto MONTERRA)
+# ===========================================================================
 
-    conn = get_db()
-    cur = conn.execute("SELECT * FROM inventory_snapshot")
-    rows = cur.fetchall()
-    conn.close()
-    
-    snapshots = {row["material_id"]: dict(row) for row in rows}
-    
-    resultado = {}
-    for material_id, info in inventario_json.items():
-        snapshot = snapshots.get(material_id, {})
-        # Snapshot de DB (actualizado por movimientos)
-        cant_db = snapshot.get("cantidad_disponible", info.get("cantidad_disponible", 0))
-        resultado[material_id] = {
-            "tipo_material": info.get("tipo_material", ""),
-            "unidad_medida": info.get("unidad_medida", ""),
-            "cantidad_disponible": info.get("cantidad_disponible", 0),
-            "cantidad_minima": info.get("cantidad_minima", 0),
-            "proveedor_principal": info.get("proveedor_principal", ""),
-            "costo_unitario": info.get("costo_unitario", 0),
-            "cantidad_disponible_db": cant_db,
-            "alerta_stock_negativo": cant_db < 0,
-            "fecha_actualizacion_db": snapshot.get("fecha_actualizacion", None),
-        }
+@app.route('/api/proyecto')
+def api_proyecto():
+    """Retorna la estructura completa del proyecto: torres, niveles, piezas."""
+    return jsonify(get_proyecto())
+
+
+@app.route('/api/piezas')
+def api_piezas():
+    """Lista de piezas del proyecto (estado actual)."""
+    proyecto = get_proyecto()
+    return jsonify(proyecto['piezas'])
+
+
+@app.route('/api/piezas/<codigo>')
+def api_pieza(codigo):
+    """Detalle de una pieza: cortes, vidrios, insumos, estado."""
+    pieza = get_pieza(codigo)
+    if pieza is None:
+        return jsonify({'error': f'Pieza {codigo} no encontrada'}), 404
+    return jsonify(pieza)
+
+
+@app.route('/api/piezas/<codigo>/calcular', methods=['POST'])
+def api_pieza_calcular(codigo):
+    """Calcula y persiste cortes/vidrios/insumos para una pieza."""
+    resultado = calcular_y_guardar_pieza(codigo)
+    if resultado is None:
+        return jsonify({'error': f'No se pudo calcular {codigo}'}), 404
     return jsonify(resultado)
 
-@app.route("/api/inventory/snapshot/<material_id>")
-def inventory_snapshot(material_id):
-    """Snapshot actual de un material desde DB, con flag de stock negativo."""
-    snapshot = get_inventory_snapshot(material_id)
-    if snapshot:
-        snapshot["alerta_stock_negativo"] = snapshot.get("cantidad_disponible", 0) < 0
-        return jsonify(snapshot)
-    return jsonify({"error": "Material no encontrado"}), 404
 
-@app.route("/api/inventory/move", methods=["POST"])
-def inventory_move():
-    """Registra un movimiento de inventario."""
-    body = request.get_json()
-    material_id = body.get("material_id", "")
-    tipo = body.get("tipo", "salida")
-    cantidad = float(body.get("cantidad", 0))
-    motivo = body.get("motivo", "")
-    usuario_id = body.get("usuario_id", "")
-    ref_instalacion_id = body.get("ref_instalacion_id", "")
-    
-    if not material_id or tipo not in ("entrada", "salida", "ajuste"):
-        return jsonify({"error": "Datos inválidos"}), 400
-    
-    mov_id = add_inventory_movement(
-        material_id=material_id,
-        tipo_movimiento=tipo,
-        cantidad=cantidad,
-        motivo=motivo or None,
-        usuario_id=usuario_id or None,
-        ref_instalacion_id=ref_instalacion_id or None
-    )
-    
-    # Retornar snapshot actualizado, con alerta si el stock quedó negativo
-    snapshot = get_inventory_snapshot(material_id)
-    alerta = False
-    if snapshot is not None:
-        alerta = snapshot.get("cantidad_disponible", 0) < 0
+@app.route('/api/piezas/<codigo>/cortar/<int:corte_id>', methods=['POST'])
+def api_corte_marcar(codigo, corte_id):
+    """Marca un corte como cortado."""
+    ok = marcar_corte_cortado(codigo, corte_id)
+    if not ok:
+        return jsonify({'error': 'Corte no encontrado o ya marcado'}), 404
+    return jsonify({'ok': True, 'corte_id': corte_id})
+
+
+@app.route('/api/instalar', methods=['POST'])
+def api_instalar():
+    """Registra una instalación."""
+    body = request.get_json(force=True, silent=True) or {}
+    pieza_codigo = body.get('pieza_codigo')
+    operador = body.get('operador', '').strip()
+    ubicacion = body.get('ubicacion_instalacion', '').strip() or None
+    observaciones = body.get('observaciones', '').strip() or None
+
+    if not pieza_codigo:
+        return jsonify({'error': 'pieza_codigo es requerido'}), 400
+    if not operador:
+        return jsonify({'error': 'operador es requerido'}), 400
+
+    pieza = get_pieza(pieza_codigo)
+    if pieza is None:
+        return jsonify({'error': f'Pieza {pieza_codigo} no encontrada'}), 404
+
+    iid = registrar_instalacion(pieza_codigo, operador, ubicacion, observaciones)
     return jsonify({
-        "movimiento_id": mov_id,
-        "material_id": material_id,
-        "tipo": tipo,
-        "cantidad": cantidad,
-        "snapshot_actualizado": snapshot,
-        "alerta_stock_negativo": alerta,
-    })
+        'ok': True,
+        'instalacion_id': iid,
+        'pieza_codigo': pieza_codigo,
+        'operador': operador,
+    }), 201
 
-@app.route("/api/inventory/movements")
-def inventory_movements():
-    """Historial de movimientos de inventario."""
-    material_id = request.args.get("material_id", "")
-    limite = request.args.get("limite", 100, type=int)
-    
-    movimientos = get_inventory_movements(
-        material_id=material_id or None,
-        limite=limite
-    )
-    return jsonify(movimientos)
 
-# ============================================================================
-# PRODUCCIÓN - PIECE INSTALLATIONS
-# ============================================================================
+# ===========================================================================
+# DASHBOARD
+# ===========================================================================
 
-@app.route("/api/production/pieces", methods=["GET"])
-def get_pieces():
-    """Lista piezas instaladas."""
-    torre = request.args.get("torre", "")
-    nivel = request.args.get("nivel", "")
-    estado = request.args.get("estado", "")
-    
-    pieces = get_piece_installations(
-        torre_codigo=torre or None,
-        nivel_nombre=nivel or None,
-        estado=estado or None
-    )
-    return jsonify(pieces)
+@app.route('/api/dashboard')
+def api_dashboard():
+    """Resumen de avance del proyecto."""
+    return jsonify(get_dashboard())
 
-@app.route("/api/production/pieces", methods=["POST"])
-def create_piece():
-    """Registra una pieza instalada/fabricada."""
-    body = request.get_json()
-    
-    required = ["codigo_plano", "pieza_catalogo_id", "departamento_id", "torre_codigo", "nivel_nombre"]
-    for field in required:
-        if field not in body:
-            return jsonify({"error": f"Campo requerido: {field}"}), 400
-    
-    # Validar que pieza_catalogo_id existe en el catálogo
-    data = load_json()
-    catalogo_piezas = data.get("catalogos", {}).get("piezas_catalogo", [])
-    catalogo_ids = {p.get("codigo_plano") for p in catalogo_piezas if p.get("codigo_plano")}
-    
-    pieza_catalogo_id = body["pieza_catalogo_id"]
-    if pieza_catalogo_id not in catalogo_ids:
-        return jsonify({
-            "error": f"pieza_catalogo_id '{pieza_catalogo_id}' no existe en el catálogo",
-            "catalogo_disponible": sorted(catalogo_ids)
-        }), 400
-    
-    piece_id = add_piece_installation(
-        codigo_plano=body["codigo_plano"],
-        pieza_catalogo_id=pieza_catalogo_id,
-        departamento_id=body["departamento_id"],
-        torre_codigo=body["torre_codigo"],
-        nivel_nombre=body["nivel_nombre"],
-        estado=body.get("estado", "pendiente"),
-        usuario_asignado=body.get("usuario_asignado"),
-        observaciones=body.get("observaciones")
-    )
-    
-    return jsonify({"id": piece_id, "estado": "pendiente"}), 201
 
-@app.route("/api/production/pieces/<piece_id>", methods=["GET"])
-def get_piece(piece_id):
-    """Retorna una pieza instalada por ID."""
-    piece = get_piece_installation(piece_id)
-    if piece:
-        return jsonify(piece)
-    return jsonify({"error": "Pieza no encontrada"}), 404
+# ===========================================================================
+# STATUS
+# ===========================================================================
 
-@app.route("/api/production/pieces/<piece_id>", methods=["PUT"])
-def update_piece(piece_id):
-    """Actualiza una pieza instalada."""
-    body = request.get_json()
-    update_piece_installation(
-        piece_id=piece_id,
-        estado=body.get("estado"),
-        usuario_asignado=body.get("usuario_asignado"),
-        observaciones=body.get("observaciones"),
-        fecha_fin_fabricacion=body.get("fecha_fin_fabricacion"),
-        fecha_fin_instalacion=body.get("fecha_fin_instalacion")
-    )
-    piece = get_piece_installation(piece_id)
-    return jsonify(piece)
-
-# ============================================================================
-# TAREAS DE PRODUCCIÓN
-# ============================================================================
-
-@app.route("/api/tasks", methods=["GET"])
-def list_tasks():
-    """Lista tareas de producción."""
-    usuario = request.args.get("usuario", "")
-    estado = request.args.get("estado", "")
-    
-    tasks = get_production_tasks(
-        usuario_asignado=usuario or None,
-        estado=estado or None
-    )
-    return jsonify(tasks)
-
-@app.route("/api/tasks", methods=["POST"])
-def create_task():
-    """Crea una tarea de producción."""
-    body = request.get_json()
-    
-    required = ["tipo", "titulo", "usuario_asignado"]
-    for field in required:
-        if field not in body:
-            return jsonify({"error": f"Campo requerido: {field}"}), 400
-    
-    task_id = add_production_task(
-        tipo=body["tipo"],
-        titulo=body["titulo"],
-        descripcion=body.get("descripcion"),
-        prioridad=body.get("prioridad", 1),
-        usuario_asignado=body["usuario_asignado"],
-        pieza_instalacion_id=body.get("pieza_instalacion_id"),
-        tiempo_estimado_minutos=body.get("tiempo_estimado_minutos")
-    )
-    
-    return jsonify({"id": task_id}), 201
-
-@app.route("/api/tasks/<task_id>", methods=["GET"])
-def get_task(task_id):
-    """Retorna una tarea por ID."""
-    task = get_production_task(task_id)
-    if task:
-        return jsonify(task)
-    return jsonify({"error": "Tarea no encontrada"}), 404
-
-@app.route("/api/tasks/<task_id>", methods=["PUT"])
-def update_task(task_id):
-    """Actualiza una tarea de producción."""
-    body = request.get_json()
-    update_production_task(
-        task_id=task_id,
-        estado=body.get("estado"),
-        fecha_completado=body.get("fecha_completado"),
-        tiempo_real_minutos=body.get("tiempo_real_minutos")
-    )
-    task = get_production_task(task_id)
-    return jsonify(task)
-
-# ============================================================================
-# STATUS DEL SERVIDOR
-# ============================================================================
-
-@app.route("/api/status")
-def status():
+@app.route('/api/status')
+def api_status():
     """Estado del servidor y base de datos."""
     conn = get_db()
-    cur = conn.execute("SELECT COUNT(*) FROM piece_installations")
-    pieces_count = cur.fetchone()[0]
-    cur = conn.execute("SELECT COUNT(*) FROM inventory_movements")
-    movements_count = cur.fetchone()[0]
-    cur = conn.execute("SELECT COUNT(*) FROM production_tasks")
-    tasks_count = cur.fetchone()[0]
+    cur = conn.execute("SELECT COUNT(*) FROM piezas")
+    piezas_count = cur.fetchone()[0]
+    cur = conn.execute("SELECT COUNT(*) FROM cortes")
+    cortes_count = cur.fetchone()[0]
+    cur = conn.execute("SELECT COUNT(*) FROM instalaciones")
+    instalaciones_count = cur.fetchone()[0]
     conn.close()
-    
+
     return jsonify({
-        "server": "Taller Ventanería API",
-        "version": "1.0.0",
-        "database": {
-            "path": os.path.abspath("data/taller.db"),
-            "pieces": pieces_count,
-            "movements": movements_count,
-            "tasks": tasks_count,
+        'server': 'MONTERRA · Taller de Ventanería API',
+        'version': '1.0.0',
+        'database': {
+            'path': os.path.abspath('data/taller.db'),
+            'piezas': piezas_count,
+            'cortes': cortes_count,
+            'instalaciones': instalaciones_count,
         },
-        "status": "operational"
+        'status': 'operational',
     })
 
-# ============================================================================
-# MAIN
-# ============================================================================
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+# ===========================================================================
+# MAIN
+# ===========================================================================
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
