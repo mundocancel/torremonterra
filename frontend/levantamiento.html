@@ -481,6 +481,11 @@ function renderChecklist(){
         <span style="color:var(--text); font-weight:600;">${pct}%</span>
       </div>
       ${incidencias > 0 ? `<div style="margin-top:6px; font-size:12px; color:var(--warn);">⚠ ${incidencias} incidencia(s)</div>` : ""}
+      <div class="btn-row" style="margin-top:12px;">
+        <button class="btn btn-primary" onclick="sincronizarConTaller()">
+          📤 Sincronizar con Taller
+        </button>
+      </div>
     </div>
 
     <div id="ticket-list"></div>
@@ -511,6 +516,76 @@ function renderChecklist(){
     `;
     list.appendChild(div);
   });
+}
+
+/* ===================================================================
+   SINCRONIZACIÓN CON TALLER (Obra → Servidor Pi)
+   =================================================================== */
+async function sincronizarConTaller(){
+  const data = cargarDataDepto();
+  const elementos = NIVELES[state.nivel].elementos;
+  const piezasParaEnviar = {};
+  
+  // Adaptamos el formato local al formato de la API
+  for(const codigo of elementos){
+    const item = data[codigo];
+    if(!item) continue;
+    if(item.estado === "medido"){
+      piezasParaEnviar[codigo] = {
+        ancho_mm: item.ancho,
+        alto_mm: item.alto,
+        estado: "medido",
+        notas: item.notas || ""
+      };
+    } else if(item.estado === "incidencia"){
+      piezasParaEnviar[codigo] = {
+        estado: "incidencia",
+        notas: item.nota || "Sin detalle"
+      };
+    }
+  }
+  
+  if(Object.keys(piezasParaEnviar).length === 0){
+    toast("No hay piezas medidas para enviar");
+    return;
+  }
+  
+  const payload = {
+    torre: state.torre,
+    nivel: state.nivel,
+    depto: state.depto,
+    lado: state.lado,
+    operador: state.operador.name,
+    piezas: piezasParaEnviar,
+    notas_generales: `Sincronizado desde ${navigator.platform || "dispositivo"}`
+  };
+  
+  // Feedback inmediato
+  toast("Enviando al taller...");
+  
+  try{
+    // Detección automática de IP según la URL desde donde se cargó
+    const apiBase = window.location.hostname === "localhost" || window.location.hostname.startsWith("192.168")
+      ? window.location.origin
+      : "http://100.67.168.38:5000";
+    
+    const resp = await fetch(`${apiBase}/api/levantamientos`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    
+    if(!resp.ok){
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.error || `HTTP ${resp.status}`);
+    }
+    
+    const result = await resp.json();
+    toast(`✓ ${result.mensaje}`);
+  } catch(err){
+    console.error("Error al sincronizar:", err);
+    toast(`❌ No se pudo enviar: ${err.message}. Datos guardados localmente.`);
+  }
 }
 
 function volverInicio(){
@@ -612,9 +687,10 @@ async function guardarMedicion(codigo, esIncidencia){
     };
   }
 
-  const ok = LS.set(deptoKey(state.torre, state.nivel, state.depto), data);
+  // Guardamos localmente primero (offline-safe)
+  LS.set(deptoKey(state.torre, state.nivel, state.depto), data);
   overlayRemove();
-  toast(ok ? "Guardado ✓" : "No se pudo guardar — reintenta");
+  toast("Guardado ✓ Toca 'Sincronizar' para enviar al taller");
   renderChecklist();
 }
 

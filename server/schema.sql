@@ -154,3 +154,22 @@ SELECT
     (SELECT COUNT(*) FROM piezas WHERE estado = 'instalado') AS instalados,
     (SELECT COUNT(*) FROM cortes WHERE estado = 'cortado') AS total_cortes_cortados
 FROM (SELECT 1);
+
+-- ============================================================
+-- LEVANTAMIENTOS (Captura de medidas en obra por el instalador)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS levantamientos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fecha TEXT NOT NULL,                -- '2026-09-05 14:30:00'
+    torre TEXT NOT NULL,                -- 'T-01'
+    nivel TEXT NOT NULL,                -- 'PB', 'N1', ...
+    depto TEXT NOT NULL,                -- 'DEP1'
+    lado TEXT,                          -- 'A', 'B'
+    operador TEXT NOT NULL,             -- 'Juan Ramírez'
+    piezas_json TEXT NOT NULL,          -- JSON con las piezas medidas { 'V-01': {ancho, alto, estado, notas}, ... }
+    estado TEXT NOT NULL DEFAULT 'nuevo', -- 'nuevo', 'recibido', 'incidencia'
+    notas_generales TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_levantamientos_estado ON levantamientos(estado);
+CREATE INDEX IF NOT EXISTS idx_levantamientos_torre ON levantamientos(torre, nivel, depto);

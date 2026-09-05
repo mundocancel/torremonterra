@@ -245,48 +245,131 @@
             border-color: var(--primary);
         }
         
-        /* Estados de piezas en el croquis */
-        .piece-shape {
-            fill: #e8f0f8;
-            stroke: #1E4D6B;
+        /* === MINI-CAD INDUSTRIAL === */
+        .croquis-container {
+            background-color: #fcfcfc;
+            background-image: 
+                linear-gradient(to right, #e0e5ea 1px, transparent 1px),
+                linear-gradient(to bottom, #e0e5ea 1px, transparent 1px);
+            background-size: 20px 20px;
+            border: 1px solid var(--line);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.02);
+            position: relative;
+        }
+        
+        .shape-marco {
+            fill: none;
+            stroke: var(--color-marro-exterior);
+            stroke-width: 4;
+            transition: stroke 0.3s, stroke-width 0.3s;
+        }
+        .shape-marco-cut {
+            stroke: var(--success);
+            stroke-width: 3;
+            stroke-dasharray: 6,3;
+        }
+        .shape-barra {
+            fill: var(--color-panel-cabezal);
+            stroke: var(--color-stroke);
             stroke-width: 2;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
             cursor: pointer;
         }
-        
-        .piece-shape:hover {
-            fill: #d0e0f0;
-            stroke-width: 3;
-        }
-        
-        .piece-shape.cut {
-            fill: #d4edda;
-            stroke: #2E7D4F;
+        .shape-barra-cut {
+            fill: #D4EDDA;
+            stroke: var(--success);
             stroke-dasharray: 4,2;
         }
-        
-        .piece-shape.current {
-            fill: #fff3cd;
-            stroke: #E8722C;
-            stroke-width: 3;
-            filter: drop-shadow(0 0 4px rgba(232,114,44,0.5));
+        .shape-panel {
+            fill: var(--color-panel-fijo);
+            stroke: var(--color-stroke);
+            stroke-width: 1.5;
+            transition: all 0.2s;
+            cursor: pointer;
         }
-        
-        .piece-label {
-            font-size: 9px;
-            fill: #1C2733;
-            pointer-events: none;
+        .shape-panel-cut {
+            fill: #D4EDDA;
+            stroke: var(--success);
+            stroke-dasharray: 4,2;
         }
-        
-        .dimension-line {
-            stroke: #5B6B78;
-            stroke-width: 0.5;
+        .shape-panel-corredizo {
+            fill: var(--color-panel-corredizo);
+            stroke: var(--color-stroke);
+            stroke-width: 1.5;
+            stroke-dasharray: 4,3;
+            transition: all 0.2s;
+            cursor: pointer;
+            filter: drop-shadow(2px 0 2px rgba(0,0,0,0.1));
         }
-        
-        .dimension-text {
+        .shape-panel-corredizo-cut {
+            fill: #D4EDDA;
+            stroke: var(--success);
+            stroke-dasharray: 4,2;
+        }
+        .shape-hoja {
+            fill: var(--color-panel-abierto);
+            stroke: var(--color-stroke);
+            stroke-width: 1.5;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .shape-hoja-cut {
+            fill: #D4EDDA;
+            stroke: var(--success);
+            stroke-dasharray: 4,2;
+        }
+        .shape-gen {
+            fill: var(--color-panel-gen);
+            stroke: var(--color-stroke);
+            stroke-width: 1.5;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .shape-gen-cut {
+            fill: #D4EDDA;
+            stroke: var(--success);
+            stroke-dasharray: 4,2;
+        }
+        .shape-highlight {
+            stroke: var(--accent) !important;
+            stroke-width: 3 !important;
+            filter: drop-shadow(0 0 4px var(--accent));
+        }
+        .zona-label {
             font-size: 8px;
-            fill: #5B6B78;
+            font-weight: 800;
+            fill: var(--color-label);
+            pointer-events: none;
+            font-family: 'Inter', system-ui, sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .pieza-id-label {
+            font-size: 10px;
+            font-weight: 700;
+            fill: var(--ink);
             text-anchor: middle;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        .flecha-sentido path {
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        
+        /* Tooltip de Medida */
+        #croquis-tooltip {
+            position: absolute;
+            padding: 4px 8px;
+            background: var(--ink);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            border-radius: 4px;
+            pointer-events: none;
+            display: none;
+            z-index: 100;
+            white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         
         .cut-label {
@@ -473,6 +556,40 @@
             .piece-detail.active { display: block !important; }
             .card { break-inside: avoid; }
         }
+
+        /* Badge de notificación de Obra */
+        .badge-notification {
+            background: var(--danger);
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 0.1rem 0.4rem;
+            border-radius: 999px;
+            margin-left: 0.25rem;
+            min-width: 18px;
+            text-align: center;
+            display: inline-block;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        /* Vista Levantamientos */
+        .lev-item {
+            background: white;
+            border: 1px solid var(--line);
+            border-left: 4px solid var(--accent);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+        }
+        .lev-item.recibido { border-left-color: var(--success); opacity: 0.7; }
+        .lev-item.incidencia { border-left-color: var(--warn); }
+        .lev-meta { font-size: 0.75rem; color: var(--ink-soft); margin-top: 0.25rem; }
+        .lev-piezas { font-size: 0.85rem; margin-top: 0.5rem; color: var(--ink); }
+        .lev-acciones { margin-top: 0.75rem; display: flex; gap: 0.5rem; }
     </style>
 </head>
 <body>
@@ -487,6 +604,9 @@
         <button class="tab active" data-view="proyecto">Proyecto</button>
         <button class="tab" data-view="taller">Taller</button>
         <button class="tab" data-view="dashboard">Dashboard</button>
+        <button class="tab" data-view="levantamientos" id="tab-levantamientos">
+            🏗️ Obra <span class="badge-notification" id="badge-levantamientos" style="display:none;">0</span>
+        </button>
     </nav>
     
     <main class="main-content">
@@ -522,6 +642,12 @@
         <div id="view-dashboard" class="view" style="display:none;">
             <h2 class="section-title">Avance por Torre</h2>
             <div id="dashboard-content"></div>
+        </div>
+
+        <!-- Vista: Levantamientos de Obra -->
+        <div id="view-levantamientos" class="view" style="display:none;">
+            <h2 class="section-title">Mediciones Recibidas desde Obra</h2>
+            <div id="levantamientos-content"></div>
         </div>
     </main>
 
@@ -635,7 +761,7 @@
                 };
                 if (pieza.alto_total) body.alto_total = pieza.alto_total;
                 
-                const resp = await fetch('/api/calcular', {
+                const resp = await fetch('/api/catalog/calcular', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(body)
@@ -755,63 +881,164 @@
         }
         
         // ==================== CROQUIS INTERACTIVO ====================
+        // Dibuja croquis SVG con zonas coloreadas según estado del checklist.
+        // Cada zona tiene: id (para synch con checklist), tipo, texto interno,
+        // colores segúnestado: pendiente=blanco/azul, cortado=verde, actual=naranja.
         function generarCroquisInteractivo(pieza, data, estado) {
-            const w = pieza.ancho;
-            const h = pieza.alto || 2400;
-            const alto = pieza.alto_total && pieza.alto_total > h ? pieza.alto_total : h;
-            const scale = Math.min(260 / w, 340 / alto);
-            const sw = w * scale;
-            const sh = alto * scale;
-            const ox = 40, oy = 30;
+                const w = pieza.ancho;
+                const h = pieza.alto || 2400;
+                const alto_total = pieza.alto_total || h;
+                const alto_desplay = alto_total > h ? alto_total : h;
+                const scale = Math.min(260 / w, 340 / alto_desplay);
+                const sw = w * scale;
+                const sh = alto_desplay * scale;
+                const ox = 50, oy = 40;
+                const dw = ox + sw + 50;
+                const dh = oy + sh + 50;
+
+                // ---- Lógica de Traslape (Overlap) para Corredizas ----
+                // En una corrediza de 2 hojas, el traslape suele ser de 30-50mm
+                const overlap_mm = 40;
+                const overlap_px = overlap_mm * scale;
+                const cortesHechos = new Set(
+                    (estado.cortes || [])
+                        .filter(c => c.hecho || c.estado === 'cortado')
+                        .map(c => c.id)
+                );
+
+                const zonas = [];
+                if (pieza.sistema === 'corrediza_3') {
+                    // Marco exterior
+                    zonas.push({
+                        id: `${pieza.codigo}-marco`, tipo: 'marco',
+                        x: ox, y: oy, w: sw, h: sh, label: '',
+                        strokeW: 4, fill: 'none', stroke: '#1E4D6B', dash: '0'
+                    });
+
+                    // Jamba Cabezal (c1)
+                    const h_cabezal = Math.max(8, sh * 0.075);
+                    zonas.push({
+                        id: `${pieza.codigo}-c1`, tipo: 'barra_horizontal',
+                        x: ox, y: oy, w: sw, h: h_cabezal, label: 'JAMBA',
+                        strokeW: 2, fill: '#D5E8F5', stroke: '#2C3E50', dash: '0',
+                        medida: `${w} mm`
+                    });
+
+                    // Riel Inferior (c0)
+                    const h_riel = Math.max(8, sh * 0.085);
+                    const y_riel = oy + sh - h_riel;
+                    zonas.push({
+                        id: `${pieza.codigo}-c0`, tipo: 'barra_horizontal',
+                        x: ox, y: y_riel, w: sw, h: h_riel, label: 'RIEL',
+                        strokeW: 2, fill: '#C5D9ED', stroke: '#2C3E50', dash: '0',
+                        medida: `${w} mm`
+                    });
+
+                    // Panel Fijo (c4) - Izquierda
+                    const panel_w = (sw / 2) + overlap_px;
+                    const panel_h = sh - h_cabezal - h_riel;
+                    zonas.push({
+                        id: `${pieza.codigo}-c4`, tipo: 'panel_fijo',
+                        x: ox + 3, y: oy + h_cabezal + 1, w: panel_w - 3, h: panel_h - 2,
+                        label: 'FIJO', strokeW: 1.5, fill: '#E8F4F8', stroke: '#2C3E50', dash: '0',
+                        medida: `${data.componentes.find(c => c.pieza.includes('Cerco chapa panel fijo'))?.longitud_mm || '---'} mm`
+                    });
+
+                    // Panel Corredizo (c5) - Derecha con Traslape
+                    zonas.push({
+                        id: `${pieza.codigo}-c5`, tipo: 'panel_corredizo',
+                        x: ox + (sw / 2) - overlap_px + 3, y: oy + h_cabezal + 1, w: panel_w - 3, h: panel_h - 2,
+                        label: 'CORREDIZO', strokeW: 1.5, fill: '#FEF5E7', stroke: '#2C3E50', dash: '4,3',
+                        medida: `${data.componentes.find(c => c.pieza.includes('Cerco chapa panel corredizo'))?.longitud_mm || '---'} mm`
+                    });
+                } else if (pieza.sistema === 'puerta_abitable') {
+                    zonas.push({
+                        id: `${pieza.codigo}-marco`, tipo: 'marco', x: ox, y: oy, w: sw, h: sh, label: '',
+                        strokeW: 4, fill: 'none', stroke: '#1E4D6B', dash: '0'
+                    });
+                    zonas.push({
+                        id: `${pieza.codigo}-c0`, tipo: 'hoja', x: ox + 3, y: oy + 3, w: sw - 6, h: sh - 6,
+                        label: 'HOJA', strokeW: 1.5, fill: '#D4ECEA', stroke: '#2C3E50', dash: '0',
+                        medida: `${data.componentes[0]?.longitud_mm || '---'} mm`
+                    });
+                } else {
+                    zonas.push({
+                        id: `${pieza.codigo}-c0`, tipo: 'estructura', x: ox, y: oy, w: sw, h: sh,
+                        label: pieza.sistema.toUpperCase(), strokeW: 1.5, fill: '#E8F0F8', stroke: '#2C3E50', dash: '0',
+                        medida: `${w} x ${h} mm`
+                    });
+                }
+
+                let svg = `<svg viewBox="0 0 ${dw} ${dh}" style="max-width:100%;" id="croquis-svg">`;
             
-            const cortesHechos = (estado.cortes || []).filter(c => c.hecho).map(c => c.id);
-            
-            // Mapear componentes a zonas del croquis (según sistema)
-            let zonas = [];
-            
-            if (pieza.sistema === 'corrediza_3') {
-                const midX = ox + sw / 2;
-                // Zona 1: Marco exterior
-                zonas.push({ id: `${pieza.codigo}-c0`, x: ox, y: oy, w: sw, h: sh, label: 'Marco', tipo: 'marco' });
-                // Zona 2: Jamba cabezal
-                zonas.push({ id: `${pieza.codigo}-c1`, x: ox, y: oy, w: sw, h: sh * 0.08, label: 'Cabezal', tipo: 'horizontal' });
-                // Zona 3: Riel inferior
-                zonas.push({ id: `${pieza.codigo}-c1`, x: ox, y: oy + sh * 0.92, w: sw, h: sh * 0.08, label: 'Riel', tipo: 'horizontal' });
-                // Zona 4: Panel fijo
-                zonas.push({ id: `${pieza.codigo}-c4`, x: ox, y: oy + sh * 0.1, w: sw/2 - 3, h: sh * 0.8, label: 'Fijo', tipo: 'panel' });
-                // Zona 5: Panel corredizo
-                zonas.push({ id: `${pieza.codigo}-c5`, x: midX + 3, y: oy + sh * 0.1, w: sw/2 - 3, h: sh * 0.8, label: 'Corredizo', tipo: 'panel' });
-            } else if (pieza.sistema === 'puerta_abitable') {
-                zonas.push({ id: `${pieza.codigo}-c0`, x: ox, y: oy, w: sw, h: sh, label: 'Marco', tipo: 'marco' });
-                zonas.push({ id: `${pieza.codigo}-c4`, x: ox + 10, y: oy + 10, w: sw - 20, h: sh - 20, label: 'Hoja', tipo: 'panel' });
-            } else {
-                zonas.push({ id: `${pieza.codigo}-c0`, x: ox, y: oy, w: sw, h: sh, label: 'Estructura', tipo: 'marco' });
+                // Dibujar zonas
+                zonas.forEach(z => {
+                    const cortado = cortesHechos.has(z.id);
+                    let cls = 'piece-shape';
+                    if (z.tipo === 'marco') cls = 'shape-marco';
+                    else if (z.tipo === 'barra_horizontal') cls = 'shape-barra';
+                    else if (z.tipo === 'panel_fijo') cls = 'shape-panel';
+                    else if (z.tipo === 'panel_corredizo') cls = 'shape-panel-corredizo';
+                    else if (z.tipo === 'hoja') cls = 'shape-hoja';
+                    else cls = 'shape-gen';
+                
+                    if (cortado) cls += ` ${z.tipo === 'marco' ? 'shape-marco-cut' : 'shape-panel-cut'}`;
+
+                    svg += `<rect x="${z.x}" y="${z.y}" width="${z.w}" height="${z.h}" 
+                                    class="${cls}" fill="${z.fill}" stroke="${z.stroke}" 
+                                    stroke-width="${z.strokeW}" stroke-dasharray="${z.dash}"
+                                    data-medida="${z.medida || ''}"
+                                    onmouseover="showTooltip(event, '${z.medida || ''}')" 
+                                    onmouseout="hideTooltip()"
+                                    onclick="highlightCorte('${z.id}')"/>`;
+
+                    if (z.label) {
+                        const cx = z.x + z.w / 2;
+                        const cy = z.y + z.h / 2;
+                        const rotar = (z.tipo === 'barra_horizontal' && z.w < 150);
+                        svg += `<text x="${cx}" y="${cy + 3}" text-anchor="middle" dominant-baseline="middle" 
+                                        class="zona-label" style="${rotar ? 'transform: rotate(-90deg); transform-origin: center;' : ''}">${z.label}</text>`;
+                    }
+                });
+
+                // Marco final
+                svg += `<rect x="${ox}" y="${oy}" width="${sw}" height="${sh}" fill="none" stroke="#1E4D6B" stroke-width="4" rx="1"/>`;
+
+                // Flechas y dimensiones... (mismo código de antes)
+                if (pieza.sistema === 'corrediza_3' && sw > 120) {
+                    const midX = ox + sw / 2; const arrowY = oy + sh + 12;
+                    svg += `<g class="flecha-sentido" stroke="#2C3E50" stroke-width="1.5" fill="none">`;
+                    svg += `<path d="M ${midX + 20} ${arrowY} l 6 -4 m -6 4 l 6 4" />`;
+                    svg += `<path d="M ${midX + 50} ${arrowY} l 6 -4 m -6 4 l 6 4" />`;
+                    svg += `<path d="M ${midX + 80} ${arrowY} l 6 -4 m -6 4 l 6 4" />`;
+                    svg += `</g><text x="${midX + 50}" y="${arrowY + 14}" text-anchor="middle" class="zona-label" style="font-size:7px;">CORREDIZO →</text>`;
+                }
+
+                svg += `<line x1="${ox}" y1="${oy - 6}" x2="${ox + sw}" y2="${oy - 6}" stroke="#5B6B78" stroke-width="0.5"/>`;
+                svg += `<text x="${ox + sw / 2}" y="${oy - 10}" text-anchor="middle" font-size="8px" fill="#5B6B78">${w} mm</text>`;
+                svg += `<line x1="${ox - 6}" y1="${oy}" x2="${ox - 6}" y2="${oy + sh}" stroke="#5B6B78" stroke-width="0.5"/>`;
+                svg += `<text x="${ox - 10}" y="${oy + sh / 2}" text-anchor="middle" font-size="8px" fill="#5B6B78" transform="rotate(-90, ${ox - 10}, ${oy + sh / 2})">${alto_desplay} mm</text>`;
+                svg += `<text x="${ox + sw / 2}" y="${oy + sh + 28}" text-anchor="middle" class="pieza-id-label">${pieza.codigo} · ${pieza.nombre}</text>`;
+
+                svg += `</svg>`;
+                return svg;
             }
-            
-            let svg = `<svg viewBox="0 0 ${sw + 80} ${sh + 70}" style="max-width:100%;" id="croquis-svg">`;
-            
-            // Zonas del croquis (coloreadas según estado)
-            zonas.forEach(z => {
-                const cortado = cortesHechos.includes(z.id);
-                const zonaClass = cortado ? 'piece-shape cut' : 'piece-shape';
-                svg += `<rect x="${z.x}" y="${z.y}" width="${z.w}" height="${h}" class="${zonaClass}" onclick="highlightCorte('${z.id}')"/>`;
-            });
-            
-            // Marco
-            svg += `<rect x="${ox}" y="${oy}" width="${sw}" height="${sh}" fill="none" stroke="#1E4D6B" stroke-width="3"/>`;
-            
-            // Dimensiones
-            svg += `<line x1="${ox}" y1="${oy - 5}" x2="${ox + sw}" y2="${oy - 5}" class="dimension-line"/>`;
-            svg += `<text x="${ox + sw/2}" y="${oy - 8}" class="dimension-text">${w}mm</text>`;
-            svg += `<line x1="${ox - 5}" y1="${oy}" x2="${ox - 5}" y2="${oy + sh}" class="dimension-line"/>`;
-            svg += `<text x="${ox - 10}" y="${oy + sh/2}" class="dimension-text" transform="rotate(-90, ${ox - 10}, ${oy + sh/2})">${alto}mm</text>`;
-            
-            svg += `</svg>`;
-            return svg;
+
+        // --- Helpers de Interacción ---
+        function showTooltip(event, text) {
+            const tooltip = document.getElementById('croquis-tooltip');
+            if (!tooltip || !text) return;
+            tooltip.innerText = text;
+            tooltip.style.display = 'block';
+            tooltip.style.left = (event.pageX + 10) + 'px';
+            tooltip.style.top = (event.pageY + 10) + 'px';
         }
-        
+        function hideTooltip() {
+            const tooltip = document.getElementById('croquis-tooltip');
+            if (tooltip) tooltip.style.display = 'none';
+        }
         function highlightCorte(corteId) {
-            // Resaltar la línea del checklist correspondiente al tocar el croquis
+            if (corteId.endsWith('-marco')) return;
             document.querySelectorAll('.cut-item').forEach(item => {
                 item.classList.remove('highlighted');
                 if (item.dataset.corte === corteId) {
