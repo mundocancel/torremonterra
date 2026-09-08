@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Torremonterra - Aluminum &amp; Architectural Systems ERP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "inverse-on-surface": "#eaf1ff",
+            "surface-container": "#e5eeff",
+            "on-surface": "#0b1c30",
+            "on-error-container": "#93000a",
+            "tertiary": "#001626",
+            "primary": "#091426",
+            "on-secondary-fixed-variant": "#003ea8",
+            "on-tertiary-fixed-variant": "#004b73",
+            "on-secondary-container": "#fefcff",
+            "surface-container-low": "#eff4ff",
+            "inverse-surface": "#213145",
+            "tertiary-fixed": "#cce5ff",
+            "secondary-fixed-dim": "#b4c5ff",
+            "error": "#ba1a1a",
+            "on-primary-fixed-variant": "#3c475a",
+            "on-primary-fixed": "#111c2d",
+            "surface-container-highest": "#d3e4fe",
+            "background": "#f8f9ff",
+            "on-primary-container": "#8590a6",
+            "on-tertiary": "#ffffff",
+            "on-background": "#0b1c30",
+            "surface": "#f8f9ff",
+            "on-tertiary-container": "#2f96db",
+            "on-primary": "#ffffff",
+            "on-surface-variant": "#45474c",
+            "surface-variant": "#d3e4fe",
+            "outline": "#75777d",
+            "surface-dim": "#cbdbf5",
+            "secondary-fixed": "#dbe1ff",
+            "on-secondary": "#ffffff",
+            "on-error": "#ffffff",
+            "surface-tint": "#545f73",
+            "error-container": "#ffdad6",
+            "tertiary-fixed-dim": "#93ccff",
+            "primary-fixed": "#d8e3fb",
+            "inverse-primary": "#bcc7de",
+            "secondary": "#0051d5",
+            "primary-container": "#1e293b",
+            "surface-container-lowest": "#ffffff",
+            "outline-variant": "#c5c6cd",
+            "tertiary-container": "#002b45",
+            "secondary-container": "#316bf3",
+            "on-secondary-fixed": "#00174b",
+            "surface-bright": "#f8f9ff",
+            "primary-fixed-dim": "#bcc7de",
+            "surface-container-high": "#dce9ff",
+            "on-tertiary-fixed": "#001d31"
+          },
+          borderRadius: {
+            DEFAULT: "0.125rem",
+            lg: "0.25rem",
+            xl: "0.5rem",
+            full: "0.75rem"
+          },
+          spacing: {
+            "gutter-mobile": "1rem",
+            "space-xs": "0.5rem",
+            "space-2xl": "3rem",
+            "space-2xs": "0.25rem",
+            "space-sm": "0.75rem",
+            "touch-target-min": "3rem",
+            "space-xl": "2rem",
+            "space-lg": "1.5rem",
+            "gutter-desktop": "1.5rem",
+            "space-md": "1rem"
+          },
+          fontFamily: {
+            "headline-lg": ["Inter"],
+            "headline-md": ["Inter"],
+            "dimension-lg": ["JetBrains Mono"],
+            "label-technical": ["JetBrains Mono"],
+            "headline-xl-mobile": ["Inter"],
+            "body-lg": ["Inter"],
+            "dimension-md": ["JetBrains Mono"],
+            "caption": ["Inter"],
+            "headline-xl": ["Inter"],
+            "body-md": ["Inter"]
+          },
+          fontSize: {
+            "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "dimension-lg": ["20px", { "lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "label-technical": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+            "headline-xl-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "dimension-md": ["15px", { "lineHeight": "20px", "fontWeight": "500" }],
+            "caption": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+            "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-background text-on-background font-body-md h-full flex flex-col antialiased selection:bg-secondary selection:text-white">
+<!-- TopAppBar -->
+<header class="bg-primary text-on-primary border-b border-primary-container docked full-width top-0 z-40 flex justify-between items-center px-space-md h-touch-target-min transition-transform duration-100">
+<div class="flex items-center space-x-space-sm">
+<span class="material-symbols-outlined text-secondary-fixed text-2xl">precision_manufacturing</span>
+<h1 class="text-headline-md font-headline-md tracking-wider text-on-primary">Torremonterra</h1>
+</div>
+<!-- Role Switcher & ERP Status -->
+<div class="hidden md:flex items-center space-x-space-md">
+<div class="bg-primary-container px-space-sm py-1 rounded flex items-center space-x-space-xs border border-outline/30">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+<span class="font-label-technical text-xs text-on-primary-container">ERP v4.2 LIVE</span>
+</div>
+<div class="flex bg-primary-container/60 p-0.5 rounded-lg border border-outline/20">
+<button class="px-space-md py-1 text-xs font-label-technical rounded bg-secondary text-white shadow-sm">Oficina Técnica</button>
+<button class="px-space-md py-1 text-xs font-label-technical text-on-primary-container hover:text-white transition-colors">Taller CNC</button>
+<button class="px-space-md py-1 text-xs font-label-technical text-on-primary-container hover:text-white transition-colors">Obra</button>
+</div>
+</div>
+<div class="flex items-center space-x-space-sm">
+<div class="flex items-center space-x-1 text-on-primary-container bg-primary-container/40 px-2 py-1 rounded">
+<span class="material-symbols-outlined text-sm">cloud_done</span>
+<span class="font-label-technical text-xs">Sincronizado</span>
+</div>
+</div>
+</header>
+<!-- Segmented Tab Navigation for Desktop/Tablet (Top Nav integration matching JSON) -->
+<nav class="bg-surface border-b border-outline-variant hidden md:flex px-gutter-desktop items-center space-x-space-lg h-12 shadow-sm">
+<a class="flex items-center space-x-2 px-space-md py-1 rounded-lg bg-surface-container text-secondary border border-secondary font-label-technical text-xs font-semibold" href="#">
+<span class="material-symbols-outlined text-lg">architecture</span>
+<span>Taller</span>
+</a>
+<a class="flex items-center space-x-2 px-space-md py-1 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface border border-transparent font-label-technical text-xs transition-all" href="#">
+<span class="material-symbols-outlined text-lg">analytics</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center space-x-2 px-space-md py-1 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface border border-transparent font-label-technical text-xs transition-all" href="#">
+<span class="material-symbols-outlined text-lg">domain_verification</span>
+<span>Obra</span>
+</a>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 overflow-y-auto pb-24 md:pb-space-xl p-gutter-mobile md:p-gutter-desktop max-w-[1600px] w-full mx-auto space-y-space-md"><div class="flex-1 flex flex-col lg:flex-row h-full relative overflow-hidden bg-surface-container-lowest">
+<div class="flex-1 relative flex items-center justify-center bg-surface-container-low overflow-hidden border-r border-outline-variant/40">
+<div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#0b1c30 1.5px, transparent 1.5px); background-size: 32px 32px;"></div>
+<div class="absolute top-6 left-6 z-10 bg-white/95 backdrop-blur px-4 py-2 rounded-lg border border-outline-variant shadow-sm flex items-center space-x-3">
+<span class="bg-primary-container text-white px-2 py-0.5 rounded text-xs font-label-technical">V-01</span>
+<div>
+<h2 class="font-headline-md text-on-surface text-sm">Ventanal 2 Hojas Corredizo</h2>
+<p class="text-[11px] text-on-surface-variant">SERIE C-70 • CAD Technical Workspace</p>
+</div>
+</div>
+<div class="absolute top-6 right-6 z-10 flex items-center space-x-2 bg-white/95 backdrop-blur p-1 rounded-lg border border-outline-variant shadow-sm">
+<button class="p-2 hover:bg-surface-container rounded text-on-surface transition-colors" title="Zoom In"><span class="material-symbols-outlined text-sm">zoom_in</span></button>
+<button class="p-2 hover:bg-surface-container rounded text-on-surface transition-colors" title="Zoom Out"><span class="material-symbols-outlined text-sm">zoom_out</span></button>
+<button class="p-2 hover:bg-surface-container rounded text-on-surface transition-colors" title="Reset View"><span class="material-symbols-outlined text-sm">center_focus_strong</span></button>
+<button class="p-2 bg-primary text-white rounded transition-colors" title="Vector Anim"><span class="material-symbols-outlined text-sm">animation</span></button>
+</div>
+<div class="w-[80%] h-[75%] border-2 border-primary-container relative flex p-4 bg-white/60 backdrop-blur-xs shadow-xl rounded-xl">
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-white px-3 py-0.5 rounded border border-outline-variant font-label-technical text-xs shadow-xs">ANCHO: 2400 mm ±2 mm</div>
+<div class="absolute -left-6 top-1/2 -translate-y-1/2 -rotate-90 bg-white px-3 py-0.5 rounded border border-outline-variant font-label-technical text-xs shadow-xs">ALTO: 2150 mm</div>
+<div class="w-1/2 h-full border-r-2 border-dashed border-primary-container/60 relative flex items-center justify-center cursor-pointer hover:bg-emerald-50/20 transition-colors group">
+<div class="absolute bottom-3 left-3 font-label-technical text-xs text-on-surface font-semibold bg-white/80 px-2 py-1 rounded">Hoja Movil A (AL-9918)</div>
+<span class="material-symbols-outlined text-primary-container/40 text-5xl group-hover:text-secondary transition-colors">east</span>
+</div>
+<div class="w-1/2 h-full relative flex items-center justify-center cursor-pointer hover:bg-emerald-50/20 transition-colors group">
+<div class="absolute bottom-3 right-3 font-label-technical text-xs text-on-surface font-semibold bg-white/80 px-2 py-1 rounded">Hoja Fija B (AL-9919)</div>
+</div>
+</div>
+</div>
+<div class="w-full lg:w-[420px] bg-surface-container-lowest border-l border-outline-variant flex flex-col h-full shadow-lg z-20">
+<div class="p-4 border-b border-outline-variant flex items-center justify-between bg-surface-container-low">
+<div>
+<h3 class="font-headline-md text-on-surface text-base">Inspector de Componentes</h3>
+<p class="text-xs text-on-surface-variant">Seleccione un elemento del plano</p>
+</div>
+<span class="material-symbols-outlined text-secondary">info</span>
+</div>
+<div class="p-4 space-y-4 overflow-y-auto flex-1">
+<div class="bg-surface-container-low p-3 rounded-lg border border-outline-variant">
+<span class="text-xs font-label-technical text-secondary">SELECCIÓN ACTIVA</span>
+<h4 class="font-bold text-on-surface text-lg mt-1">M1: Marco Superior C-70</h4>
+<p class="text-xs text-on-surface-variant mt-0.5">Código: AL-9912 • Perfilería Aluminio</p>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-surface-container-low p-3 rounded border border-outline-variant">
+<span class="text-[10px] font-label-technical text-on-surface-variant block">LONGITUD</span>
+<span class="font-dimension-md text-on-surface text-base font-bold">2386 mm</span>
+</div>
+<div class="bg-surface-container-low p-3 rounded border border-outline-variant">
+<span class="text-[10px] font-label-technical text-on-surface-variant block">TOLERANCIA</span>
+<span class="font-dimension-md text-emerald-700 text-base font-bold">±2 mm</span>
+</div>
+</div>
+<div class="bg-amber-50 p-3 rounded-lg border border-amber-200">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-amber-600 text-sm">warning</span>
+<span class="font-label-technical text-amber-900 text-xs">Advertencia de Obra</span>
+</div>
+<p class="text-xs text-amber-800 mt-1">Discrepancia detectada en vano (-5 mm). Aplicar ajuste antes de mecanizado final.</p>
+</div>
+<div class="border-t border-outline-variant pt-4 space-y-2">
+<h5 class="font-label-technical text-xs text-on-surface">Secuencia CNC Asociada</h5>
+<div class="p-3 rounded bg-emerald-50 border border-emerald-200 flex items-center justify-between">
+<span class="text-xs font-semibold text-emerald-950">Corte 90° Recto</span>
+<span class="material-symbols-outlined text-emerald-600 text-sm">check_circle</span>
+</div>
+</div>
+</div>
+<div class="p-4 border-t border-outline-variant bg-surface-container-low">
+<button class="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary-container transition-all font-label-technical text-xs tracking-wider flex items-center justify-center space-x-2 shadow-sm">
+<span class="material-symbols-outlined text-base">bolt</span>
+<span>Enviar Especificación a CNC</span>
+</button>
+</div>
+</div>
+</div></main>
+<!-- BottomNavBar (Mobile Only matching JSON spec) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-space-xs h-touch-target-min bg-surface dark:bg-surface border-t border-outline-variant dark:border-outline-variant">
+<!-- Active Item -->
+<a class="flex flex-col items-center justify-center bg-surface-container text-secondary dark:text-secondary rounded-lg px-space-md py-space-xs border border-secondary" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">architecture</span>
+<span class="font-label-technical text-[10px] mt-0.5">Taller</span>
+</a>
+<!-- Inactive Item 1 -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-space-md py-space-xs border border-transparent" href="#">
+<span class="material-symbols-outlined text-xl">analytics</span>
+<span class="font-label-technical text-[10px] mt-0.5">Dashboard</span>
+</a>
+<!-- Inactive Item 2 -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-space-md py-space-xs border border-transparent" href="#">
+<span class="material-symbols-outlined text-xl">domain_verification</span>
+<span class="font-label-technical text-[10px] mt-0.5">Obra</span>
+</a>
+</nav>
+</body></html>

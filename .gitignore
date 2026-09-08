@@ -27,6 +27,8 @@ logs
 # Local Hermes attachments and generated document previews
 .hermes/
 
-# Temporary files
-*.tmp
-*.temp
+# Python
+__pycache__/
+*.pyc
+*.pyo
+data/*.db
