@@ -1,1277 +1,247 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MONTERRA · Taller de Ventanería</title>
-    <style>
-        :root {
-            --primary: #1E4D6B;
-            --primary-dark: #153A52;
-            --accent: #E8722C;
-            --accent-light: #FCF1E0;
-            --success: #2E7D4F;
-            --alert: #C77700;
-            --danger: #D94F4F;
-            --bg: #F4F6F8;
-            --surface: #FFFFFF;
-            --ink: #1C2733;
-            --ink-soft: #5B6B78;
-            --line: #DEE4E9;
-            --font: 'Inter', system-ui, -apple-system, sans-serif;
-        }
-        
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        body {
-            font-family: var(--font);
-            background: var(--bg);
-            color: var(--ink);
-            min-height: 100vh;
-            padding: 0;
-        }
-        
-        .app-header {
-            background: var(--primary);
-            color: white;
-            padding: 1rem 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .app-header h1 {
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
-        
-        .app-header .subtitle {
-            font-size: 0.75rem;
-            color: #BFD4E0;
-            margin-top: 2px;
-        }
-        
-        .tabs {
-            display: flex;
-            gap: 0;
-            background: white;
-            border-bottom: 1px solid var(--line);
-            padding: 0 1rem;
-        }
-        
-        .tab {
-            padding: 0.75rem 1.25rem;
-            border: none;
-            background: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--ink-soft);
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            transition: all 0.2s;
-        }
-        
-        .tab:hover { color: var(--ink); }
-        
-        .tab.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-        }
-        
-        .main-content {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 1.5rem;
-        }
-        
-        .section-title {
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: var(--ink);
-        }
-        
-        .piece-list {
-            display: grid;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .piece-item {
-            background: white;
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            padding: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .piece-item:hover {
-            border-color: var(--primary);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        
-        .piece-info h3 {
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-        
-        .piece-info .piece-meta {
-            font-size: 0.75rem;
-            color: var(--ink-soft);
-            margin-top: 2px;
-        }
-        
-        .piece-status {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .badge {
-            font-size: 0.7rem;
-            font-weight: 700;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            text-transform: uppercase;
-        }
-        
-        .badge-pending { background: var(--ink-soft); color: white; }
-        .badge-progress { background: var(--accent); color: white; }
-        .badge-done { background: var(--success); color: white; }
-        
-        .piece-detail {
-            display: none;
-            animation: fadeIn 0.2s ease;
-        }
-        
-        .piece-detail.active { display: block; }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .card {
-            background: white;
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-        
-        .card-title {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 0.75rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--line);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .croquis-container {
-            background: var(--bg);
-            border-radius: 6px;
-            padding: 1rem;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-        
-        .croquis-container canvas {
-            max-width: 100%;
-            height: auto;
-        }
-        
-        .cut-list {
-            list-style: none;
-        }
-        
-        .cut-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.6rem 0;
-            border-bottom: 1px solid var(--line);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .cut-item:hover { background: var(--bg); }
-        .cut-item:last-child { border-bottom: none; }
-        
-        .cut-item input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-            accent-color: var(--success);
-        }
-        
-        .cut-item.checked .cut-label {
-            text-decoration: line-through;
-            color: var(--ink-soft);
-        }
-        
-        .cut-item.highlighted {
-            background: var(--accent-light);
-            border-left: 3px solid var(--accent);
-            padding-left: 0.5rem;
-        }
-        
-        /* Vista de croquis */
-        .croquis-toolbar {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .croquis-toolbar button {
-            padding: 0.3rem 0.6rem;
-            font-size: 0.7rem;
-            border: 1px solid var(--line);
-            background: white;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        .croquis-toolbar button.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-        
-        /* === MINI-CAD INDUSTRIAL === */
-        .croquis-container {
-            background-color: #fcfcfc;
-            background-image: 
-                linear-gradient(to right, #e0e5ea 1px, transparent 1px),
-                linear-gradient(to bottom, #e0e5ea 1px, transparent 1px);
-            background-size: 20px 20px;
-            border: 1px solid var(--line);
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.02);
-            position: relative;
-        }
-        
-        .shape-marco {
-            fill: none;
-            stroke: var(--color-marro-exterior);
-            stroke-width: 4;
-            transition: stroke 0.3s, stroke-width 0.3s;
-        }
-        .shape-marco-cut {
-            stroke: var(--success);
-            stroke-width: 3;
-            stroke-dasharray: 6,3;
-        }
-        .shape-barra {
-            fill: var(--color-panel-cabezal);
-            stroke: var(--color-stroke);
-            stroke-width: 2;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-        .shape-barra-cut {
-            fill: #D4EDDA;
-            stroke: var(--success);
-            stroke-dasharray: 4,2;
-        }
-        .shape-panel {
-            fill: var(--color-panel-fijo);
-            stroke: var(--color-stroke);
-            stroke-width: 1.5;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-        .shape-panel-cut {
-            fill: #D4EDDA;
-            stroke: var(--success);
-            stroke-dasharray: 4,2;
-        }
-        .shape-panel-corredizo {
-            fill: var(--color-panel-corredizo);
-            stroke: var(--color-stroke);
-            stroke-width: 1.5;
-            stroke-dasharray: 4,3;
-            transition: all 0.2s;
-            cursor: pointer;
-            filter: drop-shadow(2px 0 2px rgba(0,0,0,0.1));
-        }
-        .shape-panel-corredizo-cut {
-            fill: #D4EDDA;
-            stroke: var(--success);
-            stroke-dasharray: 4,2;
-        }
-        .shape-hoja {
-            fill: var(--color-panel-abierto);
-            stroke: var(--color-stroke);
-            stroke-width: 1.5;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-        .shape-hoja-cut {
-            fill: #D4EDDA;
-            stroke: var(--success);
-            stroke-dasharray: 4,2;
-        }
-        .shape-gen {
-            fill: var(--color-panel-gen);
-            stroke: var(--color-stroke);
-            stroke-width: 1.5;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-        .shape-gen-cut {
-            fill: #D4EDDA;
-            stroke: var(--success);
-            stroke-dasharray: 4,2;
-        }
-        .shape-highlight {
-            stroke: var(--accent) !important;
-            stroke-width: 3 !important;
-            filter: drop-shadow(0 0 4px var(--accent));
-        }
-        .zona-label {
-            font-size: 8px;
-            font-weight: 800;
-            fill: var(--color-label);
-            pointer-events: none;
-            font-family: 'Inter', system-ui, sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .pieza-id-label {
-            font-size: 10px;
-            font-weight: 700;
-            fill: var(--ink);
-            text-anchor: middle;
-            font-family: 'Inter', system-ui, sans-serif;
-        }
-        .flecha-sentido path {
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-        
-        /* Tooltip de Medida */
-        #croquis-tooltip {
-            position: absolute;
-            padding: 4px 8px;
-            background: var(--ink);
-            color: white;
-            font-size: 10px;
-            font-weight: 600;
-            border-radius: 4px;
-            pointer-events: none;
-            display: none;
-            z-index: 100;
-            white-space: nowrap;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        
-        .cut-label {
-            flex: 1;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-        
-        .cut-measure {
-            font-size: 0.8rem;
-            color: var(--ink-soft);
-            font-family: ui-monospace, monospace;
-        }
-        
-        .cut-qty {
-            background: var(--primary);
-            color: white;
-            font-size: 0.7rem;
-            font-weight: 700;
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            min-width: 28px;
-            text-align: center;
-        }
-        
-        .input-row {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-        
-        .input-group {
-            flex: 1;
-        }
-        
-        .input-group label {
-            display: block;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--ink-soft);
-            margin-bottom: 0.25rem;
-        }
-        
-        .input-group input, .input-group select {
-            width: 100%;
-            padding: 0.5rem 0.75rem;
-            border: 1.5px solid var(--line);
-            border-radius: 6px;
-            font-size: 0.85rem;
-            color: var(--ink);
-        }
-        
-        .input-group input:focus, .input-group select:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-        
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 0.6rem 1.25rem;
-            border: none;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .btn-primary {
-            background: var(--accent);
-            color: white;
-        }
-        
-        .btn-primary:hover { background: #d6621e; }
-        
-        .filters {
-            display: flex;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-        }
-        
-        .filters select {
-            flex: 1;
-            padding: 0.5rem 0.75rem;
-            border: 1.5px solid var(--line);
-            border-radius: 6px;
-            font-size: 0.85rem;
-            color: var(--ink);
-            background: white;
-        }
-        
-        .filters select:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-        
-        .btn-secondary {
-            background: var(--line);
-            color: var(--ink);
-        }
-        
-        .btn-secondary:hover { background: #c8d0d8; }
-        
-        .btn-success {
-            background: var(--success);
-            color: white;
-        }
-        
-        .actions-bar {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--line);
-        }
-        
-        .progress-bar {
-            height: 6px;
-            background: var(--line);
-            border-radius: 3px;
-            overflow: hidden;
-            margin: 0.5rem 0;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: var(--success);
-            transition: width 0.3s ease;
-        }
-        
-        .glass-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--line);
-        }
-        
-        .glass-item:last-child { border-bottom: none; }
-        
-        .glass-dims {
-            font-family: ui-monospace, monospace;
-            font-size: 0.85rem;
-            color: var(--primary);
-            font-weight: 600;
-        }
-        
-        .supply-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.4rem 0;
-            border-bottom: 1px solid var(--line);
-            font-size: 0.8rem;
-        }
-        
-        .supply-item:last-child { border-bottom: none; }
-        
-        .back-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
-            font-size: 0.8rem;
-            color: var(--ink-soft);
-            cursor: pointer;
-            margin-bottom: 1rem;
-            background: none;
-            border: none;
-        }
-        
-        .back-btn:hover { color: var(--primary); }
-        
-        .empty-state {
-            text-align: center;
-            padding: 2rem;
-            color: var(--ink-soft);
-        }
-        
-        @media print {
-            .app-header, .tabs, .actions-bar, .back-btn { display: none; }
-            .piece-detail.active { display: block !important; }
-            .card { break-inside: avoid; }
-        }
 
-        /* Badge de notificación de Obra */
-        .badge-notification {
-            background: var(--danger);
-            color: white;
-            font-size: 0.65rem;
-            font-weight: 700;
-            padding: 0.1rem 0.4rem;
-            border-radius: 999px;
-            margin-left: 0.25rem;
-            min-width: 18px;
-            text-align: center;
-            display: inline-block;
-            animation: pulse 1.5s infinite;
+<html class="h-full" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Torremonterra - Aluminum &amp; Architectural Systems ERP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "inverse-on-surface": "#eaf1ff",
+            "surface-container": "#e5eeff",
+            "on-surface": "#0b1c30",
+            "on-error-container": "#93000a",
+            "tertiary": "#001626",
+            "primary": "#091426",
+            "on-secondary-fixed-variant": "#003ea8",
+            "on-tertiary-fixed-variant": "#004b73",
+            "on-secondary-container": "#fefcff",
+            "surface-container-low": "#eff4ff",
+            "inverse-surface": "#213145",
+            "tertiary-fixed": "#cce5ff",
+            "secondary-fixed-dim": "#b4c5ff",
+            "error": "#ba1a1a",
+            "on-primary-fixed-variant": "#3c475a",
+            "on-primary-fixed": "#111c2d",
+            "surface-container-highest": "#d3e4fe",
+            "background": "#f8f9ff",
+            "on-primary-container": "#8590a6",
+            "on-tertiary": "#ffffff",
+            "on-background": "#0b1c30",
+            "surface": "#f8f9ff",
+            "on-tertiary-container": "#2f96db",
+            "on-primary": "#ffffff",
+            "on-surface-variant": "#45474c",
+            "surface-variant": "#d3e4fe",
+            "outline": "#75777d",
+            "surface-dim": "#cbdbf5",
+            "secondary-fixed": "#dbe1ff",
+            "on-secondary": "#ffffff",
+            "on-error": "#ffffff",
+            "surface-tint": "#545f73",
+            "error-container": "#ffdad6",
+            "tertiary-fixed-dim": "#93ccff",
+            "primary-fixed": "#d8e3fb",
+            "inverse-primary": "#bcc7de",
+            "secondary": "#0051d5",
+            "primary-container": "#1e293b",
+            "surface-container-lowest": "#ffffff",
+            "outline-variant": "#c5c6cd",
+            "tertiary-container": "#002b45",
+            "secondary-container": "#316bf3",
+            "on-secondary-fixed": "#00174b",
+            "surface-bright": "#f8f9ff",
+            "primary-fixed-dim": "#bcc7de",
+            "surface-container-high": "#dce9ff",
+            "on-tertiary-fixed": "#001d31"
+          },
+          borderRadius: {
+            DEFAULT: "0.125rem",
+            lg: "0.25rem",
+            xl: "0.5rem",
+            full: "0.75rem"
+          },
+          spacing: {
+            "gutter-mobile": "1rem",
+            "space-xs": "0.5rem",
+            "space-2xl": "3rem",
+            "space-2xs": "0.25rem",
+            "space-sm": "0.75rem",
+            "touch-target-min": "3rem",
+            "space-xl": "2rem",
+            "space-lg": "1.5rem",
+            "gutter-desktop": "1.5rem",
+            "space-md": "1rem"
+          },
+          fontFamily: {
+            "headline-lg": ["Inter"],
+            "headline-md": ["Inter"],
+            "dimension-lg": ["JetBrains Mono"],
+            "label-technical": ["JetBrains Mono"],
+            "headline-xl-mobile": ["Inter"],
+            "body-lg": ["Inter"],
+            "dimension-md": ["JetBrains Mono"],
+            "caption": ["Inter"],
+            "headline-xl": ["Inter"],
+            "body-md": ["Inter"]
+          },
+          fontSize: {
+            "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "dimension-lg": ["20px", { "lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "label-technical": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+            "headline-xl-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "dimension-md": ["15px", { "lineHeight": "20px", "fontWeight": "500" }],
+            "caption": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+            "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+          }
         }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.1); }
-        }
-
-        /* Vista Levantamientos */
-        .lev-item {
-            background: white;
-            border: 1px solid var(--line);
-            border-left: 4px solid var(--accent);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 0.75rem;
-        }
-        .lev-item.recibido { border-left-color: var(--success); opacity: 0.7; }
-        .lev-item.incidencia { border-left-color: var(--warn); }
-        .lev-meta { font-size: 0.75rem; color: var(--ink-soft); margin-top: 0.25rem; }
-        .lev-piezas { font-size: 0.85rem; margin-top: 0.5rem; color: var(--ink); }
-        .lev-acciones { margin-top: 0.75rem; display: flex; gap: 0.5rem; }
-    </style>
+      }
+    }
+  </script>
 </head>
-<body>
-    <header class="app-header">
-        <div>
-            <h1>🏗️ MONTERRA · Taller</h1>
-            <div class="subtitle">Sistema de Despiece y Producción</div>
-        </div>
-    </header>
-    
-    <nav class="tabs">
-        <button class="tab active" data-view="proyecto">Proyecto</button>
-        <button class="tab" data-view="taller">Taller</button>
-        <button class="tab" data-view="dashboard">Dashboard</button>
-        <button class="tab" data-view="levantamientos" id="tab-levantamientos">
-            🏗️ Obra <span class="badge-notification" id="badge-levantamientos" style="display:none;">0</span>
-        </button>
-    </nav>
-    
-    <main class="main-content">
-        <!-- Vista: Lista de piezas del proyecto -->
-        <div id="view-proyecto" class="view active">
-            <h2 class="section-title">Piezas del Proyecto</h2>
-            <div class="filters">
-                <select id="filter-torre" onchange="renderListaPiezas()">
-                    <option value="">Todas las torres</option>
-                    <option value="T-01">Torre 1</option>
-                    <option value="T-02">Torre 2</option>
-                    <option value="T-03">Torre 3</option>
-                </select>
-                <select id="filter-nivel" onchange="renderListaPiezas()">
-                    <option value="">Todos los niveles</option>
-                    <option value="PB">Planta Baja</option>
-                    <option value="N1">Nivel 1</option>
-                    <option value="N2">Nivel 2</option>
-                    <option value="N3">Nivel 3</option>
-                    <option value="N4">Nivel 4</option>
-                </select>
-            </div>
-            <div id="piece-list" class="piece-list"></div>
-        </div>
-        
-        <!-- Vista: Detalle de pieza -->
-        <div id="view-detalle" class="piece-detail">
-            <button class="back-btn" onclick="showView('proyecto')">← Volver a la lista</button>
-            <div id="detalle-content"></div>
-        </div>
-        
-        <!-- Vista: Dashboard -->
-        <div id="view-dashboard" class="view" style="display:none;">
-            <h2 class="section-title">Avance por Torre</h2>
-            <div id="dashboard-content"></div>
-        </div>
-
-        <!-- Vista: Levantamientos de Obra -->
-        <div id="view-levantamientos" class="view" style="display:none;">
-            <h2 class="section-title">Mediciones Recibidas desde Obra</h2>
-            <div id="levantamientos-content"></div>
-        </div>
-    </main>
-
-    <script>
-        // ==================== CONFIGURACIÓN ====================
-        // URL pública de Funnel (copia la que obtuviste con `tailscale funnel list`)
-        const PI_URL = "https://irving.pango-lin.ts.net";
-        
-        const PROYECTO = {
-            nombre: "MONTERRA",
-            torres: [
-                { codigo: "T-01", nombre: "Torre 1", niveles: ["PB", "N1", "N2", "N3", "N4"] },
-                { codigo: "T-02", nombre: "Torre 2", niveles: ["PB", "N1", "N2", "N3", "N4"] },
-                { codigo: "T-03", nombre: "Torre 3", niveles: ["PB", "N1", "N2", "N3", "N4"] }
-            ],
-            piezas: [
-                // Torre 1
-                { codigo: "V-01", nombre: "Sala PB", sistema: "corrediza_3", ancho: 1990, alto: 2400, torre: "T-01", nivel: "PB", depto: "DEP1", recinto: "Sala" },
-                { codigo: "V-04", nombre: "Lavandería", sistema: "celosias_fijas", ancho: 740, alto: 400, torre: "T-01", nivel: "PB", depto: "DEP1", recinto: "Lavandería" },
-                { codigo: "V-07", nombre: "Baño", sistema: "sifon_eco", ancho: 430, alto: 330, torre: "T-01", nivel: "PB", depto: "DEP1", recinto: "Baño" },
-                { codigo: "P-01", nombre: "Puerta Rec1 (chapa der.)", sistema: "puerta_abitable", ancho: 990, alto: 2400, torre: "T-01", nivel: "PB", depto: "DEP1", recinto: "Recámara 1" },
-                { codigo: "P-02", nombre: "Puerta Rec2 (chapa izq.)", sistema: "puerta_abitable", ancho: 990, alto: 2400, torre: "T-01", nivel: "PB", depto: "DEP2", recinto: "Recámara 2" },
-                // Torre 1 - Nivel 1
-                { codigo: "V-02", nombre: "Comedor N1", sistema: "corrediza_3", ancho: 1230, alto: 1600, torre: "T-01", nivel: "N1", depto: "DEP1", recinto: "Comedor" },
-                { codigo: "V-05", nombre: "Sala N1", sistema: "corrediza_3", ancho: 1990, alto: 1600, torre: "T-01", nivel: "N1", depto: "DEP2", recinto: "Sala" },
-                // Torre 1 - Niveles 2-4
-                { codigo: "V-03", nombre: "Balcón", sistema: "corrediza_3", ancho: 1230, alto: 2400, torre: "T-01", nivel: "N2", depto: "DEP1", recinto: "Balcón" },
-                { codigo: "V-06", nombre: "Salas N2-N4", sistema: "corrediza_3", ancho: 1990, alto: 1200, alto_total: 2400, torre: "T-01", nivel: "N2", depto: "DEP2", recinto: "Sala" },
-                { codigo: "V-08", nombre: "Recámara 1", sistema: "corrediza_3", ancho: 990, alto: 1200, alto_total: 2400, torre: "T-01", nivel: "N3", depto: "DEP1", recinto: "Recámara 1" },
-                { codigo: "V-09", nombre: "Recámara 2", sistema: "corrediza_3", ancho: 990, alto: 1200, alto_total: 2400, torre: "T-01", nivel: "N3", depto: "DEP2", recinto: "Recámara 2" },
-                // Torre 2
-                { codigo: "V-10", nombre: "Sala PB T2", sistema: "corrediza_3", ancho: 1990, alto: 2400, torre: "T-02", nivel: "PB", depto: "DEP1", recinto: "Sala" },
-                { codigo: "V-11", nombre: "Comedor T2", sistema: "corrediza_3", ancho: 1230, alto: 1600, torre: "T-02", nivel: "N1", depto: "DEP1", recinto: "Comedor" },
-                // Torre 3
-                { codigo: "V-12", nombre: "Sala PB T3", sistema: "corrediza_3", ancho: 1990, alto: 2400, torre: "T-03", nivel: "PB", depto: "DEP1", recinto: "Sala" },
-                { codigo: "V-13", nombre: "Comedor T3", sistema: "corrediza_3", ancho: 1230, alto: 1600, torre: "T-03", nivel: "N1", depto: "DEP1", recinto: "Comedor" },
-            ]
-        };
-
-        const SISTEMAS = {
-            'corrediza_3': 'Corrediza 3"',
-            'celosias_fijas': 'Celosías Fijas',
-            'sifon_eco': 'Sifón Ecológico',
-            'puerta_abitable': 'Puerta Abatible',
-            'ventanal_4_hojas': 'Ventanal 4 Hojas'
-        };
-
-        // ==================== ESTADO LOCAL ====================
-        let estadoPiezas = JSON.parse(localStorage.getItem('monterra_estado') || '{}');
-
-        function guardarEstado() {
-            localStorage.setItem('monterra_estado', JSON.stringify(estadoPiezas));
-        }
-
-        // ==================== RENDERIZADO ====================
-        function renderListaPiezas() {
-            const container = document.getElementById('piece-list');
-            const filtroTorre = document.getElementById('filter-torre')?.value || '';
-            const filtroNivel = document.getElementById('filter-nivel')?.value || '';
-            
-            const piezasFiltradas = PROYECTO.piezas.filter(p => {
-                if (filtroTorre && p.torre !== filtroTorre) return false;
-                if (filtroNivel && p.nivel !== filtroNivel) return false;
-                return true;
-            });
-            
-            if (piezasFiltradas.length === 0) {
-                container.innerHTML = '<div class="empty-state">No hay piezas para esta selección</div>';
-                return;
-            }
-            
-            container.innerHTML = piezasFiltradas.map(p => {
-                const estado = estadoPiezas[p.codigo] || {};
-                const cortesHechos = (estado.cortes || []).filter(c => c.hecho).length;
-                const totalCortes = estado.cortes ? estado.cortes.length : 0;
-                const pct = totalCortes > 0 ? Math.round((cortesHechos / totalCortes) * 100) : 0;
-                
-                let badgeClass = 'badge-pending';
-                let badgeText = 'Pendiente';
-                if (pct === 100) { badgeClass = 'badge-done'; badgeText = 'Completo'; }
-                else if (pct > 0) { badgeClass = 'badge-progress'; badgeText = `${pct}%`; }
-                
-                const ubicacion = p.torre ? `${p.torre} · ${p.nivel} · ${p.depto}` : '';
-                
-                return `
-                    <div class="piece-item" onclick="verDetalle('${p.codigo}')">
-                        <div class="piece-info">
-                            <h3>${p.codigo} · ${p.nombre}</h3>
-                            <div class="piece-meta">${SISTEMAS[p.sistema]} · ${p.ancho}×${p.alto}mm</div>
-                            ${ubicacion ? `<div class="piece-meta" style="color:var(--primary);">📍 ${ubicacion}</div>` : ''}
-                        </div>
-                        <div class="piece-status">
-                            <span class="badge ${badgeClass}">${badgeText}</span>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        async function verDetalle(codigo) {
-            const pieza = PROYECTO.piezas.find(p => p.codigo === codigo);
-            if (!pieza) return;
-            
-            showView('detalle');
-            
-            const container = document.getElementById('detalle-content');
-            container.innerHTML = '<div class="empty-state">Calculando despiece...</div>';
-            
-            try {
-                const body = {
-                    sistema_id: pieza.sistema,
-                    ancho: pieza.ancho,
-                    alto: pieza.alto
-                };
-                if (pieza.alto_total) body.alto_total = pieza.alto_total;
-                
-                const resp = await fetch(`${PI_URL}/api/catalog/calcular`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(body)
-                });
-                
-                const data = await resp.json();
-                if (data.error) {
-                    container.innerHTML = `<div class="empty-state">Error: ${data.error}</div>`;
-                    return;
-                }
-                
-                renderDetalle(pieza, data);
-            } catch (err) {
-                // Modo offline: mostrar datos del proyecto
-                renderDetalleOffline(pieza);
-            }
-        }
-
-        function renderDetalle(pieza, data) {
-            const container = document.getElementById('detalle-content');
-            const estado = estadoPiezas[pieza.codigo] || { cortes: [] };
-            
-            // Croquis con zonas interactivas sincronizadas con checklist
-            const croquisHTML = generarCroquisInteractivo(pieza, data, estado);
-            
-            // Lista de corte (sincronizada con croquis)
-            const cortesHTML = (data.componentes || []).map((c, i) => {
-                const corteId = `${pieza.codigo}-c${i}`;
-                const corte = (estado.cortes || []).find(x => x.id === corteId);
-                const checked = corte && corte.hecho ? 'checked' : '';
-                const doneClass = checked ? 'checked' : '';
-                
-                const long = c.longitud_mm !== null ? `${c.longitud_mm.toFixed(1)}mm` : 'N/A';
-                return `
-                    <li class="cut-item ${doneClass}" data-corte="${corteId}" data-idx="${i}" onclick="toggleCorte('${pieza.codigo}', '${corteId}')">
-                        <input type="checkbox" ${checked}>
-                        <span class="cut-label">${c.pieza}</span>
-                        <span class="cut-qty">×${c.cantidad}</span>
-                        <span class="cut-measure">${long}</span>
-                    </li>
-                `;
-            }).join('');
-            
-            // Vidrios
-            const vidriosHTML = (data.vidrios || []).map(v => {
-                if (!v.cantidad || v.cantidad === 0) return '';
-                const ancho = v.ancho_mm ? v.ancho_mm.toFixed(1) : 'N/A';
-                const alto = v.alto_mm ? v.alto_mm.toFixed(1) : 'N/A';
-                return `
-                    <div class="glass-item">
-                        <span class="cut-label">${v.posicion}</span>
-                        <span class="glass-dims">${ancho} × ${alto} mm</span>
-                        <span class="cut-qty">×${v.cantidad}</span>
-                    </div>
-                `;
-            }).join('');
-            
-            // Insumos
-            const insumosHTML = (data.insumos || []).map(i => {
-                if (!i.cantidad || i.cantidad === 0) return '';
-                const qty = i.unidad === 'metro_lineal' ? (i.cantidad / 1000).toFixed(2) + 'm' : i.cantidad;
-                return `
-                    <div class="supply-item">
-                        <span>${i.nombre}</span>
-                        <span class="cut-measure">${qty}</span>
-                    </div>
-                `;
-            }).join('');
-            
-            // Progreso
-            const totalCortes = (data.componentes || []).length;
-            const cortesHechos = (estado.cortes || []).filter(c => c.hecho).length;
-            const pct = totalCortes > 0 ? Math.round((cortesHechos / totalCortes) * 100) : 0;
-            
-            container.innerHTML = `
-                <h2 class="section-title">${pieza.codigo} · ${pieza.nombre}</h2>
-                <div style="font-size:0.8rem;color:var(--ink-soft);margin-bottom:1rem;">
-                    ${SISTEMAS[pieza.sistema]} · ${pieza.ancho}×${pieza.alto}mm
-                    ${pieza.torre ? `· 📍 ${pieza.torre} · ${pieza.nivel} · ${pieza.depto}` : ''}
-                </div>
-                
-                <div class="card">
-                    <div class="card-title">📐 Croquis de Despiece</div>
-                    ${croquisHTML}
-                </div>
-                
-                <div class="card">
-                    <div class="card-title">📋 Lista de Corte</div>
-                    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem;">
-                        <div class="progress-bar" style="flex:1;">
-                            <div class="progress-fill" style="width:${pct}%;"></div>
-                        </div>
-                        <span style="font-size:0.8rem;font-weight:600;">${cortesHechos}/${totalCortes}</span>
-                    </div>
-                    <ul class="cut-list">${cortesHTML}</ul>
-                </div>
-                
-                ${vidriosHTML ? `
-                <div class="card">
-                    <div class="card-title">🪟 Vidrios</div>
-                    ${vidriosHTML}
-                </div>
-                ` : ''}
-                
-                ${insumosHTML ? `
-                <div class="card">
-                    <div class="card-title">📦 Insumos</div>
-                    ${insumosHTML}
-                </div>
-                ` : ''}
-                
-                <div class="actions-bar">
-                    <button class="btn btn-secondary" onclick="imprimir()">🖨️ Imprimir</button>
-                    <button class="btn btn-success" onclick="marcarTodo('${pieza.codigo}', ${totalCortes})">✓ Marcar todo</button>
-                </div>
-            `;
-        }
-        
-        // ==================== CROQUIS INTERACTIVO ====================
-        // Dibuja croquis SVG con zonas coloreadas según estado del checklist.
-        // Cada zona tiene: id (para synch con checklist), tipo, texto interno,
-        // colores segúnestado: pendiente=blanco/azul, cortado=verde, actual=naranja.
-        function generarCroquisInteractivo(pieza, data, estado) {
-                const w = pieza.ancho;
-                const h = pieza.alto || 2400;
-                const alto_total = pieza.alto_total || h;
-                const alto_desplay = alto_total > h ? alto_total : h;
-                const scale = Math.min(260 / w, 340 / alto_desplay);
-                const sw = w * scale;
-                const sh = alto_desplay * scale;
-                const ox = 50, oy = 40;
-                const dw = ox + sw + 50;
-                const dh = oy + sh + 50;
-
-                // ---- Lógica de Traslape (Overlap) para Corredizas ----
-                // En una corrediza de 2 hojas, el traslape suele ser de 30-50mm
-                const overlap_mm = 40;
-                const overlap_px = overlap_mm * scale;
-                const cortesHechos = new Set(
-                    (estado.cortes || [])
-                        .filter(c => c.hecho || c.estado === 'cortado')
-                        .map(c => c.id)
-                );
-
-                const zonas = [];
-                if (pieza.sistema === 'corrediza_3') {
-                    // Marco exterior
-                    zonas.push({
-                        id: `${pieza.codigo}-marco`, tipo: 'marco',
-                        x: ox, y: oy, w: sw, h: sh, label: '',
-                        strokeW: 4, fill: 'none', stroke: '#1E4D6B', dash: '0'
-                    });
-
-                    // Jamba Cabezal (c1)
-                    const h_cabezal = Math.max(8, sh * 0.075);
-                    zonas.push({
-                        id: `${pieza.codigo}-c1`, tipo: 'barra_horizontal',
-                        x: ox, y: oy, w: sw, h: h_cabezal, label: 'JAMBA',
-                        strokeW: 2, fill: '#D5E8F5', stroke: '#2C3E50', dash: '0',
-                        medida: `${w} mm`
-                    });
-
-                    // Riel Inferior (c0)
-                    const h_riel = Math.max(8, sh * 0.085);
-                    const y_riel = oy + sh - h_riel;
-                    zonas.push({
-                        id: `${pieza.codigo}-c0`, tipo: 'barra_horizontal',
-                        x: ox, y: y_riel, w: sw, h: h_riel, label: 'RIEL',
-                        strokeW: 2, fill: '#C5D9ED', stroke: '#2C3E50', dash: '0',
-                        medida: `${w} mm`
-                    });
-
-                    // Panel Fijo (c4) - Izquierda
-                    const panel_w = (sw / 2) + overlap_px;
-                    const panel_h = sh - h_cabezal - h_riel;
-                    zonas.push({
-                        id: `${pieza.codigo}-c4`, tipo: 'panel_fijo',
-                        x: ox + 3, y: oy + h_cabezal + 1, w: panel_w - 3, h: panel_h - 2,
-                        label: 'FIJO', strokeW: 1.5, fill: '#E8F4F8', stroke: '#2C3E50', dash: '0',
-                        medida: `${data.componentes.find(c => c.pieza.includes('Cerco chapa panel fijo'))?.longitud_mm || '---'} mm`
-                    });
-
-                    // Panel Corredizo (c5) - Derecha con Traslape
-                    zonas.push({
-                        id: `${pieza.codigo}-c5`, tipo: 'panel_corredizo',
-                        x: ox + (sw / 2) - overlap_px + 3, y: oy + h_cabezal + 1, w: panel_w - 3, h: panel_h - 2,
-                        label: 'CORREDIZO', strokeW: 1.5, fill: '#FEF5E7', stroke: '#2C3E50', dash: '4,3',
-                        medida: `${data.componentes.find(c => c.pieza.includes('Cerco chapa panel corredizo'))?.longitud_mm || '---'} mm`
-                    });
-                } else if (pieza.sistema === 'puerta_abitable') {
-                    zonas.push({
-                        id: `${pieza.codigo}-marco`, tipo: 'marco', x: ox, y: oy, w: sw, h: sh, label: '',
-                        strokeW: 4, fill: 'none', stroke: '#1E4D6B', dash: '0'
-                    });
-                    zonas.push({
-                        id: `${pieza.codigo}-c0`, tipo: 'hoja', x: ox + 3, y: oy + 3, w: sw - 6, h: sh - 6,
-                        label: 'HOJA', strokeW: 1.5, fill: '#D4ECEA', stroke: '#2C3E50', dash: '0',
-                        medida: `${data.componentes[0]?.longitud_mm || '---'} mm`
-                    });
-                } else {
-                    zonas.push({
-                        id: `${pieza.codigo}-c0`, tipo: 'estructura', x: ox, y: oy, w: sw, h: sh,
-                        label: pieza.sistema.toUpperCase(), strokeW: 1.5, fill: '#E8F0F8', stroke: '#2C3E50', dash: '0',
-                        medida: `${w} x ${h} mm`
-                    });
-                }
-
-                let svg = `<svg viewBox="0 0 ${dw} ${dh}" style="max-width:100%;" id="croquis-svg">`;
-            
-                // Dibujar zonas
-                zonas.forEach(z => {
-                    const cortado = cortesHechos.has(z.id);
-                    let cls = 'piece-shape';
-                    if (z.tipo === 'marco') cls = 'shape-marco';
-                    else if (z.tipo === 'barra_horizontal') cls = 'shape-barra';
-                    else if (z.tipo === 'panel_fijo') cls = 'shape-panel';
-                    else if (z.tipo === 'panel_corredizo') cls = 'shape-panel-corredizo';
-                    else if (z.tipo === 'hoja') cls = 'shape-hoja';
-                    else cls = 'shape-gen';
-                
-                    if (cortado) cls += ` ${z.tipo === 'marco' ? 'shape-marco-cut' : 'shape-panel-cut'}`;
-
-                    svg += `<rect x="${z.x}" y="${z.y}" width="${z.w}" height="${z.h}" 
-                                    class="${cls}" fill="${z.fill}" stroke="${z.stroke}" 
-                                    stroke-width="${z.strokeW}" stroke-dasharray="${z.dash}"
-                                    data-medida="${z.medida || ''}"
-                                    onmouseover="showTooltip(event, '${z.medida || ''}')" 
-                                    onmouseout="hideTooltip()"
-                                    onclick="highlightCorte('${z.id}')"/>`;
-
-                    if (z.label) {
-                        const cx = z.x + z.w / 2;
-                        const cy = z.y + z.h / 2;
-                        const rotar = (z.tipo === 'barra_horizontal' && z.w < 150);
-                        svg += `<text x="${cx}" y="${cy + 3}" text-anchor="middle" dominant-baseline="middle" 
-                                        class="zona-label" style="${rotar ? 'transform: rotate(-90deg); transform-origin: center;' : ''}">${z.label}</text>`;
-                    }
-                });
-
-                // Marco final
-                svg += `<rect x="${ox}" y="${oy}" width="${sw}" height="${sh}" fill="none" stroke="#1E4D6B" stroke-width="4" rx="1"/>`;
-
-                // Flechas y dimensiones... (mismo código de antes)
-                if (pieza.sistema === 'corrediza_3' && sw > 120) {
-                    const midX = ox + sw / 2; const arrowY = oy + sh + 12;
-                    svg += `<g class="flecha-sentido" stroke="#2C3E50" stroke-width="1.5" fill="none">`;
-                    svg += `<path d="M ${midX + 20} ${arrowY} l 6 -4 m -6 4 l 6 4" />`;
-                    svg += `<path d="M ${midX + 50} ${arrowY} l 6 -4 m -6 4 l 6 4" />`;
-                    svg += `<path d="M ${midX + 80} ${arrowY} l 6 -4 m -6 4 l 6 4" />`;
-                    svg += `</g><text x="${midX + 50}" y="${arrowY + 14}" text-anchor="middle" class="zona-label" style="font-size:7px;">CORREDIZO →</text>`;
-                }
-
-                svg += `<line x1="${ox}" y1="${oy - 6}" x2="${ox + sw}" y2="${oy - 6}" stroke="#5B6B78" stroke-width="0.5"/>`;
-                svg += `<text x="${ox + sw / 2}" y="${oy - 10}" text-anchor="middle" font-size="8px" fill="#5B6B78">${w} mm</text>`;
-                svg += `<line x1="${ox - 6}" y1="${oy}" x2="${ox - 6}" y2="${oy + sh}" stroke="#5B6B78" stroke-width="0.5"/>`;
-                svg += `<text x="${ox - 10}" y="${oy + sh / 2}" text-anchor="middle" font-size="8px" fill="#5B6B78" transform="rotate(-90, ${ox - 10}, ${oy + sh / 2})">${alto_desplay} mm</text>`;
-                svg += `<text x="${ox + sw / 2}" y="${oy + sh + 28}" text-anchor="middle" class="pieza-id-label">${pieza.codigo} · ${pieza.nombre}</text>`;
-
-                svg += `</svg>`;
-                return svg;
-            }
-
-        // --- Helpers de Interacción ---
-        function showTooltip(event, text) {
-            const tooltip = document.getElementById('croquis-tooltip');
-            if (!tooltip || !text) return;
-            tooltip.innerText = text;
-            tooltip.style.display = 'block';
-            tooltip.style.left = (event.pageX + 10) + 'px';
-            tooltip.style.top = (event.pageY + 10) + 'px';
-        }
-        function hideTooltip() {
-            const tooltip = document.getElementById('croquis-tooltip');
-            if (tooltip) tooltip.style.display = 'none';
-        }
-        function highlightCorte(corteId) {
-            if (corteId.endsWith('-marco')) return;
-            document.querySelectorAll('.cut-item').forEach(item => {
-                item.classList.remove('highlighted');
-                if (item.dataset.corte === corteId) {
-                    item.classList.add('highlighted');
-                    item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }
-            });
-        }
-
-        function renderDetalleOffline(pieza) {
-            const container = document.getElementById('detalle-content');
-            container.innerHTML = `
-                <h2 class="section-title">${pieza.codigo} · ${pieza.nombre}</h2>
-                <div style="font-size:0.8rem;color:var(--ink-soft);margin-bottom:1rem;">
-                    ${SISTEMAS[pieza.sistema]} · ${pieza.ancho}×${pieza.alto}mm
-                </div>
-                <div class="card">
-                    <div class="card-title">⚠️ Sin conexión</div>
-                    <p style="font-size:0.85rem;color:var(--ink-soft);">
-                        Mostrando datos del proyecto. Conectate al servidor para el despiece completo.
-                    </p>
-                </div>
-                <div class="card">
-                    <div class="card-title">📐 Croquis</div>
-                    <div class="croquis-container">${dibujoGenerico(pieza)}</div>
-                </div>
-            `;
-        }
-
-        // ==================== CROQUIS ====================
-        // ==================== CROQUIS ====================
-        function dibujarCroquis(pieza, data) {
-            const w = pieza.ancho;
-            const h = pieza.alto || pieza.alto_total || 2400;
-            const alto = pieza.alto_total && pieza.alto_total > h ? pieza.alto_total : h;
-            const scale = Math.min(280 / w, 380 / alto);
-            const sw = w * scale;
-            const sh = alto * scale;
-            
-            let svg = `<svg viewBox="0 0 ${sw + 60} ${sh + 60}" style="max-width:100%;">`;
-            
-            // Marco exterior
-            svg += `<rect x="30" y="30" width="${sw}" height="${sh}" fill="none" stroke="#1E4D6B" stroke-width="3"/>`;
-            
-            if (pieza.sistema === 'corrediza_3' && sw > 100) {
-                const midX = 30 + sw / 2;
-                // Panel fijo
-                svg += `<rect x="30" y="30" width="${sw/2 - 2}" height="${sh}" fill="#4FD1E8" fill-opacity="0.3" stroke="#4FD1E8" stroke-width="1.5"/>`;
-                svg += `<text x="${30 + sw/4}" y="${sh/2 + 35}" text-anchor="middle" font-size="10" fill="#1E4D6B">FIJO</text>`;
-                
-                // Panel corredizo
-                svg += `<rect x="${midX + 2}" y="30" width="${sw/2 - 2}" height="${sh}" fill="#E8722C" fill-opacity="0.2" stroke="#E8722C" stroke-width="1.5"/>`;
-                svg += `<text x="${midX + sw/4 + 2}" y="${sh/2 + 35}" text-anchor="middle" font-size="10" fill="#1E4D6B">CORREDIZO</text>`;
-                
-                // Sentido
-                svg += `<path d="M ${30 + sw*0.25} ${sh + 50} l 5 -5 m -5 5 l 5 5" stroke="#1E4D6B" stroke-width="1.5" fill="none"/>`;
-                svg += `<path d="M ${midX + sw*0.25} ${sh + 50} l -5 -5 m 5 5 l -5 5" stroke="#1E4D6B" stroke-width="1.5" fill="none"/>`;
-            } else if (pieza.sistema === 'puerta_abitable') {
-                svg += `<rect x="35" y="35" width="${sw - 10}" height="${sh - 10}" fill="#4FD1E8" fill-opacity="0.3" stroke="#4FD1E8" stroke-width="1.5"/>`;
-                // Sentido de apertura
-                svg += `<path d="M ${30 + sw - 10} ${30 + sh} A ${sw-10} ${sh-10} 0 0 1 ${30 + sw} ${30 + sh - 10}" fill="none" stroke="#E8722C" stroke-width="2"/>`;
-                svg += `<text x="${30 + sw/2}" y="${sh + 50}" text-anchor="middle" font-size="10" fill="#1E4D6B">ABATIBLE</text>`;
-            } else {
-                svg += `<rect x="35" y="35" width="${sw - 10}" height="${sh - 10}" fill="#4FD1E8" fill-opacity="0.3" stroke="#4FD1E8" stroke-width="1.5"/>`;
-            }
-            
-            // Medidas
-            svg += `<text x="${30 + sw/2}" y="20" text-anchor="middle" font-size="9" fill="#5B6B78">${w}mm</text>`;
-            svg += `<text x="20" y="${30 + sh/2}" text-anchor="middle" font-size="9" fill="#5B6B78" transform="rotate(-90, 20, ${30 + sh/2})">${alto}mm</text>`;
-            
-            svg += `</svg>`;
-            return svg;
-        }
-
-        function dibujoGenerico(pieza) {
-            return dibujarCroquis(pieza, { componentes: [], vidrios: [] });
-        }
-
-        // ==================== ESTADO ====================
-        function toggleCorte(codigo, corteId) {
-            if (!estadoPiezas[codigo]) estadoPiezas[codigo] = { cortes: [] };
-            const idx = estadoPiezas[codigo].cortes.findIndex(c => c.id === corteId);
-            if (idx >= 0) {
-                estadoPiezas[codigo].cortes[idx].hecho = !estadoPiezas[codigo].cortes[idx].hecho;
-            } else {
-                estadoPiezas[codigo].cortes.push({ id: corteId, hecho: true });
-            }
-            guardarEstado();
-            renderListaPiezas();
-            verDetalle(codigo);
-        }
-
-        function avanzarEstado(codigo) {
-            // Marcar todos como hechos
-            const pieza = PROYECTO.piezas.find(p => p.codigo === codigo);
-            if (!pieza) return;
-            
-            const container = document.getElementById('detalle-content');
-            const checkboxes = container.querySelectorAll('.cut-item input[type="checkbox"]');
-            if (!estadoPiezas[codigo]) estadoPiezas[codigo] = { cortes: [] };
-            
-            checkboxes.forEach((cb, i) => {
-                cb.checked = true;
-                const id = `${codigo}-c${i}`;
-                const idx = estadoPiezas[codigo].cortes.findIndex(c => c.id === id);
-                if (idx >= 0) {
-                    estadoPiezas[codigo].cortes[idx].hecho = true;
-                } else {
-                    estadoPiezas[codigo].cortes.push({ id, hecho: true });
-                }
-            });
-            
-            guardarEstado();
-            renderListaPiezas();
-            verDetalle(codigo);
-        }
-
-        function marcarTodo(codigo, totalCortes) {
-            if (!estadoPiezas[codigo]) estadoPiezas[codigo] = { cortes: [] };
-            for (let i = 0; i < totalCortes; i++) {
-                const id = `${codigo}-c${i}`;
-                const idx = estadoPiezas[codigo].cortes.findIndex(c => c.id === id);
-                if (idx >= 0) estadoPiezas[codigo].cortes[idx].hecho = true;
-                else estadoPiezas[codigo].cortes.push({ id, hecho: true });
-            }
-            guardarEstado();
-            renderListaPiezas();
-            verDetalle(codigo);
-        }
-
-        // ==================== NAVEGACIÓN ====================
-        function showView(view) {
-            document.querySelectorAll('.view').forEach(v => v.style.display = 'none');
-            document.querySelectorAll('.piece-detail').forEach(v => v.classList.remove('active'));
-            
-            const el = document.getElementById(`view-${view}`);
-            if (el) {
-                if (view === 'detalle') el.classList.add('active');
-                else el.style.display = 'block';
-            }
-            
-            document.querySelectorAll('.tab').forEach(t => {
-                t.classList.toggle('active', t.dataset.view === view);
-            });
-        }
-
-        // ==================== TABS ====================
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                showView(tab.dataset.view);
-            });
-        });
-
-        // ==================== IMPRIMIR ====================
-        function imprimir() {
-            window.print();
-        }
-
-        // ==================== DASHBOARD ====================
-        function renderDashboard() {
-            const container = document.getElementById('dashboard-content');
-            const total = PROYECTO.piezas.length;
-            const completas = PROYECTO.piezas.filter(p => {
-                const e = estadoPiezas[p.codigo];
-                return e && e.cortes && e.cortes.length > 0 && e.cortes.every(c => c.hecho);
-            }).length;
-            
-            // Avance por torre
-            const torresHTML = PROYECTO.torres.map(torre => {
-                const piezasTorre = PROYECTO.piezas.filter(p => p.torre === torre.codigo);
-                const totalTorre = piezasTorre.length;
-                const completasTorre = piezasTorre.filter(p => {
-                    const e = estadoPiezas[p.codigo];
-                    return e && e.cortes && e.cortes.length > 0 && e.cortes.every(c => c.hecho);
-                }).length;
-                const pctTorre = totalTorre > 0 ? Math.round((completasTorre / totalTorre) * 100) : 0;
-                
-                // Niveles de esta torre
-                const niveles = [...new Set(piezasTorre.map(p => p.nivel))];
-                const nivelesHTML = niveles.map(niv => {
-                    const piezasNivel = piezasTorre.filter(p => p.nivel === niv);
-                    const totalNivel = piezasNivel.length;
-                    const completasNivel = piezasNivel.filter(p => {
-                        const e = estadoPiezas[p.codigo];
-                        return e && e.cortes && e.cortes.length > 0 && e.cortes.every(c => c.hecho);
-                    }).length;
-                    const pctNivel = totalNivel > 0 ? Math.round((completasNivel / totalNivel) * 100) : 0;
-                    return `
-                        <div style="padding:0.25rem 0;font-size:0.75rem;color:var(--ink-soft);display:flex;justify-content:space-between;">
-                            <span>${niv}</span>
-                            <span>${completasNivel}/${totalNivel} (${pctNivel}%)</span>
-                        </div>
-                    `;
-                }).join('');
-                
-                return `
-                    <div class="card" style="margin-bottom:0.75rem;">
-                        <div class="card-title">🏗️ ${torre.nombre}</div>
-                        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem;">
-                            <div class="progress-bar" style="flex:1;">
-                                <div class="progress-fill" style="width:${pctTorre}%;"></div>
-                            </div>
-                            <span style="font-size:0.9rem;font-weight:700;">${completasTorre}/${totalTorre}</span>
-                        </div>
-                        <div style="padding-left:0.5rem;border-left:2px solid var(--line);">
-                            ${nivelesHTML}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            
-            container.innerHTML = `
-                <div class="card">
-                    <div class="card-title">📊 Avance General Monterra</div>
-                    <div style="display:flex;align-items:center;gap:1rem;">
-                        <div class="progress-bar" style="flex:1;">
-                            <div class="progress-fill" style="width:${(completas/total)*100}%;"></div>
-                        </div>
-                        <span style="font-size:1.2rem;font-weight:700;">${completas}/${total}</span>
-                    </div>
-                </div>
-                ${torresHTML}
-            `;
-        }
-
-        // Dashboard tab
-        document.querySelector('[data-view="dashboard"]').addEventListener('click', renderDashboard);
-
-        // ==================== INICIALIZACIÓN ====================
-        renderListaPiezas();
-    </script>
-</body>
-</html>
+<body class="bg-background text-on-background font-body-md h-full flex flex-col antialiased selection:bg-secondary selection:text-white">
+<!-- TopAppBar -->
+<header class="bg-primary text-on-primary border-b border-primary-container docked full-width top-0 z-40 flex justify-between items-center px-space-md h-touch-target-min transition-transform duration-100">
+<div class="flex items-center space-x-space-sm">
+<span class="material-symbols-outlined text-secondary-fixed text-2xl">precision_manufacturing</span>
+<h1 class="text-headline-md font-headline-md tracking-wider text-on-primary">Torremonterra</h1>
+</div>
+<!-- Role Switcher & ERP Status -->
+<div class="hidden md:flex items-center space-x-space-md">
+<div class="bg-primary-container px-space-sm py-1 rounded flex items-center space-x-space-xs border border-outline/30">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+<span class="font-label-technical text-xs text-on-primary-container">ERP v4.2 LIVE</span>
+</div>
+<div class="flex bg-primary-container/60 p-0.5 rounded-lg border border-outline/20">
+<button class="px-space-md py-1 text-xs font-label-technical rounded bg-secondary text-white shadow-sm">Oficina Técnica</button>
+<button class="px-space-md py-1 text-xs font-label-technical text-on-primary-container hover:text-white transition-colors">Taller CNC</button>
+<button class="px-space-md py-1 text-xs font-label-technical text-on-primary-container hover:text-white transition-colors">Obra</button>
+</div>
+</div>
+<div class="flex items-center space-x-space-sm">
+<div class="flex items-center space-x-1 text-on-primary-container bg-primary-container/40 px-2 py-1 rounded">
+<span class="material-symbols-outlined text-sm">cloud_done</span>
+<span class="font-label-technical text-xs">Sincronizado</span>
+</div>
+</div>
+</header>
+<!-- Segmented Tab Navigation for Desktop/Tablet (Top Nav integration matching JSON) -->
+<nav class="bg-surface border-b border-outline-variant hidden md:flex px-gutter-desktop items-center space-x-space-lg h-12 shadow-sm">
+<a class="flex items-center space-x-2 px-space-md py-1 rounded-lg bg-surface-container text-secondary border border-secondary font-label-technical text-xs font-semibold" href="#">
+<span class="material-symbols-outlined text-lg">architecture</span>
+<span>Taller</span>
+</a>
+<a class="flex items-center space-x-2 px-space-md py-1 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface border border-transparent font-label-technical text-xs transition-all" href="#">
+<span class="material-symbols-outlined text-lg">analytics</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center space-x-2 px-space-md py-1 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface border border-transparent font-label-technical text-xs transition-all" href="#">
+<span class="material-symbols-outlined text-lg">domain_verification</span>
+<span>Obra</span>
+</a>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 overflow-y-auto pb-24 md:pb-space-xl p-gutter-mobile md:p-gutter-desktop max-w-[1600px] w-full mx-auto space-y-space-md"><div class="flex-1 flex flex-col lg:flex-row h-full relative overflow-hidden bg-surface-container-lowest">
+<div class="flex-1 relative flex items-center justify-center bg-surface-container-low overflow-hidden border-r border-outline-variant/40">
+<div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#0b1c30 1.5px, transparent 1.5px); background-size: 32px 32px;"></div>
+<div class="absolute top-6 left-6 z-10 bg-white/95 backdrop-blur px-4 py-2 rounded-lg border border-outline-variant shadow-sm flex items-center space-x-3">
+<span class="bg-primary-container text-white px-2 py-0.5 rounded text-xs font-label-technical">V-01</span>
+<div>
+<h2 class="font-headline-md text-on-surface text-sm">Ventanal 2 Hojas Corredizo</h2>
+<p class="text-[11px] text-on-surface-variant">SERIE C-70 • CAD Technical Workspace</p>
+</div>
+</div>
+<div class="absolute top-6 right-6 z-10 flex items-center space-x-2 bg-white/95 backdrop-blur p-1 rounded-lg border border-outline-variant shadow-sm">
+<button class="p-2 hover:bg-surface-container rounded text-on-surface transition-colors" title="Zoom In"><span class="material-symbols-outlined text-sm">zoom_in</span></button>
+<button class="p-2 hover:bg-surface-container rounded text-on-surface transition-colors" title="Zoom Out"><span class="material-symbols-outlined text-sm">zoom_out</span></button>
+<button class="p-2 hover:bg-surface-container rounded text-on-surface transition-colors" title="Reset View"><span class="material-symbols-outlined text-sm">center_focus_strong</span></button>
+<button class="p-2 bg-primary text-white rounded transition-colors" title="Vector Anim"><span class="material-symbols-outlined text-sm">animation</span></button>
+</div>
+<div class="w-[80%] h-[75%] border-2 border-primary-container relative flex p-4 bg-white/60 backdrop-blur-xs shadow-xl rounded-xl">
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-white px-3 py-0.5 rounded border border-outline-variant font-label-technical text-xs shadow-xs">ANCHO: 2400 mm ±2 mm</div>
+<div class="absolute -left-6 top-1/2 -translate-y-1/2 -rotate-90 bg-white px-3 py-0.5 rounded border border-outline-variant font-label-technical text-xs shadow-xs">ALTO: 2150 mm</div>
+<div class="w-1/2 h-full border-r-2 border-dashed border-primary-container/60 relative flex items-center justify-center cursor-pointer hover:bg-emerald-50/20 transition-colors group">
+<div class="absolute bottom-3 left-3 font-label-technical text-xs text-on-surface font-semibold bg-white/80 px-2 py-1 rounded">Hoja Movil A (AL-9918)</div>
+<span class="material-symbols-outlined text-primary-container/40 text-5xl group-hover:text-secondary transition-colors">east</span>
+</div>
+<div class="w-1/2 h-full relative flex items-center justify-center cursor-pointer hover:bg-emerald-50/20 transition-colors group">
+<div class="absolute bottom-3 right-3 font-label-technical text-xs text-on-surface font-semibold bg-white/80 px-2 py-1 rounded">Hoja Fija B (AL-9919)</div>
+</div>
+</div>
+</div>
+<div class="w-full lg:w-[420px] bg-surface-container-lowest border-l border-outline-variant flex flex-col h-full shadow-lg z-20">
+<div class="p-4 border-b border-outline-variant flex items-center justify-between bg-surface-container-low">
+<div>
+<h3 class="font-headline-md text-on-surface text-base">Inspector de Componentes</h3>
+<p class="text-xs text-on-surface-variant">Seleccione un elemento del plano</p>
+</div>
+<span class="material-symbols-outlined text-secondary">info</span>
+</div>
+<div class="p-4 space-y-4 overflow-y-auto flex-1">
+<div class="bg-surface-container-low p-3 rounded-lg border border-outline-variant">
+<span class="text-xs font-label-technical text-secondary">SELECCIÓN ACTIVA</span>
+<h4 class="font-bold text-on-surface text-lg mt-1">M1: Marco Superior C-70</h4>
+<p class="text-xs text-on-surface-variant mt-0.5">Código: AL-9912 • Perfilería Aluminio</p>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-surface-container-low p-3 rounded border border-outline-variant">
+<span class="text-[10px] font-label-technical text-on-surface-variant block">LONGITUD</span>
+<span class="font-dimension-md text-on-surface text-base font-bold">2386 mm</span>
+</div>
+<div class="bg-surface-container-low p-3 rounded border border-outline-variant">
+<span class="text-[10px] font-label-technical text-on-surface-variant block">TOLERANCIA</span>
+<span class="font-dimension-md text-emerald-700 text-base font-bold">±2 mm</span>
+</div>
+</div>
+<div class="bg-amber-50 p-3 rounded-lg border border-amber-200">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-amber-600 text-sm">warning</span>
+<span class="font-label-technical text-amber-900 text-xs">Advertencia de Obra</span>
+</div>
+<p class="text-xs text-amber-800 mt-1">Discrepancia detectada en vano (-5 mm). Aplicar ajuste antes de mecanizado final.</p>
+</div>
+<div class="border-t border-outline-variant pt-4 space-y-2">
+<h5 class="font-label-technical text-xs text-on-surface">Secuencia CNC Asociada</h5>
+<div class="p-3 rounded bg-emerald-50 border border-emerald-200 flex items-center justify-between">
+<span class="text-xs font-semibold text-emerald-950">Corte 90° Recto</span>
+<span class="material-symbols-outlined text-emerald-600 text-sm">check_circle</span>
+</div>
+</div>
+</div>
+<div class="p-4 border-t border-outline-variant bg-surface-container-low">
+<button class="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary-container transition-all font-label-technical text-xs tracking-wider flex items-center justify-center space-x-2 shadow-sm">
+<span class="material-symbols-outlined text-base">bolt</span>
+<span>Enviar Especificación a CNC</span>
+</button>
+</div>
+</div>
+</div></main>
+<!-- BottomNavBar (Mobile Only matching JSON spec) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-space-xs h-touch-target-min bg-surface dark:bg-surface border-t border-outline-variant dark:border-outline-variant">
+<!-- Active Item -->
+<a class="flex flex-col items-center justify-center bg-surface-container text-secondary dark:text-secondary rounded-lg px-space-md py-space-xs border border-secondary" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">architecture</span>
+<span class="font-label-technical text-[10px] mt-0.5">Taller</span>
+</a>
+<!-- Inactive Item 1 -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-space-md py-space-xs border border-transparent" href="#">
+<span class="material-symbols-outlined text-xl">analytics</span>
+<span class="font-label-technical text-[10px] mt-0.5">Dashboard</span>
+</a>
+<!-- Inactive Item 2 -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-space-md py-space-xs border border-transparent" href="#">
+<span class="material-symbols-outlined text-xl">domain_verification</span>
+<span class="font-label-technical text-[10px] mt-0.5">Obra</span>
+</a>
+</nav>
+</body></html>
