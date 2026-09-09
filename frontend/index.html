@@ -3,15 +3,133 @@
 <head>
 <meta charset="UTF-8">
 <title>Torre MONTERRA - Modelo 3D</title>
+
 <link rel="stylesheet" href="css/styles.css">
+<!-- Estilos de respaldo para el panel de historial -->
+<style>
+    #action-history-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 300px;
+        max-height: 200px;
+        background: rgba(255,255,255,0.95);
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 1000;
+        overflow-y: auto;
+        font-size: 12px;
+        display: none;
+    }
+    #action-history-container h4 {
+        margin: 0 0 8px 0;
+        font-size: 14px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 6px;
+    }
+    .history-entry {
+        padding: 4px 0;
+        border-bottom: 1px solid #f5f5f5;
+        font-family: monospace;
+        color: #333;
+    }
+    #notification-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 2000;
+    }
+    .notification {
+        padding: 12px 20px;
+        margin-bottom: 10px;
+        border-radius: 6px;
+        color: white;
+        font-weight: bold;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        animation: slideIn 0.3s ease-out;
+    }
+    .notification.success { background: #4CAF50; }
+    .notification.error { background: #f44336; }
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    #connection-status {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 1000;
+        background: rgba(0,0,0,0.7);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-family: monospace;
+    }
+    #warning-container {
+        position: fixed;
+        bottom: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 900;
+        width: 90%;
+        max-width: 600px;
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 8px;
+        padding: 12px;
+        display: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .warning-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 0;
+    }
+    .warning-item button {
+        margin-left: auto;
+        padding: 4px 12px;
+        background: #ffc107;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+</style>
 </head>
 <body>
 
+<!-- ====== CANVAS 3D ====== -->
 <div id="canvas-container"></div>
 
+<!-- ====== BACKEND UI ====== -->
+<div id="connection-status">
+    <span id="backend-status">🔄 Conectando...</span>
+</div>
+
+<div id="notification-container"></div>
+
+<div id="warning-container">
+    <!-- Las advertencias se generan dinámicamente -->
+</div>
+
+<div id="action-history-container">
+    <h4>📋 Historial de Acciones</h4>
+    <div id="action-history"></div>
+</div>
+
+<!-- ====== UI PRINCIPAL ====== -->
 <div id="loading">
   <div class="spinner"></div>
   <div>Cargando modelo 3D...</div>
+</div>
+
+<div id="loading-indicator" style="display: none;">
+  <div class="spinner"></div>
+  <div>Cargando datos...</div>
 </div>
 
 <div id="header" class="panel">
@@ -40,6 +158,8 @@
   <button class="btn" id="btn-wireframe">Wireframe</button>
   <button class="btn" id="btn-reset">Reset Cámara</button>
   <button class="btn" id="btn-rotate">Auto-Rotar</button>
+  <h3 class="controls-section-title">⚙️ BACKEND</h3>
+  <button class="btn" id="save-adjustment">Guardar Ajuste</button>
 </div>
 
 <div id="info" class="panel">
@@ -54,6 +174,18 @@
   </p>
 </div>
 
+<div id="data-panel" class="panel">
+  <h4>📊 DATOS DE COMPONENTE</h4>
+  <div class="data-grid">
+    <div><strong>Ancho:</strong> <span id="ancho">---</span></div>
+    <div><strong>Alto:</strong> <span id="alto">---</span></div>
+    <div><strong>Hoja Móvil:</strong> <span id="hoja-movil">---</span></div>
+    <div><strong>Hoja Fija:</strong> <span id="hoja-fija">---</span></div>
+    <div><strong>Marco Superior:</strong> <span id="marco-superior">---</span></div>
+  </div>
+  <div id="warning-container-inner" style="display: none;"></div>
+</div>
+
 <div id="legend" class="panel">
   <h4>🎨 MATERIALES</h4>
   <div class="legend-item"><div class="legend-color" style="background:#e8e4dc"></div>Muros Reserved White</div>
@@ -64,10 +196,31 @@
   <div class="legend-item"><div class="legend-color" style="background:#a89882"></div>Piedra Georgetown</div>
 </div>
 
+<!-- ====== BOTÓN DE GUARDAR (flotante) ====== -->
+<button id="save-adjustment-float" style="
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+">
+    💾 Guardar Ajuste
+</button>
+
+<!-- ====== SCRIPTS ====== -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
 <script src="js/app.js" defer></script>
+<script src="js/backend-connect.js"></script>
 
 </body>
 </html>
