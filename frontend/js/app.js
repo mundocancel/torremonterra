@@ -67,6 +67,7 @@ function init() {
   // Eventos
   window.addEventListener('resize', onResize);
   setupControls();
+  setupDashboardListener();
 
   document.getElementById('loading').classList.add('hidden');
   animate();
@@ -141,9 +142,25 @@ function createBuilding() {
 
     const baseY = levelData.npt * SCALE;
 
-    // Volumen principal y moldura perimetral de concreto.
-    addMesh(group, new THREE.BoxGeometry(W, H, D), wallMat, [0, baseY + H / 2, 0]);
-    addMesh(group, new THREE.BoxGeometry(W + 0.32, 0.22, D + 0.32), concreteMat, [0, baseY + 0.11, 0]);
+    // Losa de entrepiso y moldura perimetral de concreto.
+    addMesh(group, new THREE.BoxGeometry(W, 0.22, D), concreteMat, [0, baseY + 0.11, 0]);
+
+    // Muros perimetrales ahuecados (fachadas con grosor real)
+    const wallThick = 0.3;
+    addMesh(group, new THREE.BoxGeometry(W, H, wallThick), wallMat, [0, baseY + H / 2, D / 2 - wallThick / 2]); // Muro Frente
+    addMesh(group, new THREE.BoxGeometry(W, H, wallThick), wallMat, [0, baseY + H / 2, -D / 2 + wallThick / 2]); // Muro Trasero
+    addMesh(group, new THREE.BoxGeometry(wallThick, H, D - wallThick * 2), wallMat, [-W / 2 + wallThick / 2, baseY + H / 2, 0]); // Muro Izq
+    addMesh(group, new THREE.BoxGeometry(wallThick, H, D - wallThick * 2), wallMat, [W / 2 - wallThick / 2, baseY + H / 2, 0]); // Muro Der
+
+    // Muros divisorios interiores y cubo de escaleras (en niveles habitables y PB)
+    if (['pb', 'n1', 'n2', 'n3', 'n4'].includes(key)) {
+      // Muro divisorio central entre departamentos (Eje longitudinal)
+      addMesh(group, new THREE.BoxGeometry(wallThick * 0.7, H - 0.22, D * 0.65), wallMat, [0, baseY + H / 2, -D * 0.1]);
+      // Muro transversal para recámaras / servicios
+      addMesh(group, new THREE.BoxGeometry(W * 0.85, H - 0.22, wallThick * 0.7), wallMat, [0, baseY + H / 2, -D * 0.15]);
+      // Paredes del cubo de escaleras central
+      addMesh(group, new THREE.BoxGeometry(1.6 * SCALE, H - 0.22, wallThick * 0.7), stairMat, [0, baseY + H / 2, D * 0.22]);
+    }
 
     if (key === 'pb') {
       // PB: zócalo Brier Branch, puerta doble central y dos accesos laterales.
@@ -367,13 +384,14 @@ function addMainAccess(group, baseY, W, D, accessMat, molduraMat) {
   allMeshes.push(dintel);
 }
 
-// ============ CONTROLES ============
+// ============ CONTROLES UI ============
 function setupControls() {
   document.querySelectorAll('.btn[data-level]').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.btn[data-level]').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       showLevel(btn.dataset.level);
+      zoomToLevel(btn.dataset.level);
     });
   });
 
@@ -383,17 +401,63 @@ function setupControls() {
   });
 
   document.getElementById('btn-reset').addEventListener('click', () => {
-    camera.position.set(35, 25, 35);
-    controls.target.set(0, 13, 0);
-    showLevel('all');
-    document.querySelectorAll('.btn[data-level]').forEach(b => b.classList.remove('active'));
-    document.querySelector('.btn[data-level="all"]').classList.add('active');
+    resetCamera();
   });
 
   document.getElementById('btn-rotate').addEventListener('click', () => {
     controls.autoRotate = !controls.autoRotate;
     controls.autoRotateSpeed = 1.5;
   });
+}
+
+// ============ DASHBOARD LISTENER (minimalista) ============
+// Escucha eventos del dashboard para sincronizar selecciones con el visor 3D.
+// Tipos soportados: 'nivel' (valor = clave del nivel o 'reset'), 'reset' (reset general).
+function setupDashboardListener() {
+  window.addEventListener('dashboard-event', (e) => {
+    const { tipo, valor } = e.detail;
+
+    if (tipo === 'nivel') {
+      if (valor === 'reset') {
+        resetCamera();
+      } else {
+        // Valor es la clave del nivel: pb, n1, n2, n3, n4, azotea
+        // Validamos que sea una clave conocida antes de aplicar
+        if (LEVELS[valor]) {
+          showLevel(valor);
+          zoomToLevel(valor);
+        } else {
+          console.warn('Nivel desconocido:', valor);
+        }
+      }
+    }
+
+    if (tipo === 'reset') {
+      resetCamera();
+    }
+  });
+}
+
+function zoomToLevel(nivelKey) {
+  const level = LEVELS[nivelKey];
+  if (!level) return;
+
+  // Altura del nivel en coordenadas 3D (SCALE aplicado)
+  const targetY = level.npt * SCALE;
+  // Apuntar la cámara al centro del nivel
+  controls.target.set(0, targetY, 0);
+  // Posicionar cámara frente al edificio, a la altura del nivel
+  camera.position.set(14, targetY + 4, 14);
+  controls.update();
+}
+
+function resetCamera() {
+  camera.position.set(35, 25, 35);
+  controls.target.set(0, 13, 0);
+  controls.update();
+  showLevel('all');
+  document.querySelectorAll('.btn[data-level]').forEach(b => b.classList.remove('active'));
+  document.querySelector('.btn[data-level="all"]').classList.add('active');
 }
 
 function showLevel(level) {

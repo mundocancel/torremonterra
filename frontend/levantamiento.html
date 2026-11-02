@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Levantamiento · Torre MONTERRA</title>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#1a1d24; --panel2:#22262f; --line:#30353f;
+    --text:#f0f0f0; --dim:#8892a0; --accent:#ff7a1a;
+    --ok:#4fae72; --warn:#e8a83c; --danger:#e15b48;
+    --radius:10px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    background:var(--bg); color:var(--text); min-height:100vh; padding-bottom:60px;
+    -webkit-font-smoothing:antialiased;
+  }
+  button{font-family:inherit; cursor:pointer; border:none; background:none; color:inherit;}
+  input,select,textarea{font-family:inherit;}
+
+  /* Header fijo */
+  header{
+    position:sticky; top:0; z-index:50; background:rgba(15,17,21,.95);
+    border-bottom:1px solid var(--line);
+    padding:10px 14px; display:flex; align-items:center; justify-content:space-between;
+    gap:10px; backdrop-filter:blur(8px);
+  }
+  .brand{display:flex; align-items:center; gap:10px;}
+  .brand .mark{
+    width:32px; height:32px; border-radius:7px; background:var(--accent);
+    display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:16px; color:#0f1115;
+  }
+  .brand .name{font-size:14px; font-weight:700; line-height:1.1;}
+  .brand .sub{font-size:11px; color:var(--dim); text-transform:uppercase; letter-spacing:.06em;}
+
+  .nav{display:flex; gap:4px; flex-wrap:wrap;}
+  .nav button{
+    padding:8px 13px; border-radius:7px; font-size:12px; font-weight:600;
+    color:var(--dim); border:1px solid transparent; transition:all .15s;
+    text-transform:uppercase; letter-spacing:.04em;
+  }
+  .nav button:hover{color:var(--text); background:var(--panel2);}
+  .nav button.active{color:#0f1115; background:var(--accent); border-color:var(--accent);}
+
+  /* Main */
+  main{max-width:520px; margin:0 auto; padding:16px 14px;}
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:16px; margin-bottom:12px;
+  }
+  .card-title{font-size:13px; font-weight:700; color:var(--dim); text-transform:uppercase;
+    letter-spacing:.06em; margin-bottom:10px; display:flex; align-items:center; gap:8px;}
+  .card-title .badge{
+    font-size:10px; padding:2px 7px; border-radius:999px; font-weight:600;
+    background:var(--panel2); color:var(--text); text-transform:none; letter-spacing:0;
+  }
+
+  /* Form fields */
+  .field{margin-bottom:12px;}
+  .field label{display:block; font-size:11px; font-weight:600; color:var(--dim);
+    text-transform:uppercase; letter-spacing:.05em; margin-bottom:5px;}
+  .field input,.field select{
+    width:100%; padding:11px 12px; background:var(--panel2);
+    border:1px solid var(--line); border-radius:8px; color:var(--text);
+    font-size:14px; outline:none; transition:border-color .15s;
+  }
+  .field input:focus,.field select:focus{border-color:var(--accent);}
+
+  .btn-row{display:flex; gap:8px; margin-top:4px;}
+  .btn-row button{flex:1;}
+
+  .btn{
+    display:block; width:100%; padding:14px; border-radius:10px;
+    font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:.05em;
+    transition:transform .1s, opacity .15s;
+  }
+  .btn:active{transform:scale(.98);}
+  .btn-primary{background:var(--accent); color:#0f1115;}
+  .btn-secondary{background:var(--panel2); border:1px solid var(--line); color:var(--text);}
+  .btn-ghost{background:none; border:1px solid var(--line); color:var(--dim);}
+  .btn-danger{background:transparent; border:1px solid var(--danger); color:var(--danger);}
+
+  /* Empty state */
+  .empty{text-align:center; padding:50px 20px; color:var(--dim);}
+  .empty .icon{font-size:40px; margin-bottom:10px; opacity:.5;}
+
+  /* Tickets list */
+  .ticket{
+    background:var(--panel); border:1px solid var(--line); border-radius:9px;
+    padding:12px 14px; margin-bottom:8px; display:flex; align-items:center;
+    gap:12px; cursor:pointer; border-left:4px solid var(--line);
+    transition:border-color .15s, background .15s;
+  }
+  .ticket:hover{background:var(--panel2);}
+  .ticket.pendiente{border-left-color:var(--danger);}
+  .ticket.medido{border-left-color:var(--ok);}
+  .ticket.incidencia{border-left-color:var(--warn);}
+  .ticket .code{font-family:'SF Mono',Menlo,Consolas,monospace; font-weight:700; font-size:13px;}
+  .ticket .desc{font-size:12px; color:var(--dim); margin-top:2px;}
+  .ticket .medida{font-family:'SF Mono',Menlo,Consolas,monospace; font-size:12px;
+    color:var(--ok); margin-top:3px;}
+  .ticket .status{
+    margin-left:auto; font-size:10px; font-weight:700; text-transform:uppercase;
+    letter-spacing:.05em; padding:4px 9px; border-radius:999px; white-space:nowrap;
+  }
+  .ticket.pendiente .status{background:rgba(225,91,72,.15); color:var(--danger);}
+  .ticket.medido .status{background:rgba(79,174,114,.15); color:var(--ok);}
+  .ticket.incidencia .status{background:rgba(232,168,60,.15); color:var(--warn);}
+
+  /* Modal sheet */
+  .overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,.6);
+    display:flex; align-items:flex-end; z-index:100;
+  }
+  .sheet{
+    background:var(--panel); width:100%; max-width:520px; margin:0 auto;
+    border-radius:18px 18px 0 0; padding:20px; max-height:85vh; overflow-y:auto;
+    border-top:3px solid var(--accent);
+  }
+  .sheet-handle{
+    width:40px; height:4px; background:var(--line); border-radius:999px;
+    margin:0 auto 16px;
+  }
+  .sheet h2{font-size:17px; font-weight:700; margin-bottom:4px;}
+  .sheet .sub{font-size:12px; color:var(--dim); margin-bottom:16px;}
+  .warn-box{
+    background:rgba(232,168,60,.1); border:1px solid rgba(232,168,60,.35);
+    border-radius:8px; padding:10px 12px; font-size:12px; color:var(--warn);
+    margin-bottom:14px;
+  }
+  .info-box{
+    background:rgba(79,163,209,.1); border:1px solid rgba(79,163,209,.35);
+    border-radius:8px; padding:10px 12px; font-size:12px; color:#7fb8d8;
+    margin-bottom:14px;
+  }
+  .close-x{
+    position:absolute; top:14px; right:16px; background:none; border:none;
+    color:var(--dim); font-size:20px; cursor:pointer; padding:4px 8px; border-radius:6px;
+  }
+  .close-x:hover{color:var(--text); background:var(--panel2);}
+
+  /* Dashboard stats */
+  .stats-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px;}
+  .stat{
+    background:var(--panel2); border-radius:8px; padding:12px; text-align:center;
+    border:1px solid var(--line);
+  }
+  .stat .num{font-size:22px; font-weight:800; color:var(--text); line-height:1;}
+  .stat .lbl{font-size:10px; color:var(--dim); text-transform:uppercase;
+    letter-spacing:.06em; margin-top:4px;}
+  .stat.ok .num{color:var(--ok);}
+  .stat.warn .num{color:var(--warn);}
+
+  .progress{
+    height:6px; background:var(--panel2); border-radius:999px; overflow:hidden;
+    margin-bottom:14px;
+  }
+  .progress .fill{height:100%; background:var(--accent); transition:width .3s;}
+
+  .pb{font-family:'SF Mono',Menlo,Consolas,monospace;}
+
+  /* Responsive */
+  @media (max-width:420px){
+    main{padding:12px 10px;}
+    .card{padding:14px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="mark">M</div>
+    <div>
+      <div class="name">Levantamiento</div>
+      <div class="sub" id="operador-label">Sin identificar</div>
+    </div>
+  </div>
+  <div class="nav" id="nav-tabs">
+    <button data-screen="inicio" class="active">Inicio</button>
+    <button data-screen="checklist">Checklist</button>
+    <button data-screen="dashboard">Dashboard</button>
+  </div>
+</header>
+
+<main>
+  <div id="app"></div>
+</main>
+
+<script>
+/* ===================================================================
+   DATOS DEL PROYECTO (extraídos de fuente_informacion_organizada.md)
+   =================================================================== */
+const TORRES = ["T-01","T-02","T-03","T-04","T-05"];
+
+const NIVELES = {
+  "PB": { orden:0, nombre:"Planta Baja", elementos:["V-01","V-04","V-07","CAN-01","P-01","P-02"] },
+  "N1": { orden:1, nombre:"Nivel 1", elementos:["V-02","V-04","V-05","V-07","V-08","V-09","CAN-01"] },
+  "N2": { orden:2, nombre:"Nivel 2", elementos:["V-03","V-04","V-06","V-07","V-08","V-09","CAN-01"] },
+  "N3": { orden:3, nombre:"Nivel 3", elementos:["V-03","V-04","V-06","V-07","V-08","V-09","CAN-01"] },
+  "N4": { orden:4, nombre:"Nivel 4", elementos:["V-03","V-04","V-06","V-07","V-08","V-09","CAN-01"] },
+};
+const ORDEN_NIVELES = ["PB","N1","N2","N3","N4"];
+
+// Medidas de plano de referencia (mm)
+const PLANOS = {
+  "V-01": { tipo:"Ventanal corredizo 3\"", uso:"Sala PB", plano:"1990 × 2400 mm" },
+  "V-02": { tipo:"Ventana corrediza 3\"", uso:"Comedor N1", plano:"1230 × 1600 mm" },
+  "V-03": { tipo:"Ventanal corredizo 3\"", uso:"Balcón N2-N4", plano:"1230 × 2400 mm" },
+  "V-04": { tipo:"Ventila celosías fijas", uso:"Lavandería", plano:"740 × 400 mm" },
+  "V-05": { tipo:"Ventana corrediza 3\"", uso:"Sala N1", plano:"1990 × 1600 mm" },
+  "V-06": { tipo:"Corrediza + Fijo inferior", uso:"Salas N2-N4", plano:"1990mm ancho · corredera 1200 + fijo" },
+  "V-07": { tipo:"Ventila tipo Sifón", uso:"Baño", plano:"430 × 330 mm" },
+  "V-08": { tipo:"Corrediza + Fijo inferior", uso:"Recámara 1", plano:"990mm ancho · corredera 1200 + fijo" },
+  "V-09": { tipo:"Corrediza + Fijo inferior", uso:"Recámara 2", plano:"990mm ancho · corredera 1200 + fijo" },
+  "P-01": { tipo:"Puerta abatible (chapa der.)", uso:"Recámara 1 PB", plano:"990 × 2400 mm" },
+  "P-02": { tipo:"Puerta abatible (chapa izq.)", uso:"Recámara 2 PB", plano:"990 × 2400 mm" },
+  "CAN-01": { tipo:"Cancel de baño", uso:"Baño", plano:"1340 × 2000 mm" },
+};
+
+const deptosDeNivel = (nivelId) => {
+  const idx = ORDEN_NIVELES.indexOf(nivelId);
+  return [
+    { id:`DEP${idx*2+1}`, lado:"A" },
+    { id:`DEP${idx*2+2}`, lado:"B" },
+  ];
+};
+
+/* ===================================================================
+   STORAGE (localStorage — funciona offline, sin dependencias)
+   =================================================================== */
+const LS = {
+  get(key){
+    try{
+      const v = localStorage.getItem("mtl_"+key);
+      return v ? JSON.parse(v) : null;
+    }catch(e){ return null; }
+  },
+  set(key, value){
+    try{ localStorage.setItem("mtl_"+key, JSON.stringify(value)); return true; }
+    catch(e){ console.error("localStorage error", e); return false; }
+  },
+  keys(prefix){
+    const r = [];
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(k && k.startsWith("mtl_"+prefix)) r.push(k.slice(4+k.indexOf("_")));
+    }
+    return r;
+  },
+  remove(key){ localStorage.removeItem("mtl_"+key); },
+};
+
+/* ===================================================================
+   DATA DEL DEPARTAMENTO
+   =================================================================== */
+function deptoStorageKey(torre, nivel, depto){
+  return `depto|${torre}|${nivel}|${depto}`;
+}
+
+function cargarDataDepto(){
+  const key = deptoStorageKey(state.torre, state.nivel, state.depto);
+  return LS.get(key) || {};
+}
+
+function guardarDataDepto(data){
+  const key = deptoStorageKey(state.torre, state.nivel, state.depto);
+  LS.set(key, data);
+  return true;
+}
+
+/* ===================================================================
+   ESTADO
+   =================================================================== */
+let state = {
+  screen: "inicio",
+  torre: null, nivel: null, depto: null, lado: null,
+  operador: LS.get("operador"),
+};
+
+const $ = (s) => document.querySelector(s);
+const app = $("#app");
+
+/* ===================================================================
+   HELPERS
+   =================================================================== */
+function deptoKey(torre, nivel, depto){
+  // Usa el ID que el usuario seleccionó (ej: DEP3) — nivel y torre se guardan aparte
+  return `depto|${torre}|${nivel}|${depto}`;
+}
+
+function toast(msg){
+  const t = document.createElement("div");
+  t.style.cssText = `
+    position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+    background:#4fae72; color:#0f1115; padding:11px 22px; border-radius:999px;
+    font-weight:600; font-size:13px; z-index:200; box-shadow:0 4px 14px rgba(0,0,0,.4);
+    transition:opacity .3s;
+  `;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>{ t.style.opacity=0; setTimeout(()=>t.remove(), 300); }, 2000);
+}
+
+/* ===================================================================
+   INIT
+   =================================================================== */
+function init(){
+  render();
+  setupNav();
+}
+
+function setupNav(){
+  document.querySelectorAll(".nav button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".nav button").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      state.screen = btn.dataset.screen;
+      render();
+    });
+  });
+}
+
+/* ===================================================================
+   RENDER
+   =================================================================== */
+function render(){
+  if(!state.operador){
+    renderPideOperador();
+  } else if(state.screen === "inicio"){
+    renderInicio();
+  } else if(state.screen === "checklist"){
+    renderChecklist();
+  } else if(state.screen === "dashboard"){
+    renderDashboard();
+  }
+}
+
+/* --- Pide operador --- */
+function renderPideOperador(){
+  app.innerHTML = `
+    <div class="card">
+      <div class="card-title">¿Quién es el operario?</div>
+      <p style="font-size:13px; color:var(--dim); margin-bottom:14px;">
+        Tu nombre se guarda en este dispositivo y se anota en cada medición.
+      </p>
+      <div class="field">
+        <label>Nombre y apellido</label>
+        <input type="text" id="input-operador" placeholder="Ej. Juan Ramírez"
+          value="${state.operador ? state.operador.name : ""}" autofocus>
+      </div>
+      <button class="btn btn-primary" onclick="guardarOperador()">Continuar</button>
+    </div>
+  `;
+  setTimeout(()=>$("#input-operador")?.focus(), 50);
+}
+
+async function guardarOperador(){
+  const val = $("#input-operador").value.trim();
+  if(!val){ toast("Escribí tu nombre para continuar"); return; }
+  state.operador = { name: val };
+  LS.set("operador", state.operador);
+  $("#operador-label").textContent = val;
+  render();
+  toast(`Hola, ${val.split(" ")[0]} ✓`);
+}
+
+/* --- Inicio: selector de torre/nivel/depto --- */
+function renderInicio(){
+  app.innerHTML = `
+    <div class="card">
+      <div class="card-title">Nuevo levantamiento</div>
+
+      <div class="field">
+        <label>Torre</label>
+        <select id="sel-torre">
+          <option value="">Selecciona torre</option>
+          ${TORRES.map(t=>`<option value="${t}">${t}</option>`).join("")}
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Nivel</label>
+        <select id="sel-nivel">
+          <option value="">Primero elegí una torre</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Departamento</label>
+        <select id="sel-depto">
+          <option value="">Primero elegí un nivel</option>
+        </select>
+      </div>
+
+      <button class="btn btn-primary" onclick="irAChecklist()">
+        Ver piezas a medir
+      </button>
+    </div>
+
+    <button class="btn btn-secondary" onclick="irADashboard()">
+      Ver dashboard de avance
+    </button>
+  `;
+
+  $("#sel-torre").addEventListener("change", (e) => {
+    const t = e.target.value;
+    const selNivel = $("#sel-nivel");
+    if(!t){
+      selNivel.innerHTML = `<option value="">Primero elegí una torre</option>`;
+      $("#sel-depto").innerHTML = `<option value="">Primero elegí un nivel</option>`;
+      return;
+    }
+    selNivel.innerHTML = `<option value="">Selecciona nivel</option>` +
+      ORDEN_NIVELES.map(n =>
+        `<option value="${n}">${n} — ${NIVELES[n].nombre}</option>`
+      ).join("");
+    $("#sel-depto").innerHTML = `<option value="">Primero elegí un nivel</option>`;
+  });
+
+  $("#sel-nivel").addEventListener("change", (e) => {
+    const nivel = e.target.value;
+    const selDepto = $("#sel-depto");
+    if(!nivel){
+      selDepto.innerHTML = `<option value="">Primero elegí un nivel</option>`;
+      return;
+    }
+    const ds = deptosDeNivel(nivel);
+    selDepto.innerHTML = `<option value="">Selecciona departamento</option>` +
+      ds.map(d => `<option value="${d.id}|${d.lado}">${d.id} · Lado ${d.lado}</option>`).join("");
+  });
+}
+
+async function irAChecklist(){
+  const torre = $("#sel-torre").value;
+  const nivel = $("#sel-nivel").value;
+  const deptoVal = $("#sel-depto").value;
+  if(!torre){ toast("Seleccioná una torre"); return; }
+  if(!nivel){ toast("Seleccioná un nivel"); return; }
+  if(!deptoVal){ toast("Seleccioná un departamento"); return; }
+  const [depto, lado] = deptoVal.split("|");
+  state.torre = torre; state.nivel = nivel; state.depto = depto; state.lado = lado;
+  state.screen = "checklist";
+  render();
+}
+
+async function irADashboard(){
+  const torre = $("#sel-torre").value || TORRES[0];
+  state.torre = torre;
+  state.screen = "dashboard";
+  render();
+}
+
+/* ===================================================================
+   CHECKLIST — lista de piezas del departamento
+   =================================================================== */
+function renderChecklist(){
+  const elementos = NIVELES[state.nivel].elementos;
+  const data = cargarDataDepto();
+
+  const medidos = elementos.filter(e => data[e] && data[e].estado === "medido").length;
+  const incidencias = elementos.filter(e => data[e] && data[e].estado === "incidencia").length;
+  const pct = elementos.length ? Math.round((medidos/elementos.length)*100) : 0;
+
+  app.innerHTML = `
+    <button class="btn btn-ghost" onclick="volverInicio()" style="margin-bottom:12px; text-align:left;">
+      ← Cambiar departamento
+    </button>
+
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-title">
+        ${state.torre} · ${state.nivel} · ${state.depto}
+        <span class="badge">Lado ${state.lado}</span>
+      </div>
+      <div class="progress"><div class="fill" style="width:${pct}%"></div></div>
+      <div style="display:flex; justify-content:space-between; font-size:12px;">
+        <span style="color:var(--dim);">${medidos} de ${elementos.length} medidas</span>
+        <span style="color:var(--text); font-weight:600;">${pct}%</span>
+      </div>
+      ${incidencias > 0 ? `<div style="margin-top:6px; font-size:12px; color:var(--warn);">⚠ ${incidencias} incidencia(s)</div>` : ""}
+      <div class="btn-row" style="margin-top:12px;">
+        <button class="btn btn-primary" onclick="sincronizarConTaller()">
+          📤 Sincronizar con Taller
+        </button>
+      </div>
+    </div>
+
+    <div id="ticket-list"></div>
+  `;
+
+  const list = $("#ticket-list");
+  elementos.forEach(codigo => {
+    const info = PLANOS[codigo];
+    const item = data[codigo];
+    const estado = item ? item.estado : "pendiente";
+
+    const div = document.createElement("div");
+    div.className = `ticket ${estado}`;
+    div.onclick = () => abrirFormulario(codigo);
+    div.innerHTML = `
+      <div>
+        <div class="code">${codigo}</div>
+        <div class="desc">${info.tipo} · ${info.uso}</div>
+        ${item && item.estado === "medido"
+          ? `<div class="medida">Real: ${item.ancho} × ${item.alto} mm</div>`
+          : ""}
+        ${item && item.estado === "incidencia"
+          ? `<div class="medida" style="color:var(--warn);">⚠ ${item.nota || "Incidencia"}</div>`
+          : ""}
+      </div>
+      <span class="status">${estado === "pendiente" ? "Pendiente"
+        : estado === "medido" ? "Medido" : "Incidencia"}</span>
+    `;
+    list.appendChild(div);
+  });
+}
+
+/* ===================================================================
+   SINCRONIZACIÓN CON TALLER (Obra → Servidor Pi)
+   =================================================================== */
+async function sincronizarConTaller(){
+  const data = cargarDataDepto();
+  const elementos = NIVELES[state.nivel].elementos;
+  const piezasParaEnviar = {};
+  
+  // Adaptamos el formato local al formato de la API
+  for(const codigo of elementos){
+    const item = data[codigo];
+    if(!item) continue;
+    if(item.estado === "medido"){
+      piezasParaEnviar[codigo] = {
+        ancho_mm: item.ancho,
+        alto_mm: item.alto,
+        estado: "medido",
+        notas: item.notas || ""
+      };
+    } else if(item.estado === "incidencia"){
+      piezasParaEnviar[codigo] = {
+        estado: "incidencia",
+        notas: item.nota || "Sin detalle"
+      };
+    }
+  }
+  
+  if(Object.keys(piezasParaEnviar).length === 0){
+    toast("No hay piezas medidas para enviar");
+    return;
+  }
+  
+  const payload = {
+    torre: state.torre,
+    nivel: state.nivel,
+    depto: state.depto,
+    lado: state.lado,
+    operador: state.operador.name,
+    piezas: piezasParaEnviar,
+    notas_generales: `Sincronizado desde ${navigator.platform || "dispositivo"}`
+  };
+  
+  // Feedback inmediato
+  toast("Enviando al taller...");
+  
+  try{
+    // Detección automática de IP según la URL desde donde se cargó
+    const apiBase = window.location.hostname === "localhost" || window.location.hostname.startsWith("192.168")
+      ? window.location.origin
+      : "http://100.67.168.38:5000";
+    
+    const resp = await fetch(`${apiBase}/api/levantamientos`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    
+    if(!resp.ok){
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.error || `HTTP ${resp.status}`);
+    }
+    
+    const result = await resp.json();
+    toast(`✓ ${result.mensaje}`);
+  } catch(err){
+    console.error("Error al sincronizar:", err);
+    toast(`❌ No se pudo enviar: ${err.message}. Datos guardados localmente.`);
+  }
+}
+
+function volverInicio(){
+  state.screen = "inicio";
+  render();
+}
+
+/* ===================================================================
+   FORMULARIO DE MEDICIÓN
+   =================================================================== */
+async function abrirFormulario(codigo){
+  const data = cargarDataDepto();
+  const existente = data[codigo];
+  const info = PLANOS[codigo];
+  const overlay = document.createElement("div");
+  overlay.className = "overlay";
+  overlay.innerHTML = `
+    <div class="sheet">
+      <button class="close-x" onclick="this.closest('.overlay').remove()">✕</button>
+      <div class="sheet-handle"></div>
+      <h2>${codigo} — ${info.tipo}</h2>
+      <div class="sub">${info.uso} · Plano: ${info.plano}</div>
+
+      ${existente && existente.estado === "medido"
+        ? `<div class="info-box">
+            Medido por <b>${existente.responsable}</b> ·
+            ${existente.fecha ? new Date(existente.fecha).toLocaleDateString("es-AR") : "fecha desconocida"} ·
+            <b>${existente.ancho} × ${existente.alto} mm</b>
+          </div>`
+        : existente && existente.estado === "incidencia"
+          ? `<div class="warn-box">Incidencia reportada: ${existente.nota || "Sin detalle"}</div>`
+          : ""}
+
+      <div class="field">
+        <label>Ancho real (mm)</label>
+        <input type="number" id="f-ancho" inputmode="numeric"
+          placeholder="Ej. ${info.plano.split(" × ")[0] || ""}"
+          value="${existente && existente.ancho ? existente.ancho : ""}">
+      </div>
+
+      <div class="field">
+        <label>Alto real (mm)</label>
+        <input type="number" id="f-alto" inputmode="numeric"
+          placeholder="Ej. ${info.plano.split(" × ")[1] ? info.plano.split(" × ")[1].replace(" mm","") : ""}"
+          value="${existente && existente.alto ? existente.alto : ""}">
+      </div>
+
+      <div class="field">
+        <label>Notas de campo (opcional)</label>
+        <input type="text" id="f-notas" placeholder="Ej. muro fuera de escuadra 5mm"
+          value="${existente && existente.notas ? existente.notas : ""}">
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="guardarMedicion('${codigo}', false)">
+          Guardar medida
+        </button>
+      </div>
+      <div class="btn-row" style="margin-top:8px;">
+        <button class="btn btn-danger" onclick="guardarMedicion('${codigo}', true)">
+          Marcar incidencia (no se pudo medir)
+        </button>
+      </div>
+      <div style="margin-top:12px; text-align:center;">
+        <button class="btn btn-ghost" onclick="this.closest('.overlay').remove()">
+          Cancelar
+        </button>
+      </div>
+    `;
+  document.body.appendChild(overlay);
+  setTimeout(()=>$("#f-ancho")?.focus(), 50);
+}
+
+async function guardarMedicion(codigo, esIncidencia){
+  const data = cargarDataDepto();
+
+  if(esIncidencia){
+    const nota = $("#f-notas").value.trim() || "Sin detalle";
+    data[codigo] = {
+      estado: "incidencia",
+      nota,
+      responsable: state.operador.name,
+      fecha: new Date().toISOString(),
+    };
+  } else {
+    const ancho = parseFloat($("#f-ancho").value);
+    const alto = parseFloat($("#f-alto").value);
+    if(!ancho || !alto || ancho <= 0 || alto <= 0){
+      toast("Ancho y alto son obligatorios y deben ser mayores a 0");
+      return;
+    }
+    const notas = $("#f-notas").value.trim();
+    data[codigo] = {
+      estado: "medido",
+      ancho, alto,
+      notas,
+      responsable: state.operador.name,
+      fecha: new Date().toISOString(),
+    };
+  }
+
+  // Guardamos localmente primero (offline-safe)
+  LS.set(deptoKey(state.torre, state.nivel, state.depto), data);
+  overlayRemove();
+  toast("Guardado ✓ Toca 'Sincronizar' para enviar al taller");
+  renderChecklist();
+}
+
+function overlayRemove(){
+  document.querySelector(".overlay")?.remove();
+}
+
+/* ===================================================================
+   DASHBOARD — avance general
+   =================================================================== */
+async function renderDashboard(){
+  const torre = state.torre || TORRES[0];
+  state.torre = torre;
+
+  let filasHtml = "";
+  let totalPzs = 0, totalMed = 0, totalInc = 0;
+
+  for(const nivel of ORDEN_NIVELES){
+    const ds = deptosDeNivel(nivel);
+    for(const d of ds){
+      const data = LS.get(deptoKey(torre, nivel, d.id)) || {};
+      const elementos = NIVELES[nivel].elementos;
+      const medidos = elementos.filter(e => data[e] && data[e].estado === "medido").length;
+      const incid = elementos.filter(e => data[e] && data[e].estado === "incidencia").length;
+      const pend = elementos.length - medidos - incid;
+      totalPzs += elementos.length;
+      totalMed += medidos;
+      totalInc += incid;
+
+      const pct = elementos.length ? Math.round((medidos/elementos.length)*100) : 0;
+      const cls = medidos === elementos.length ? "medido"
+        : incid > 0 ? "incidencia" : "pendiente";
+
+      filasHtml += `
+        <div class="ticket ${cls}" onclick="irAChecklistDesdeDashboard('${nivel}','${d.id}','${d.lado}')">
+          <div class="code">${nivel} · ${d.id}</div>
+          <div class="desc">
+            Lado ${d.lado} · ${medidos}/${elementos.length} medidas
+            ${incid > 0 ? `· ${incid} incidencia(s)` : ""}
+            ${pend > 0 ? `· ${pend} pendientes` : ""}
+          </div>
+          <span class="status">${pct}%</span>
+        </div>
+      `;
+    }
+  }
+
+  const pctTotal = totalPzs ? Math.round((totalMed/totalPzs)*100) : 0;
+
+  app.innerHTML = `
+    <button class="btn btn-ghost" onclick="volverInicio()" style="margin-bottom:12px; text-align:left;">
+      ← Volver aselector
+    </button>
+
+    <div class="card">
+      <div class="card-title">
+        ${torre} · Avance general
+        <span class="badge" id="dash-torre-label">${NIVELES[ORDEN_NIVELES.findIndex(n=>n===torre)] ? "N/A" : "N/A"}</span>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="num">${totalPzs}</div>
+          <div class="lbl">Total piezas</div>
+        </div>
+        <div class="stat ok">
+          <div class="num">${totalMed}</div>
+          <div class="lbl">Medidas</div>
+        </div>
+        <div class="stat ${totalInc > 0 ? 'warn' : ''}">
+          <div class="num">${totalInc}</div>
+          <div class="lbl">Incidencias</div>
+        </div>
+      </div>
+
+      <div class="progress"><div class="fill" style="width:${pctTotal}%"></div></div>
+      <div style="display:flex; justify-content:space-between; font-size:12px;">
+        <span style="color:var(--dim);">Avance general</span>
+        <span style="color:var(--text); font-weight:700;">${pctTotal}%</span>
+      </div>
+    </div>
+
+    <div id="dash-filas">${filasHtml}</div>
+  `;
+}
+
+function irAChecklistDesdeDashboard(nivel, depto, lado){
+  state.nivel = nivel;
+  state.depto = depto;
+  state.lado = lado;
+  state.screen = "checklist";
+  render();
+}
+
+/* ===================================================================
+   ARRANCAR
+   =================================================================== */
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,1419 @@
+{
+  "nombre_proyecto": "Residencial Alfa",
+  "descripcion_proyecto": "Proyecto de 45 torres de 4 niveles cada una",
+  "total_torres": 45,
+  "estado": "en_produccion",
+  "fecha_inicio": "2026-08-25",
+  "fecha_creacion": "2026-08-25T00:00:00",
+  "catalogos": {
+    "tipos_pieza": [
+      {
+        "id": 1,
+        "codigo": "CORREDIZA_3_ESTANDAR",
+        "nombre": "Ventana Corrediza de 3\"",
+        "descripcion": "Ventana corrediza estándar línea 3\" CONALUM",
+        "sistema_construccion": "Línea 3\" CONALUM",
+        "altura_maxima_recomendada": 1800,
+        "requiere_resaque": true,
+        "requiere_barreno_gancho": true,
+        "requiere_traslape": false,
+        "requiere_fijo_inferior": false
+      },
+      {
+        "id": 2,
+        "codigo": "FIJO_INFERIOR",
+        "nombre": "Fijo Inferior (Complemento)",
+        "descripcion": "Fijo inferior para ventanas en cruz",
+        "sistema_construccion": "Línea 3\" CONALUM",
+        "altura_maxima_recomendada": 1800,
+        "requiere_resaque": false,
+        "requiere_barreno_gancho": false,
+        "requiere_traslape": false,
+        "requiere_fijo_inferior": true
+      },
+      {
+        "id": 3,
+        "codigo": "SIFON_ECOLOGICO",
+        "nombre": "Sifón Ecológico (Baños/Lavado)",
+        "descripcion": "Bastidor de baño con traslape de 40mm",
+        "sistema_construccion": "Jamba de baño",
+        "altura_maxima_recomendada": 1800,
+        "requiere_resaque": false,
+        "requiere_barreno_gancho": false,
+        "requiere_traslape": true,
+        "requiere_fijo_inferior": false
+      },
+      {
+        "id": 4,
+        "codigo": "CELOSIAS",
+        "nombre": "Ventilación Fija (Celosías)",
+        "descripcion": "Celosías fijas en canal de 2\"",
+        "sistema_construccion": "Canal liso 2\" CONALUM",
+        "altura_maxima_recomendada": 400,
+        "requiere_resaque": false,
+        "requiere_barreno_gancho": false,
+        "requiere_traslape": false,
+        "requiere_fijo_inferior": false
+      },
+      {
+        "id": 5,
+        "codigo": "PUERTA_ABATIBLE",
+        "nombre": "Puerta Abatible 3\"",
+        "descripcion": "Puerta abatible línea 3\" CONALUM",
+        "sistema_construccion": "Línea 3\" CONALUM",
+        "altura_maxima_recomendada": 2100,
+        "requiere_resaque": false,
+        "requiere_barreno_gancho": false,
+        "requiere_traslape": false,
+        "requiere_fijo_inferior": false
+      },
+      {
+        "id": 6,
+        "codigo": "PANORAMICO_3_HOJAS",
+        "nombre": "Ventanal Panorámico 3 hojas",
+        "descripcion": "Ventanal corredizo de 3 hojas reforzado",
+        "sistema_construccion": "Línea 3\" CONALUM reforzada",
+        "altura_maxima_recomendada": 2000,
+        "requiere_resaque": true,
+        "requiere_barreno_gancho": true,
+        "requiere_traslape": false,
+        "requiere_fijo_inferior": false
+      },
+      {
+        "id": 7,
+        "codigo": "CANCEL_BAÑO_101",
+        "nombre": "Cancel de Baño Kit 101",
+        "descripcion": "Cancel corredizo doble CONALUM",
+        "sistema_construccion": "Kit 101 CONALUM",
+        "altura_maxima_recomendada": 2100,
+        "requiere_resaque": false,
+        "requiere_barreno_gancho": false,
+        "requiere_traslape": false,
+        "requiere_fijo_inferior": false
+      }
+    ],
+    "piezas_catalogo": [
+      {
+        "codigo_plano": "V-01",
+        "nombre": "Ventanal Sala PB",
+        "tipo_pieza": "ventanal",
+        "id_tipo": 1,
+        "nivel_aplicacion": "Planta_Baja",
+        "ubicacion": "Sala",
+        "ancho_mm": 2400,
+        "alto_mm": 1800,
+        "sistema_construccion": "Línea 3\" CONALUM",
+        "material_principal": "Jamba 3\" + Riel 3\"",
+        "especificacion": "Corredizo 2 hojas",
+        "tipo_relleno": "Vidrio Transparente 6mm",
+        "perimetro_marco_m": 8.4,
+        "observaciones_fabricacion": "Marco con refuerzo estructural",
+        "tiempo_estimado_horas": 2.0
+      },
+      {
+        "codigo_plano": "V-02",
+        "nombre": "Ventana Comedor N1",
+        "tipo_pieza": "ventana",
+        "id_tipo": 1,
+        "nivel_aplicacion": "Nivel_1",
+        "ubicacion": "Comedor",
+        "ancho_mm": 1800,
+        "alto_mm": 1500,
+        "sistema_construccion": "Línea 3\" CONALUM",
+        "material_principal": "Jamba 3\" + Riel 3\"",
+        "especificacion": "Corredizo 2 hojas c/mosquitero",
+        "tipo_relleno": "Vidrio Transparente 6mm",
+        "perimetro_marco_m": 6.6,
+        "observaciones_fabricacion": "Incluye riel para mosquitero",
+        "tiempo_estimado_horas": 2.0
+      },
+      {
+        "codigo_plano": "V-03",
+        "nombre": "Ventanal Balcon",
+        "tipo_pieza": "ventanal",
+        "id_tipo": 1,
+        "nivel_aplicacion": "Niveles_2,3,4",
+        "ubicacion": "Balcon",
+        "ancho_mm": 2400,
+        "alto_mm": 2000,
+        "sistema_construccion": "Línea 3\" CONALUM",
+        "material_principal": "Jamba 3\" + Riel 3\"",
+        "especificacion": "Corredizo 2 hojas",
+        "tipo_relleno": "Vidrio Transparente 6mm",
+        "perimetro_marco_m": 8.8,
+        "observaciones_fabricacion": "Altura mayor. Marco reforzado",
+        "tiempo_estimado_horas": 2.5
+      },
+      {
+        "codigo_plano": "V-04",
+        "nombre": "Ventila Lavanderia",
+        "tipo_pieza": "ventila",
+        "id_tipo": 4,
+        "nivel_aplicacion": "Todos",
+        "ubicacion": "Lavanderia",
+        "ancho_mm": 600,
+        "alto_mm": 400,
+        "sistema_construccion": "Canal liso 2\" CONALUM",
+        "material_principal": "Canal liso de 2\"",
+        "especificacion": "Celosías fijas cada 70 mm",
+        "tipo_relleno": "Celosía",
+        "perimetro_marco_m": 2.0,
+        "observaciones_fabricacion": "5 tabletas de celosía horizontales. Sin vidrio",
+        "tiempo_estimado_horas": 1.0
+      },
+      {
+        "codigo_plano": "V-05",
+        "nombre": "Ventana Sala N1",
+        "tipo_pieza": "ventana",
+        "id_tipo": 1,
+        "nivel_aplicacion": "Nivel_1",
+        "ubicacion": "Sala",
+        "ancho_mm": 2400,
+        "alto_mm": 1800,
+        "sistema_construccion": "Línea 3\" CONALUM",
+        "material_principal": "Jamba 3\" + Riel 3\"",
+        "especificacion": "Corredizo 2 hojas c/mosquitero",
+        "tipo_relleno": "Vidrio Transparente 6mm",
+        "perimetro_marco_m": 8.4,
+        "observaciones_fabricacion": "Incluye riel para mosquitero",
+        "tiempo_estimado_horas": 2.2
+      },
+      {
+        "codigo_plano": "V-06",
+        "nombre": "Ventanal Panoramico",
+        "tipo_pieza": "ventanal",
+        "id_tipo": 6,
+        "nivel_aplicacion": "Niveles_2,3,4",
+        "ubicacion": "Panoramico",
+        "ancho_mm": 3000,
+        "alto_mm": 2000,
+        "sistema_construccion": "Línea 3\" CONALUM reforzada",
+        "material_principal": "Jamba 3\" + Riel 3\"",
+        "especificacion": "Corredizo 3 hojas",
+        "tipo_relleno": "Vidrio Templado 8mm",
+        "perimetro_marco_m": 10.0,
+        "observaciones_fabricacion": "Refuerzo estructural en largueros",
+        "tiempo_estimado_horas": 3.0
+      },
+      {
+        "codigo_plano": "V-07",
+        "nombre": "Ventila Baño",
+        "tipo_pieza": "ventila",
+        "id_tipo": 3,
+        "nivel_aplicacion": "Todos",
+        "ubicacion": "Baño",
+        "ancho_mm": 400,
+        "alto_mm": 400,
+        "sistema_construccion": "Bastidor tubo 2\"x1\"",
+        "material_principal": "Tubo 2\"x1\" cal.16",
+        "especificacion": "Sifón fijo traslape 20mm",
+        "tipo_relleno": "Vidrio Satinado 4mm",
+        "perimetro_marco_m": 1.6,
+        "observaciones_fabricacion": "Bastidor de tubo. Traslape 40mm entre vidrios (sifón)",
+        "tiempo_estimado_horas": 1.0
+      },
+      {
+        "codigo_plano": "V-08",
+        "nombre": "Ventanal Rec1",
+        "tipo_pieza": "ventanal",
+        "id_tipo": 1,
+        "nivel_aplicacion": "Niveles_1,2,3,4",
+        "ubicacion": "Recamara_1",
+        "ancho_mm": 1500,
+        "alto_mm": 1800,
+        "sistema_construccion": "Línea 3\" CONALUM",
+        "material_principal": "Jamba 3\" + Riel 3\"",
+        "especificacion": "Corredizo 2 hojas c/mosquitero",
+        "tipo_relleno": "Vidrio Transparente 6mm",
+        "perimetro_marco_m": 6.6,
+        "observaciones_fabricacion": "Incluye riel para mosquitero",
+        "tiempo_estimado_horas": 2.0
+      },
+      {
+        "codigo_plano": "V-09",
+        "nombre": "Ventanal Rec2",
+        "tipo_pieza": "ventanal",
+        "id_tipo": 1,
+        "nivel_aplicacion": "Niveles_1,2,3,4",
+        "ubicacion": "Recamara_2",
+        "ancho_mm": 1500,
+        "alto_mm": 1800,
+        "sistema_construccion": "Línea 3\" CONALUM",
+        "material_principal": "Jamba 3\" + Riel 3\"",
+        "especificacion": "Corredizo 2 hojas c/mosquitero",
+        "tipo_relleno": "Vidrio Transparente 6mm",
+        "perimetro_marco_m": 6.6,
+        "observaciones_fabricacion": "Incluye riel para mosquitero",
+        "tiempo_estimado_horas": 2.0
+      },
+      {
+        "codigo_plano": "P-01",
+        "nombre": "Puerta Rec1 PB",
+        "tipo_pieza": "puerta",
+        "id_tipo": 5,
+        "nivel_aplicacion": "Planta_Baja",
+        "ubicacion": "Recamara_1",
+        "ancho_mm": 900,
+        "alto_mm": 2100,
+        "sistema_construccion": "Línea 3\" CONALUM",
+        "material_principal": "Jamba 3\"",
+        "especificacion": "Abatible 1 hoja",
+        "tipo_relleno": "Vidrio Transparente 6mm",
+        "perimetro_marco_m": 6.0,
+        "observaciones_fabricacion": "Abatible con chapa y bisagras reforzadas",
+        "tiempo_estimado_horas": 2.5
+      },
+      {
+        "codigo_plano": "P-02",
+        "nombre": "Puerta Rec2 PB",
+        "tipo_pieza": "puerta",
+        "id_tipo": 5,
+        "nivel_aplicacion": "Planta_Baja",
+        "ubicacion": "Recamara_2",
+        "ancho_mm": 900,
+        "alto_mm": 2100,
+        "sistema_construccion": "Línea 3\" CONALUM",
+        "material_principal": "Jamba 3\"",
+        "especificacion": "Abatible 1 hoja",
+        "tipo_relleno": "Vidrio Transparente 6mm",
+        "perimetro_marco_m": 6.0,
+        "observaciones_fabricacion": "Abatible con chapa y bisagras reforzadas",
+        "tiempo_estimado_horas": 2.5
+      },
+      {
+        "codigo_plano": "P-03",
+        "nombre": "Cancel Baño N1-N4",
+        "tipo_pieza": "cancel",
+        "id_tipo": 7,
+        "nivel_aplicacion": "Niveles_1,2,3,4",
+        "ubicacion": "Baño",
+        "ancho_mm": 800,
+        "alto_mm": 2100,
+        "sistema_construccion": "Kit 101 CONALUM",
+        "material_principal": "Kit 101 (1.5m)",
+        "especificacion": "Corredizo doble 2 hojas",
+        "tipo_relleno": "Vidrio Translucido 6mm",
+        "perimetro_marco_m": 0.0,
+        "observaciones_fabricacion": "Kit completo. Vidrio templado de 6mm",
+        "tiempo_estimado_horas": 1.5
+      },
+      {
+        "codigo_plano": "P-04",
+        "nombre": "Cancel Baño PB",
+        "tipo_pieza": "cancel",
+        "id_tipo": 7,
+        "nivel_aplicacion": "Planta_Baja",
+        "ubicacion": "Baño",
+        "ancho_mm": 800,
+        "alto_mm": 2100,
+        "sistema_construccion": "Kit 101 CONALUM",
+        "material_principal": "Kit 101 (1.5m)",
+        "especificacion": "Corredizo doble 2 hojas",
+        "tipo_relleno": "Vidrio Translucido 6mm",
+        "perimetro_marco_m": 0.0,
+        "observaciones_fabricacion": "Kit completo. Vidrio templado de 6mm",
+        "tiempo_estimado_horas": 1.5
+      },
+      {
+        "codigo_plano": "P-05",
+        "nombre": "Puerta Rec1 PB (espejo)",
+        "tipo_pieza": "puerta",
+        "id_tipo": 5,
+        "nivel_aplicacion": "Planta_Baja",
+        "ubicacion": "Recamara_1",
+        "ancho_mm": 900,
+        "alto_mm": 2100,
+        "sistema_construccion": "Línea 3\" CONALUM",
+        "material_principal": "Jamba 3\"",
+        "especificacion": "Abatible 1 hoja",
+        "tipo_relleno": "Vidrio Transparente 6mm",
+        "perimetro_marco_m": 6.0,
+        "observaciones_fabricacion": "Versión espejo de P-01",
+        "tiempo_estimado_horas": 2.5
+      }
+    ],
+    "componentes": {
+      "corrediza_3pulg": [
+        {
+          "id": 1,
+          "nombre": "Riel de 3\"",
+          "funcion": "Parte inferior, guía de desplazamiento",
+          "especificacion": "3 pulgadas",
+          "formula_medida": "Medida total de ancho",
+          "cantidad_por_ventana": "1 pieza",
+          "notas_especiales": ""
+        },
+        {
+          "id": 2,
+          "nombre": "Jamba de 3\"",
+          "funcion": "Postes laterales, guía vertical",
+          "especificacion": "3 pulgadas",
+          "formula_medida": "Medida total de ancho = misma que riel/cabezal",
+          "cantidad_por_ventana": "2 piezas",
+          "notas_especiales": ""
+        },
+        {
+          "id": 3,
+          "nombre": "Cabezal de 3\" (general)",
+          "funcion": "Parte superior, cierre y guía superior",
+          "especificacion": "3 pulgadas",
+          "formula_medida": "Medida total de ancho",
+          "cantidad_por_ventana": "1 pieza",
+          "notas_especiales": ""
+        },
+        {
+          "id": 4,
+          "nombre": "Zoclo doble vena de 3\"",
+          "funcion": "Parte inferior de las hojas",
+          "especificacion": "3 pulgadas",
+          "formula_medida": "(Ancho total - 185 mm) / 2 → 2 piezas iguales",
+          "cantidad_por_ventana": "2 piezas",
+          "notas_especiales": ""
+        },
+        {
+          "id": 5,
+          "nombre": "Cabezal de 3\" (hojas)",
+          "funcion": "Parte superior de las hojas",
+          "especificacion": "3 pulgadas",
+          "formula_medida": "(Ancho total - 185 mm) / 2 → 2 piezas iguales",
+          "cantidad_por_ventana": "2 piezas",
+          "notas_especiales": ""
+        },
+        {
+          "id": 6,
+          "nombre": "Cerco chapa de 3\"",
+          "funcion": "Marco fijo, alojamiento de jaladera",
+          "especificacion": "3 pulgadas",
+          "formula_medida": "Panel fijo: Alto total - 30 mm",
+          "cantidad_por_ventana": "1 pieza",
+          "notas_especiales": ""
+        },
+        {
+          "id": 7,
+          "nombre": "Traslape puerta de 3\"",
+          "funcion": "Panel corredizo / traslape",
+          "especificacion": "3 pulgadas",
+          "formula_medida": "Panel corredizo: Alto total - 40 mm",
+          "cantidad_por_ventana": "1 pieza",
+          "notas_especiales": "También llamado traslape panel corredizo"
+        },
+        {
+          "id": 8,
+          "nombre": "Vidrio panel fijo",
+          "funcion": "Cristal lado fijo",
+          "especificacion": "6 mm",
+          "formula_medida": "Ancho: (Ancho total - 155 mm) / 2 | Alto: Alto total - 125 mm",
+          "cantidad_por_ventana": "1 pieza",
+          "notas_especiales": ""
+        },
+        {
+          "id": 9,
+          "nombre": "Vidrio panel corredizo",
+          "funcion": "Cristal lado móvil",
+          "especificacion": "6 mm",
+          "formula_medida": "Ancho: (Ancho total - 155 mm) / 2 | Alto: Alto total - 135 mm",
+          "cantidad_por_ventana": "1 pieza",
+          "notas_especiales": ""
+        },
+        {
+          "id": 10,
+          "nombre": "Felpa",
+          "funcion": "Sellado perimetral entre hoja y marco",
+          "especificacion": "Estándar",
+          "formula_medida": "Perímetro total × 8 + (Alto total × 2)",
+          "cantidad_por_ventana": "Variable",
+          "notas_especiales": ""
+        },
+        {
+          "id": 11,
+          "nombre": "Empaque vinil peine 11",
+          "funcion": "Sellado y sujeción del vidrio",
+          "especificacion": "Peine 11",
+          "formula_medida": "Suma de perímetros de los 2 vidrios → cantidad exacta",
+          "cantidad_por_ventana": "Variable",
+          "notas_especiales": ""
+        },
+        {
+          "id": 12,
+          "nombre": "Carretillas de 3\"",
+          "funcion": "Rodamientos para desplazamiento",
+          "especificacion": "3 pulgadas",
+          "formula_medida": "Según diseño",
+          "cantidad_por_ventana": "2 piezas por hoja",
+          "notas_especiales": "Total 4 por ventana"
+        },
+        {
+          "id": 13,
+          "nombre": "Jaladera de embutir tipo Alfa",
+          "funcion": "Manija de apertura",
+          "especificacion": "Sin tornillo visible",
+          "formula_medida": "—",
+          "cantidad_por_ventana": "1 pieza",
+          "notas_especiales": "Requiere resaque según norma"
+        },
+        {
+          "id": 14,
+          "nombre": "Contra jaladera tipo Herralum",
+          "funcion": "Contracerradura",
+          "especificacion": "Para 3\"",
+          "formula_medida": "—",
+          "cantidad_por_ventana": "1 pieza",
+          "notas_especiales": "Complemento de cierre"
+        }
+      ],
+      "fijo_inferior": [
+        {
+          "id": 1,
+          "nombre": "Tapa Bolsa Corta de 3\"",
+          "funcion": "Parte superior del fijo; conecta con riel 3\" y empalme perfecto con escalonado",
+          "espesor_o_dimension": "3 pulgadas",
+          "formula_medida": "Medida total de ancho",
+          "cantidad_por_fijo": "1 pieza",
+          "notas_especiales": "Resaque 16 mm hasta centro del perfil para empalme con escalonado; poste central resta 28 mm adicionales"
+        },
+        {
+          "id": 2,
+          "nombre": "Escalonado de 3\"",
+          "funcion": "Parte inferior del fijo; base estructural y asiento del vidrio; recibe junquillos",
+          "espesor_o_dimension": "3 pulgadas",
+          "formula_medida": "Medida total de ancho - 90 mm",
+          "cantidad_por_fijo": "1 pieza",
+          "notas_especiales": "Resaque 16 mm hasta centro del perfil para empalme con tapa bolsa"
+        },
+        {
+          "id": 3,
+          "nombre": "Junquillos de 3\"",
+          "funcion": "Sujeción lateral del vidrio contra el escalonado",
+          "espesor_o_dimension": "3 pulgadas",
+          "formula_medida": "(Medida total de ancho - 135 mm) / 2 → 2 piezas iguales",
+          "cantidad_por_fijo": "2 piezas",
+          "notas_especiales": ""
+        },
+        {
+          "id": 4,
+          "nombre": "Bolsa de 3\" - Postes Laterales",
+          "funcion": "Postes verticales laterales; soporte vertical y rigidez estructural",
+          "espesor_o_dimension": "3 pulgadas",
+          "formula_medida": "Medida total de alto - 1200 mm",
+          "cantidad_por_fijo": "2 piezas",
+          "notas_especiales": "Aplica para Rec1, Rec2 y Sala / Panorámico"
+        },
+        {
+          "id": 5,
+          "nombre": "Bolsa de 3\" - Poste Central",
+          "funcion": "Poste central; refuerzo entre cristales y pilar para ventana superior",
+          "espesor_o_dimension": "3 pulgadas",
+          "formula_medida": "(Medida total de alto - 1200 mm) - 28 mm",
+          "cantidad_por_fijo": "1 pieza",
+          "notas_especiales": "Resaque 16 mm para empalme; resta 28 mm adicional respecto a postes laterales"
+        },
+        {
+          "id": 6,
+          "nombre": "Tapa Bolsa Complementaria",
+          "funcion": "Complemento poste central; sujeta ambos cristales y da firmeza a estructura superior",
+          "espesor_o_dimension": "3 pulgadas",
+          "formula_medida": "Según medida poste central",
+          "cantidad_por_fijo": "1 pieza",
+          "notas_especiales": "Se combina con bolsa de 3\" central"
+        },
+        {
+          "id": 7,
+          "nombre": "Empaque Vinil Peine 11",
+          "funcion": "Sellado y sujeción elástica del vidrio contra el aluminio",
+          "espesor_o_dimension": "Peine 11",
+          "formula_medida": "Suma de perímetros de los vidrios → cantidad exacta",
+          "cantidad_por_fijo": "Variable",
+          "notas_especiales": ""
+        },
+        {
+          "id": 8,
+          "nombre": "Vidrio",
+          "funcion": "Cristal del fijo inferior",
+          "espesor_o_dimension": "6 mm",
+          "formula_medida": "Ancho: (Ancho total - 110 mm) / 2 | Alto: Alto total - 1230 mm",
+          "cantidad_por_fijo": "2 piezas",
+          "notas_especiales": "Fórmula de alto aplica para Rec1, Rec2 y Sala / Panorámico"
+        }
+      ]
+    },
+    "herrajes": {
+      "corrediza_3pulg": [
+        {
+          "nombre": "Pijas de armado cabeza bola",
+          "dimensiones": "10 x ¾\"",
+          "cantidad_por_ventana": "8 piezas",
+          "uso": "Ensamblaje general de perfiles"
+        },
+        {
+          "nombre": "Pijas de anclaje",
+          "dimensiones": "10 x 3\"",
+          "cantidad_por_ventana": "12 piezas",
+          "uso": "Fijación a la obra/estructura"
+        },
+        {
+          "nombre": "Taquetes de anclaje",
+          "dimensiones": "¼\"",
+          "cantidad_por_ventana": "4 piezas (alto ≤1700mm) / 6 piezas (alto ≥1800mm)",
+          "uso": "Complemento de anclaje para pijas 10x3\""
+        }
+      ],
+      "fijo_inferior": [
+        {
+          "nombre": "Pijas de armado cabeza bola",
+          "dimensiones": "10 x ¾\"",
+          "cantidad_por_fijo": 14,
+          "uso": "Ensamblaje general de perfiles"
+        },
+        {
+          "nombre": "Pijas unión fijo-ventana",
+          "dimensiones": "10 x ¾\"",
+          "cantidad_por_fijo": 2,
+          "uso": "Unión entre fijo inferior y ventana corrediza superior"
+        },
+        {
+          "nombre": "Pijas de anclaje",
+          "dimensiones": "10 x 3\"",
+          "cantidad_por_fijo": 2,
+          "uso": "Fijación del fijo a la obra/estructura"
+        },
+        {
+          "nombre": "Taquetes para anclaje",
+          "dimensiones": "—",
+          "cantidad_por_fijo": 2,
+          "uso": "Complemento de fijación para pijas de 10 x 3\""
+        }
+      ]
+    },
+    "reglas_calculo": {
+      "corrediza_3pulg": [
+        {
+          "nombre": "Resta hojas ancho",
+          "valor_numerico": 185.0,
+          "descripcion": "Valor a restar del ancho total para zoclo y cabezal de hojas",
+          "tipo": "resta"
+        },
+        {
+          "nombre": "Resta cerco chapa alto",
+          "valor_numerico": 30.0,
+          "descripcion": "Resta de alto total para panel fijo",
+          "tipo": "resta"
+        },
+        {
+          "nombre": "Resta traslape alto",
+          "valor_numerico": 40.0,
+          "descripcion": "Resta de alto total para panel corredizo",
+          "tipo": "resta"
+        },
+        {
+          "nombre": "Resta vidrio ancho",
+          "valor_numerico": 155.0,
+          "descripcion": "Resta de ancho total antes de dividir entre 2",
+          "tipo": "resta"
+        },
+        {
+          "nombre": "Resta vidrio alto panel fijo",
+          "valor_numerico": 125.0,
+          "descripcion": "Resta de alto total para vidrio panel fijo",
+          "tipo": "resta"
+        },
+        {
+          "nombre": "Resta vidrio alto panel corredizo",
+          "valor_numerico": 135.0,
+          "descripcion": "Resta de alto total para vidrio panel corredizo",
+          "tipo": "resta"
+        },
+        {
+          "nombre": "Factor felpa",
+          "valor_numerico": 8.0,
+          "descripcion": "Multiplicador de perímetro para cálculo de felpa",
+          "tipo": "constante"
+        },
+        {
+          "nombre": "Ancho resaque jaladera",
+          "valor_numerico": 20.0,
+          "descripcion": "Ancho final del resaque de jaladera",
+          "tipo": "constante"
+        },
+        {
+          "nombre": "Alto resaque jaladera",
+          "valor_numerico": 168.0,
+          "descripcion": "Altura total del resaque de jaladera",
+          "tipo": "constante"
+        },
+        {
+          "nombre": "Reserva lado vidrio",
+          "valor_numerico": 16.0,
+          "descripcion": "Distancia desde lado vidrio al inicio del resaque",
+          "tipo": "constante"
+        },
+        {
+          "nombre": "Limite extremo resaque",
+          "valor_numerico": 36.0,
+          "descripcion": "Distancia desde lado vidrio al extremo opuesto del resaque",
+          "tipo": "constante"
+        },
+        {
+          "nombre": "Alto estandarizado R1 R2 Sala",
+          "valor_numerico": 1200.0,
+          "descripcion": "Alto estándar Proyecto Monterra: R1, R2, Sala (Depto 3-10)",
+          "tipo": "constante"
+        }
+      ],
+      "fijo_inferior": [
+        {
+          "nombre": "Resta escalonado",
+          "valor_numerico": 90.0,
+          "descripcion": "Valor a restar del ancho total para escalonado 3\"",
+          "tipo": "resta"
+        },
+        {
+          "nombre": "Resta junquillos",
+          "valor_numerico": 135.0,
+          "descripcion": "Valor a restar del ancho total antes de dividir entre 2",
+          "tipo": "resta"
+        },
+        {
+          "nombre": "Resta vidrio ancho",
+          "valor_numerico": 110.0,
+          "descripcion": "Valor a restar del ancho total para obtener ancho de vidrio",
+          "tipo": "resta"
+        },
+        {
+          "nombre": "Resta bolsa altura",
+          "valor_numerico": 1200.0,
+          "descripcion": "Valor a restar del alto total para postes laterales y central",
+          "tipo": "resta"
+        },
+        {
+          "nombre": "Resta vidrio altura",
+          "valor_numerico": 1230.0,
+          "descripcion": "Valor a restar del alto total para altura de vidrio",
+          "tipo": "resta"
+        },
+        {
+          "nombre": "Resta extra poste central",
+          "valor_numerico": 28.0,
+          "descripcion": "Resta adicional en altura para poste central",
+          "tipo": "resta"
+        },
+        {
+          "nombre": "Resaque empalme",
+          "valor_numerico": 16.0,
+          "descripcion": "Resaque hasta centro del perfil (tapa bolsa y escalonado)",
+          "tipo": "resaque"
+        },
+        {
+          "nombre": "Espesor vidrio",
+          "valor_numerico": 6.0,
+          "descripcion": "Espesor estándar del vidrio en mm",
+          "tipo": "constante"
+        }
+      ]
+    },
+    "normas_resaque": [
+      {
+        "caso_aplicacion": "Estándar Proyecto Monterra",
+        "altura_total_ventana": "1200 mm (R1, R2, Sala)",
+        "inicio_resaque_mm": 300,
+        "fin_superior_resaque_mm": 468,
+        "ancho_resaque_mm": 20,
+        "barreno_gancho": "½\" de diámetro, centrado a altura límite superior del resaque",
+        "notas": "Deptos 3-10 todas las torres; verificar lado antes de cortar"
+      },
+      {
+        "caso_aplicacion": "Puerta / Balcón / Planta Baja",
+        "altura_total_ventana": "Mayor a 1200 mm",
+        "inicio_resaque_mm": 1000,
+        "fin_superior_resaque_mm": 1168,
+        "ancho_resaque_mm": 20,
+        "barreno_gancho": "½\" de diámetro, centrado a altura límite superior del resaque",
+        "notas": "Para comodidad de uso como puerta"
+      },
+      {
+        "caso_aplicacion": "Ventana altura 1600 mm",
+        "altura_total_ventana": "1600 mm",
+        "inicio_resaque_mm": 400,
+        "fin_superior_resaque_mm": 568,
+        "ancho_resaque_mm": 20,
+        "barreno_gancho": "½\" de diámetro, centrado a altura límite superior del resaque",
+        "notas": "Altura recomendada para operación cómoda"
+      },
+      {
+        "caso_aplicacion": "Estándar general",
+        "altura_total_ventana": "Variable",
+        "inicio_resaque_mm": 300,
+        "fin_superior_resaque_mm": 468,
+        "ancho_resaque_mm": 20,
+        "barreno_gancho": "½\" de diámetro, centrado a altura límite superior del resaque",
+        "notas": "Por defecto si no aplica caso especial"
+      }
+    ],
+    "kits_insumos": [
+      {
+        "id_tipo": 1,
+        "nombre_insumo": "Pijas 10 x 3/4\" cabeza bola",
+        "cantidad": 8,
+        "unidad_medida": "pz",
+        "especificacion_tecnica": "Cabeza bola",
+        "condicion_aplicacion": null
+      },
+      {
+        "id_tipo": 1,
+        "nombre_insumo": "Pijas 10 x 3\"",
+        "cantidad": 12,
+        "unidad_medida": "pz",
+        "especificacion_tecnica": "Larga",
+        "condicion_aplicacion": null
+      },
+      {
+        "id_tipo": 1,
+        "nombre_insumo": "Taquetes",
+        "cantidad": 4,
+        "unidad_medida": "pz",
+        "especificacion_tecnica": "Para anclaje a muro",
+        "condicion_aplicacion": "Altura < 1700mm"
+      },
+      {
+        "id_tipo": 1,
+        "nombre_insumo": "Taquetes",
+        "cantidad": 6,
+        "unidad_medida": "pz",
+        "especificacion_tecnica": "Para anclaje a muro",
+        "condicion_aplicacion": "Altura > 1800mm"
+      },
+      {
+        "id_tipo": 1,
+        "nombre_insumo": "Jaladera Alfa",
+        "cantidad": 1,
+        "unidad_medida": "pz",
+        "especificacion_tecnica": "Sin tornillo",
+        "condicion_aplicacion": null
+      },
+      {
+        "id_tipo": 1,
+        "nombre_insumo": "Contra Herralum",
+        "cantidad": 1,
+        "unidad_medida": "pz",
+        "especificacion_tecnica": "Contra jaladera",
+        "condicion_aplicacion": null
+      },
+      {
+        "id_tipo": 1,
+        "nombre_insumo": "Carretillas de 3\"",
+        "cantidad": 4,
+        "unidad_medida": "pz",
+        "especificacion_tecnica": "Para hojas corredizas",
+        "condicion_aplicacion": null
+      },
+      {
+        "id_tipo": 1,
+        "nombre_insumo": "Felpa",
+        "cantidad": 1,
+        "unidad_medida": "rollo",
+        "especificacion_tecnica": "Sellado de hojas",
+        "condicion_aplicacion": null
+      },
+      {
+        "id_tipo": 1,
+        "nombre_insumo": "Vinil #11 peine",
+        "cantidad": 1,
+        "unidad_medida": "pz",
+        "especificacion_tecnica": "Sellado inferior",
+        "condicion_aplicacion": null
+      },
+      {
+        "id_tipo": 2,
+        "nombre_insumo": "Pijas armado 10 x 3/4\" cabeza bola",
+        "cantidad": 14,
+        "unidad_medida": "pz",
+        "especificacion_tecnica": "Ensamblaje general de perfiles",
+        "condicion_aplicacion": null
+      },
+      {
+        "id_tipo": 2,
+        "nombre_insumo": "Pijas unión fijo-ventana 10 x 3/4\"",
+        "cantidad": 2,
+        "unidad_medida": "pz",
+        "especificacion_tecnica": "Unión entre fijo y ventana superior",
+        "condicion_aplicacion": null
+      },
+      {
+        "id_tipo": 2,
+        "nombre_insumo": "Pijas anclaje 10 x 3\"",
+        "cantidad": 2,
+        "unidad_medida": "pz",
+        "especificacion_tecnica": "Fijación a obra/estructura",
+        "condicion_aplicacion": null
+      },
+      {
+        "id_tipo": 2,
+        "nombre_insumo": "Taquetes para anclaje",
+        "cantidad": 2,
+        "unidad_medida": "pz",
+        "especificacion_tecnica": "Complemento de fijación",
+        "condicion_aplicacion": null
+      },
+      {
+        "id_tipo": 2,
+        "nombre_insumo": "Empaque Vinil Peine 11",
+        "cantidad": 1,
+        "unidad_medida": "pz",
+        "especificacion_tecnica": "Sellado de vidrio",
+        "condicion_aplicacion": "Cantidad variable según perímetro"
+      },
+      {
+        "id_tipo": 3,
+        "nombre_insumo": "Cinta doble cara",
+        "cantidad": 80,
+        "unidad_medida": "mm",
+        "especificacion_tecnica": "Perímetro total + 80mm",
+        "condicion_aplicacion": null
+      },
+      {
+        "id_tipo": 3,
+        "nombre_insumo": "Pijas 10 x 2\" con taquete",
+        "cantidad": 4,
+        "unidad_medida": "pz",
+        "especificacion_tecnica": "Para fijación",
+        "condicion_aplicacion": null
+      },
+      {
+        "id_tipo": 4,
+        "nombre_insumo": "Pijas 8 x 3/4\"",
+        "cantidad": 4,
+        "unidad_medida": "pz",
+        "especificacion_tecnica": "Por cada tableta",
+        "condicion_aplicacion": null
+      },
+      {
+        "id_tipo": 7,
+        "nombre_insumo": "Kit 101 CONALUM 1.5m",
+        "cantidad": 1,
+        "unidad_medida": "kit",
+        "especificacion_tecnica": "Perfil sup., jambas, carretillas, jaladeras, topes, guía, vinilo, pijas, esquineros",
+        "condicion_aplicacion": null
+      }
+    ],
+    "reglas_sentido": [
+      {
+        "id_tipo_pieza": 5,
+        "nivel_aplicacion": "Planta_Baja",
+        "departamento_origen": "DEP1",
+        "posicion_espejo": "Lado_A",
+        "sentido_chapa": "Derecha",
+        "lado_corrediza": "N/A",
+        "observaciones": "Chapa lado derecho visto por dentro. DEP1",
+        "ubicacion": "Recamara_1"
+      },
+      {
+        "id_tipo_pieza": 5,
+        "nivel_aplicacion": "Planta_Baja",
+        "departamento_origen": "DEP2",
+        "posicion_espejo": "Lado_B",
+        "sentido_chapa": "Izquierda",
+        "lado_corrediza": "N/A",
+        "observaciones": "Chapa lado izquierdo visto por dentro. DEP2 (espejo)",
+        "ubicacion": "Recamara_1"
+      },
+      {
+        "id_tipo_pieza": 5,
+        "nivel_aplicacion": "Planta_Baja",
+        "departamento_origen": "DEP1",
+        "posicion_espejo": "Lado_A",
+        "sentido_chapa": "Izquierda",
+        "lado_corrediza": "N/A",
+        "observaciones": "Chapa lado izquierdo visto por dentro. DEP1 - Rec2",
+        "ubicacion": "Recamara_2"
+      },
+      {
+        "id_tipo_pieza": 5,
+        "nivel_aplicacion": "Planta_Baja",
+        "departamento_origen": "DEP2",
+        "posicion_espejo": "Lado_B",
+        "sentido_chapa": "Derecha",
+        "lado_corrediza": "N/A",
+        "observaciones": "Chapa lado derecho visto por dentro. DEP2 (espejo) - Rec2",
+        "ubicacion": "Recamara_2"
+      },
+      {
+        "id_tipo_pieza": 1,
+        "nivel_aplicacion": "Nivel_1",
+        "departamento_origen": "DEP1",
+        "posicion_espejo": "Lado_A",
+        "sentido_chapa": "N/A",
+        "lado_corrediza": "Izquierdo",
+        "observaciones": "Corrediza lado izquierdo. DEP1 - Rec1",
+        "ubicacion": "Recamara_1"
+      },
+      {
+        "id_tipo_pieza": 1,
+        "nivel_aplicacion": "Nivel_1",
+        "departamento_origen": "DEP2",
+        "posicion_espejo": "Lado_B",
+        "sentido_chapa": "N/A",
+        "lado_corrediza": "Derecho",
+        "observaciones": "Corrediza lado derecho. DEP2 (espejo) - Rec1",
+        "ubicacion": "Recamara_1"
+      },
+      {
+        "id_tipo_pieza": 1,
+        "nivel_aplicacion": "Nivel_1",
+        "departamento_origen": "DEP1",
+        "posicion_espejo": "Lado_A",
+        "sentido_chapa": "N/A",
+        "lado_corrediza": "Derecho",
+        "observaciones": "Corrediza lado derecho. DEP1 - Rec2",
+        "ubicacion": "Recamara_2"
+      },
+      {
+        "id_tipo_pieza": 1,
+        "nivel_aplicacion": "Nivel_1",
+        "departamento_origen": "DEP2",
+        "posicion_espejo": "Lado_B",
+        "sentido_chapa": "N/A",
+        "lado_corrediza": "Izquierdo",
+        "observaciones": "Corrediza lado izquierdo. DEP2 (espejo) - Rec2",
+        "ubicacion": "Recamara_2"
+      },
+      {
+        "id_tipo_pieza": 1,
+        "nivel_aplicacion": "Niveles_2_3_4",
+        "departamento_origen": "DEP1",
+        "posicion_espejo": "Lado_A",
+        "sentido_chapa": "N/A",
+        "lado_corrediza": "Izquierdo",
+        "observaciones": "Corrediza lado izquierdo. DEP1 - Rec1",
+        "ubicacion": "Recamara_1"
+      },
+      {
+        "id_tipo_pieza": 1,
+        "nivel_aplicacion": "Niveles_2_3_4",
+        "departamento_origen": "DEP2",
+        "posicion_espejo": "Lado_B",
+        "sentido_chapa": "N/A",
+        "lado_corrediza": "Derecho",
+        "observaciones": "Corrediza lado derecho. DEP2 (espejo) - Rec1",
+        "ubicacion": "Recamara_1"
+      },
+      {
+        "id_tipo_pieza": 1,
+        "nivel_aplicacion": "Niveles_2_3_4",
+        "departamento_origen": "DEP1",
+        "posicion_espejo": "Lado_A",
+        "sentido_chapa": "N/A",
+        "lado_corrediza": "Derecho",
+        "observaciones": "Corrediza lado derecho. DEP1 - Rec2",
+        "ubicacion": "Recamara_2"
+      },
+      {
+        "id_tipo_pieza": 1,
+        "nivel_aplicacion": "Niveles_2_3_4",
+        "departamento_origen": "DEP2",
+        "posicion_espejo": "Lado_B",
+        "sentido_chapa": "N/A",
+        "lado_corrediza": "Izquierdo",
+        "observaciones": "Corrediza lado izquierdo. DEP2 (espejo) - Rec2",
+        "ubicacion": "Recamara_2"
+      },
+      {
+        "id_tipo_pieza": 1,
+        "nivel_aplicacion": "Planta_Baja",
+        "departamento_origen": "AMBOS",
+        "posicion_espejo": "AMBOS",
+        "sentido_chapa": "N/A",
+        "lado_corrediza": "N/A",
+        "observaciones": "Ventanal Sala sin sentido específico",
+        "ubicacion": null
+      },
+      {
+        "id_tipo_pieza": 1,
+        "nivel_aplicacion": "Nivel_1",
+        "departamento_origen": "AMBOS",
+        "posicion_espejo": "AMBOS",
+        "sentido_chapa": "N/A",
+        "lado_corrediza": "N/A",
+        "observaciones": "Ventana Comedor sin sentido específico",
+        "ubicacion": null
+      },
+      {
+        "id_tipo_pieza": 1,
+        "nivel_aplicacion": "Niveles_2_3_4",
+        "departamento_origen": "AMBOS",
+        "posicion_espejo": "AMBOS",
+        "sentido_chapa": "N/A",
+        "lado_corrediza": "N/A",
+        "observaciones": "Ventanal Balcón sin sentido específico",
+        "ubicacion": null
+      },
+      {
+        "id_tipo_pieza": 6,
+        "nivel_aplicacion": "Niveles_2_3_4",
+        "departamento_origen": "AMBOS",
+        "posicion_espejo": "AMBOS",
+        "sentido_chapa": "N/A",
+        "lado_corrediza": "N/A",
+        "observaciones": "Ventanal Panorámico sin sentido específico",
+        "ubicacion": null
+      }
+    ],
+    "configuracion": {
+      "altura_chapa_puerta": 1000,
+      "altura_jaladera_ventana_estandar": 300,
+      "altura_jaladera_ventana_1600": 400,
+      "tiempo_estandar_horas": 2.0,
+      "costo_hora_mano_obra": 150.0,
+      "porcentaje_desperdicio_vidrio": 5,
+      "porcentaje_desperdicio_perfil": 8,
+      "longitud_tramo_estandar_mm": 6100,
+      "longitud_tramo_alternativo_mm": 5600
+    }
+  },
+  "inventario": {
+    "vidrio_transparente_6mm": {
+      "tipo_material": "vidrio",
+      "unidad_medida": "m2",
+      "cantidad_disponible": 0,
+      "cantidad_minima": 100,
+      "proveedor_principal": "Vitro",
+      "costo_unitario": 450.0
+    },
+    "vidrio_satinado_4mm": {
+      "tipo_material": "vidrio",
+      "unidad_medida": "m2",
+      "cantidad_disponible": 0,
+      "cantidad_minima": 10,
+      "proveedor_principal": "Vitro",
+      "costo_unitario": 550.0
+    },
+    "vidrio_translucido_4mm": {
+      "tipo_material": "vidrio",
+      "unidad_medida": "m2",
+      "cantidad_disponible": 0,
+      "cantidad_minima": 20,
+      "proveedor_principal": "Vitro",
+      "costo_unitario": 500.0
+    },
+    "jamba_3pulg": {
+      "tipo_material": "perfil",
+      "unidad_medida": "ml",
+      "cantidad_disponible": 0,
+      "cantidad_minima": 200,
+      "proveedor_principal": "CONALUM",
+      "costo_unitario": 180.0
+    },
+    "riel_3pulg": {
+      "tipo_material": "perfil",
+      "unidad_medida": "ml",
+      "cantidad_disponible": 0,
+      "cantidad_minima": 200,
+      "proveedor_principal": "CONALUM",
+      "costo_unitario": 180.0
+    },
+    "canal_liso_2pulg": {
+      "tipo_material": "perfil",
+      "unidad_medida": "ml",
+      "cantidad_disponible": 0,
+      "cantidad_minima": 50,
+      "proveedor_principal": "CONALUM",
+      "costo_unitario": 150.0
+    },
+    "tubo_2x1_cal16": {
+      "tipo_material": "tubo",
+      "unidad_medida": "ml",
+      "cantidad_disponible": 0,
+      "cantidad_minima": 30,
+      "proveedor_principal": "CONALUM",
+      "costo_unitario": 120.0
+    },
+    "kit_101_conalum": {
+      "tipo_material": "kit",
+      "unidad_medida": "kit",
+      "cantidad_disponible": 0,
+      "cantidad_minima": 10,
+      "proveedor_principal": "CONALUM",
+      "costo_unitario": 2200.0
+    },
+    "silicona": {
+      "tipo_material": "sellador",
+      "unidad_medida": "cartucho",
+      "cantidad_disponible": 0,
+      "cantidad_minima": 20,
+      "proveedor_principal": "Sika",
+      "costo_unitario": 85.0
+    },
+    "felpa": {
+      "tipo_material": "cinta",
+      "unidad_medida": "rollo",
+      "cantidad_disponible": 0,
+      "cantidad_minima": 10,
+      "proveedor_principal": "CONALUM",
+      "costo_unitario": 120.0
+    },
+    "vinil_peine_11": {
+      "tipo_material": "cinta",
+      "unidad_medida": "metro",
+      "cantidad_disponible": 0,
+      "cantidad_minima": 50,
+      "proveedor_principal": "CONALUM",
+      "costo_unitario": 15.0
+    },
+    "vidrio_templado_8mm": {
+      "tipo_material": "vidrio",
+      "unidad_medida": "m2",
+      "cantidad_disponible": 0,
+      "cantidad_minima": 50,
+      "proveedor_principal": "Vitro",
+      "costo_unitario": 850.0
+    }
+  },
+  "estructura_proyecto": {
+    "torres": [
+      {
+        "codigo": "T-01",
+        "orientacion": "Norte",
+        "nivel_planta_baja": true,
+        "total_niveles": 4,
+        "altura_nivel_mm": 2700,
+        "acabado_marco": "Aluminio Blanco",
+        "acabado_vidrio": "Transparente 6mm",
+        "niveles": [
+          {
+            "nombre": "Planta_Baja",
+            "numero": 0,
+            "altura_mm": 2700,
+            "departamentos": [
+              {
+                "nombre": "DEP1",
+                "posicion_espejo": "Lado_A"
+              },
+              {
+                "nombre": "DEP2",
+                "posicion_espejo": "Lado_B"
+              }
+            ]
+          },
+          {
+            "nombre": "Nivel_1",
+            "numero": 1,
+            "altura_mm": 2700,
+            "departamentos": [
+              {
+                "nombre": "DEP1",
+                "posicion_espejo": "Lado_A"
+              },
+              {
+                "nombre": "DEP2",
+                "posicion_espejo": "Lado_B"
+              }
+            ]
+          },
+          {
+            "nombre": "Nivel_2",
+            "numero": 2,
+            "altura_mm": 2700,
+            "departamentos": [
+              {
+                "nombre": "DEP1",
+                "posicion_espejo": "Lado_A"
+              },
+              {
+                "nombre": "DEP2",
+                "posicion_espejo": "Lado_B"
+              }
+            ]
+          },
+          {
+            "nombre": "Nivel_3",
+            "numero": 3,
+            "altura_mm": 2700,
+            "departamentos": [
+              {
+                "nombre": "DEP1",
+                "posicion_espejo": "Lado_A"
+              },
+              {
+                "nombre": "DEP2",
+                "posicion_espejo": "Lado_B"
+              }
+            ]
+          },
+          {
+            "nombre": "Nivel_4",
+            "numero": 4,
+            "altura_mm": 2700,
+            "departamentos": [
+              {
+                "nombre": "DEP1",
+                "posicion_espejo": "Lado_A"
+              },
+              {
+                "nombre": "DEP2",
+                "posicion_espejo": "Lado_B"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "nota": "Se han generado 45 torres con la misma estructura. Se muestra solo T-01 como ejemplo para no sobrecargar el JSON."
+  },
+  "funciones_calculo": {
+    "calcular_cortes_corrediza": {
+      "descripcion": "Calcula las medidas de todos los componentes para una ventana corrediza de 3\"",
+      "parametros": [
+        "ancho_total_mm",
+        "alto_total_mm"
+      ],
+      "ejemplo": {
+        "ancho_total": 1200,
+        "alto_total": 1200,
+        "resultado": {
+          "componentes": [
+            {
+              "nombre": "Riel de 3\"",
+              "medida_mm": 1200,
+              "cantidad": 1
+            },
+            {
+              "nombre": "Jamba de 3\"",
+              "medida_mm": 1200,
+              "cantidad": 2
+            },
+            {
+              "nombre": "Cabezal de 3\"",
+              "medida_mm": 1200,
+              "cantidad": 1
+            },
+            {
+              "nombre": "Zoclo doble vena",
+              "medida_mm": 507.5,
+              "cantidad": 2
+            },
+            {
+              "nombre": "Cabezal hojas",
+              "medida_mm": 507.5,
+              "cantidad": 2
+            },
+            {
+              "nombre": "Cerco chapa fijo",
+              "medida_mm": 1170,
+              "cantidad": 1
+            },
+            {
+              "nombre": "Traslape corredizo",
+              "medida_mm": 1160,
+              "cantidad": 1
+            },
+            {
+              "nombre": "Vidrio panel fijo",
+              "medida_mm_ancho": 522.5,
+              "medida_mm_alto": 1075,
+              "cantidad": 1
+            },
+            {
+              "nombre": "Vidrio panel corredizo",
+              "medida_mm_ancho": 522.5,
+              "medida_mm_alto": 1065,
+              "cantidad": 1
+            }
+          ]
+        }
+      }
+    },
+    "calcular_cortes_fijo_inferior": {
+      "descripcion": "Calcula las medidas de todos los componentes para un fijo inferior",
+      "parametros": [
+        "ancho_total_mm",
+        "alto_total_mm"
+      ],
+      "ejemplo": {
+        "ancho_total": 1500,
+        "alto_total": 1800,
+        "resultado": {
+          "componentes": [
+            {
+              "nombre": "Tapa Bolsa Corta",
+              "medida_mm": 1500,
+              "cantidad": 1
+            },
+            {
+              "nombre": "Escalonado",
+              "medida_mm": 1410,
+              "cantidad": 1
+            },
+            {
+              "nombre": "Junquillos",
+              "medida_mm": 682.5,
+              "cantidad": 2
+            },
+            {
+              "nombre": "Poste Lateral",
+              "medida_mm": 600,
+              "cantidad": 2
+            },
+            {
+              "nombre": "Poste Central",
+              "medida_mm": 572,
+              "cantidad": 1
+            },
+            {
+              "nombre": "Vidrio Ancho",
+              "medida_mm": 695,
+              "cantidad": 2
+            },
+            {
+              "nombre": "Vidrio Alto",
+              "medida_mm": 570,
+              "cantidad": 2
+            }
+          ]
+        }
+      }
+    }
+  },
+  "resumen_materiales_por_torre": {
+    "vidrio_transparente_6mm": {
+      "cantidad_m2": "Cálculo basado en las piezas V-01, V-02, V-03, V-05, V-08, V-09, P-01, P-02, P-05"
+    },
+    "vidrio_satinado_4mm": {
+      "cantidad_m2": "Cálculo basado en la pieza V-07"
+    },
+    "kit_101_conalum": {
+      "cantidad": "Cálculo basado en las piezas P-03, P-04"
+    },
+    "vidrio_templado_8mm": {
+      "cantidad_m2": "Cálculo basado en la pieza V-06"
+    }
+  },
+  "_auditoria": {
+    "fecha": "2026-08-26",
+    "hallazgos_pendientes": [
+      {
+        "codigo": "REG-004",
+        "detalle": "Taquetes sin regla para altura 1700-1800mm"
+      },
+      {
+        "codigo": "REG-005b",
+        "detalle": "lado_corrediza se invierte entre DEP1 y DEP2 (contradice regla verbal 'sin invertir'); se resolvió usando 'ubicacion' parseado de observaciones en vez de lado_corrediza"
+      }
+    ],
+    "hallazgos_resueltos": [
+      {
+        "codigo": "CAT-002",
+        "detalle": "typo 'Template' -> 'Templado' corregido en piezas_catalogo, inventario y resumen"
+      },
+      {
+        "codigo": "REG-005",
+        "detalle": "campo 'ubicacion' agregado a reglas_sentido, parseado directo de observaciones (Rec1/Rec2), ya no depende de lado_corrediza"
+      },
+      {
+        "codigo": "CAT-003",
+        "detalle": "Confirmado con taller: solo se maneja vidrio de 6mm. tipo_relleno corregido en P-03/P-04"
+      },
+      {
+        "codigo": "REG-005c",
+        "detalle": "Puertas sin 'Rec' explícito resueltas a Recamara_1 por confirmación del mismo esquema de escalera"
+      }
+    ]
+  }
+}
