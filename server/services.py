@@ -5,7 +5,7 @@ Responsabilidad: Orquestar la lógica de negocio y validar reglas.
 
 import json
 from typing import Any, Dict, List, Optional
-from db import (
+from .db import (
     fetch_all, fetch_one, execute_transaction, insert_log, init_db,
     crear_levantamiento, listar_levantamientos, marcar_levantamiento_recibido,
     contar_levantamientos_nuevos
@@ -80,33 +80,56 @@ def calculate_and_persist_pieza(pieza_codigo: str) -> Optional[Dict[str, Any]]:
     """Calcula el despiece y lo guarda en la base de datos."""
     import calculos
     p = get_pieza_detail(pieza_codigo)
-    if not p: return None
+    if not p:
+        return None
 
     resultado = calculos.calcular_sistema(
         p['sistema_id'], p['ancho_mm'], p['alto_mm'], alto_total=p.get('alto_total_mm')
     )
-    if 'error' in resultado: return None
+    if 'error' in resultado:
+        return None
 
-    # Transacción para limpiar y re-insertar despiece
-    queries = [("DELETE FROM cortes WHERE pieza_codigo=?", (pieza_codigo,)),
-               ("DELETE FROM vidrios WHERE pieza_codigo=?", (pieza_codigo,)),
-               ("DELETE FROM insumos WHERE pieza_codigo=?", (pieza_codigo,))]
-    
+    # Transacción para limpiar y re‑insertar despiece
+    queries = [
+        ("DELETE FROM cortes WHERE pieza_codigo=?", (pieza_codigo,)),
+        ("DELETE FROM vidrios WHERE pieza_codigo=?", (pieza_codigo,)),
+        ("DELETE FROM insumos WHERE pieza_codigo=?", (pieza_codigo,))
+    ]
+
     for c in resultado.get('componentes', []):
         queries.append(("INSERT INTO cortes (pieza_codigo, material_id, pieza_nombre, longitud_mm, cantidad, observaciones, estado) VALUES (?,?,?,?,?,?, 'pendiente')",
                         (pieza_codigo, c.get('material_id'), c.get('pieza'), c.get('longitud_mm'), c.get('cantidad'), c.get('observaciones'))))
-        
+
     for v in resultado.get('vidrios', []):
         queries.append(("INSERT INTO vidrios (pieza_codigo, posicion, ancho_mm, alto_mm, cantidad, estado) VALUES (?,?,?,?,?, 'pendiente')",
                         (pieza_codigo, v.get('posicion'), v.get('ancho_mm'), v.get('alto_mm'), v.get('cantidad'))))
-        
+
     for ins in resultado.get('insumos', []):
         queries.append(("INSERT INTO insumos (pieza_codigo, material_id, nombre, cantidad, unidad, tipo) VALUES (?,?,?,?,?, 'fijo')",
                         (pieza_codigo, ins.get('material_id'), ins.get('nombre'), ins.get('cantidad'), ins.get('unidad'))))
-    
+
     if execute_transaction(queries):
         return get_pieza_detail(pieza_codigo)
     return None
+
+
+def guardar_estado_pieza(codigo: str, cortes: List[Dict[str, Any]]) -> bool:
+    """Actualiza el estado de los cortes marcados para una pieza.
+    Cada elemento de *cortes* debe contener:
+        {"id": "V‑01‑c0", "hecho": true/false}
+    """
+    # Construir consultas UPDATE para cada corte
+    queries = []
+    for c in cortes:
+        corte_id = c.get('id')
+        hecho = bool(c.get('hecho'))
+        if not corte_id:
+            continue
+        nuevo_estado = 'cortado' if hecho else 'pendiente'
+        queries.append(("UPDATE cortes SET estado=? WHERE id=? AND pieza_codigo=?", (nuevo_estado, corte_id, codigo)))
+    if not queries:
+        return False
+    return execute_transaction(queries)
 
 def get_global_dashboard() -> Dict[str, Any]:
     """Resumen de avance general."""

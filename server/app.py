@@ -4,17 +4,27 @@ Responsabilidad: Definir rutas, validar requests y retornar respuestas JSON.
 """
 
 import os
+from flask_cors import CORS
 from flask import Flask, jsonify, request
-import services
+from server import services
 
 # Rutas de directorios
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 FRONTEND_DIR = os.path.join(SCRIPT_DIR, '..', 'frontend')
+# Configuramos la carpeta de plantillas (templates) que está en la raíz del proyecto
+TEMPLATE_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, '..', 'templates'))
 
-app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path='/frontend')
+# Inicializamos Flask indicando carpeta estática y de plantillas
+app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path='/frontend', template_folder=TEMPLATE_DIR)
+# Permitir que la UI estática en GitHub Pages haga peticiones al backend
+CORS(app, origins=["https://*.github.io", "https://*.githubusercontent.com"])
 
-# Inicialización del sistema
-services.initialize_system()
+
+# Inicialización del sistema – solo si la base de datos aún no existe
+DB_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data', 'taller.db'))
+if not os.path.isfile(DB_PATH):
+    services.initialize_system()
+
 
 # ===========================================================================
 # RUTAS DEL PROYECTO
@@ -109,6 +119,36 @@ def api_levantamiento_recibir(lid):
     if services.confirmar_levantamiento_recibido(lid):
         return jsonify({'ok': True, 'levantamiento_id': lid})
     return jsonify({'error': 'Levantamiento no encontrado'}), 404
+
+# ---------------------------------------------------------------------------
+# RUTAS ADICIONALES PARA INTERFAZ VISOR
+# ---------------------------------------------------------------------------
+
+# Ruta principal que renderiza la vista del visor (template Jinja)
+@app.route('/')
+def index():
+    """Renderiza la página principal del visor de piezas."""
+    from flask import render_template
+    return render_template('visor.html')
+
+# Endpoint para guardar el estado de los cortes marcados de una pieza
+@app.route('/api/guardar_estado', methods=['POST'])
+def api_guardar_estado():
+    """Persiste el estado de los cortes de una pieza.
+    Espera JSON:
+    {
+        "codigo": "V-01",
+        "cortes": [{"id": "V-01-c0", "hecho": true}, ...]
+    }
+    """
+    data = request.get_json(silent=True) or {}
+    codigo = data.get('codigo')
+    cortes = data.get('cortes')
+    if not codigo or not isinstance(cortes, list):
+        return jsonify({'error': 'Formato inválido'}), 400
+    if services.guardar_estado_pieza(codigo, cortes):
+        return jsonify({'ok': True, 'codigo': codigo})
+    return jsonify({'error': 'No se pudo guardar'}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
